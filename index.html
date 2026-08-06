@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Ihsaanah - Islamic education and community initiative." />
+	<title>Home | Ihsaanah</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'ihsaanah-gold': '#a6822c',
+              'ihsaanah-gold-light': '#f2e9d2',
+              'ihsaanah-black': '#1a1a1a',
+            },
+            fontFamily: {
+              heading: ['Poppins', 'Segoe UI', 'sans-serif'],
+              body: ['Inter', 'Segoe UI', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+	<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="flex min-h-screen flex-col bg-white text-ihsaanah-black font-body">
+	<header class="border-b border-ihsaanah-gold-light bg-white">
+		<div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+			<a href="index.html" class="font-heading text-xl font-bold tracking-wide text-ihsaanah-black">IHSAANAH</a>
+			<nav class="hidden gap-6 lg:flex">
+				<a href="index.html" class="text-sm font-medium text-ihsaanah-gold hover:text-ihsaanah-gold transition-colors">Home</a>
+				<a href="about-ihsaanah.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">About Ihsaanah</a>
+				<a href="preschool.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Preschool</a>
+				<a href="products.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Products</a>
+				<a href="book-club.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Book Club</a>
+				<a href="community-programmes.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Programmes</a>
+				<a href="blog.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Blog & Events</a>
+				<a href="donate.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Donate</a>
+				<a href="contact.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Contact</a>
+			</nav>
+			<button id="menu-btn" class="text-sm font-semibold text-ihsaanah-gold lg:hidden">Menu</button>
+		</div>
+		<div id="mobile-menu" class="hidden flex-col gap-1 border-t border-ihsaanah-gold-light bg-white px-4 py-3 lg:hidden">
+				<a href="index.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Home</a>
+				<a href="about-ihsaanah.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">About Ihsaanah</a>
+				<a href="preschool.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Preschool</a>
+				<a href="products.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Products</a>
+				<a href="book-club.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Book Club</a>
+				<a href="community-programmes.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Programmes</a>
+				<a href="blog.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Blog & Events</a>
+				<a href="donate.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Donate</a>
+				<a href="contact.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Contact</a>
+		</div>
+	</header>
+	<main class="flex-1">
+		<section class="relative overflow-hidden bg-white py-20">
+			<div class="mx-auto max-w-4xl px-4 text-center">
+				<h1 class="font-heading text-4xl font-bold text-ihsaanah-black sm:text-5xl">Ihsaanah</h1>
+				<p class="mt-4 text-lg text-ihsaanah-black/70">An Islamic educational and community initiative -- placeholder intro copy, replace with Ihsaanah's approved mission summary.</p>
+				<div class="mt-8 flex justify-center gap-4">
+					<a href="donate.html" class="rounded-md bg-ihsaanah-gold px-6 py-3 text-sm font-semibold text-white hover:opacity-90">Support Ihsaanah</a>
+					<a href="contact.html" class="rounded-md border border-ihsaanah-gold px-6 py-3 text-sm font-semibold text-ihsaanah-gold hover:bg-ihsaanah-gold-light">Contact Us</a>
+				</div>
+			</div>
+		</section>
+		<section class="mx-auto max-w-6xl px-4 py-16">
+			<h2 class="font-heading text-2xl font-bold text-ihsaanah-black">Explore Ihsaanah</h2>
+			<p class="mt-2 text-sm text-ihsaanah-black/60">Ihsaanah Academy will appear here once Version 1 is built.</p>
+			<div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+			<div class="flex flex-col overflow-hidden rounded-lg border border-ihsaanah-gold-light bg-white p-5 shadow-sm">
+				<h3 class="font-heading text-lg font-semibold text-ihsaanah-black">Preschool</h3>
+				<p class="mt-2 flex-1 text-sm text-ihsaanah-black/70">Little Mumin Islamic Preschool.</p>
+				<a href="preschool.html" class="mt-4 inline-block text-sm font-semibold text-ihsaanah-gold hover:underline">Learn more &rarr;</a>
+			</div>
+			<div class="flex flex-col overflow-hidden rounded-lg border border-ihsaanah-gold-light bg-white p-5 shadow-sm">
+				<h3 class="font-heading text-lg font-semibold text-ihsaanah-black">Products</h3>
+				<p class="mt-2 flex-1 text-sm text-ihsaanah-black/70">Services and available items from Ihsaanah.</p>
+				<a href="products.html" class="mt-4 inline-block text-sm font-semibold text-ihsaanah-gold hover:underline">Learn more &rarr;</a>
+			</div>
+			<div class="flex flex-col overflow-hidden rounded-lg border border-ihsaanah-gold-light bg-white p-5 shadow-sm">
+				<h3 class="font-heading text-lg font-semibold text-ihsaanah-black">Book Club</h3>
+				<p class="mt-2 flex-1 text-sm text-ihsaanah-black/70">Verses & Vibes and the Little Mumin Book Club.</p>
+				<a href="book-club.html" class="mt-4 inline-block text-sm font-semibold text-ihsaanah-gold hover:underline">Learn more &rarr;</a>
+			</div>
+			<div class="flex flex-col overflow-hidden rounded-lg border border-ihsaanah-gold-light bg-white p-5 shadow-sm">
+				<h3 class="font-heading text-lg font-semibold text-ihsaanah-black">Community Programmes</h3>
+				<p class="mt-2 flex-1 text-sm text-ihsaanah-black/70">Kidpreneurs, Genius Anlad, and Project Mihrab.</p>
+				<a href="community-programmes.html" class="mt-4 inline-block text-sm font-semibold text-ihsaanah-gold hover:underline">Learn more &rarr;</a>
+			</div>
+			</div>
+		</section>
+	</main>
+	<footer class="relative overflow-hidden bg-ihsaanah-black text-white">
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-x-0 bottom-0 h-24 w-full opacity-20"></div>
+		<div class="relative mx-auto max-w-6xl px-4 py-10">
+			<div class="grid gap-8 sm:grid-cols-3">
+				<div>
+					<p class="font-heading text-lg font-bold text-ihsaanah-gold">IHSAANAH</p>
+					<p class="mt-2 text-sm text-white/70">An Islamic educational and community initiative.</p>
+				</div>
+				<div>
+					<p class="text-sm font-semibold text-ihsaanah-gold">Quick Links</p>
+					<ul class="mt-2 space-y-1 text-sm text-white/70">
+						<li><a href="about-ihsaanah.html" class="hover:text-ihsaanah-gold">About Ihsaanah</a></li>
+						<li><a href="donate.html" class="hover:text-ihsaanah-gold">Donate</a></li>
+						<li><a href="contact.html" class="hover:text-ihsaanah-gold">Contact</a></li>
+					</ul>
+				</div>
+				<div>
+					<p class="text-sm font-semibold text-ihsaanah-gold">Connect</p>
+					<ul class="mt-2 space-y-1 text-sm text-white/70">
+						<li><a href="#" class="hover:text-ihsaanah-gold">Facebook</a></li>
+						<li><a href="#" class="hover:text-ihsaanah-gold">Email</a></li>
+					</ul>
+				</div>
+			</div>
+			<p class="mt-8 border-t border-white/10 pt-6 text-xs text-white/50">&copy; 2026 Ihsaanah. All rights reserved.</p>
+		</div>
+	</footer>
+	<script src="js/main.js"></script>
+</body>
+</html>

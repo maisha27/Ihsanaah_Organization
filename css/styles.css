@@ -1,0 +1,30 @@
+/* ============================================================
+   IHSAANAH — custom styles (used alongside Tailwind CDN utility
+   classes; only things Tailwind utilities can't express live here)
+   ============================================================ */
+
+:root {
+  --ihsaanah-gold: #a6822c;
+  --ihsaanah-gold-light: #f2e9d2;
+  --ihsaanah-black: #1a1a1a;
+}
+
+/* Original, generic 8-point-star geometric tessellation, used as
+   decorative framing per the agreed design direction (white bg +
+   Islamic pattern framing, gold/black accents). This is a traditional
+   construction method, not a copy of any specific existing artwork.
+   Swap for a client-supplied pattern asset if Ihsaanah has one. */
+.ihsaanah-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23a6822c' stroke-width='1'%3E%3Cpath d='M20 2 L26 14 L38 14 L28 22 L32 34 L20 26 L8 34 L12 22 L2 14 L14 14 Z'/%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+.ihsaanah-pattern-gold {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1'%3E%3Cpath d='M20 2 L26 14 L38 14 L28 22 L32 34 L20 26 L8 34 L12 22 L2 14 L14 14 Z'/%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: repeat;
+}
+
+/* Simple mobile nav toggle, no framework needed */
+#mobile-menu.open {
+  display: flex;
+}

@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Sample Event" />
+	<title>Sample Event | Ihsaanah</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              'ihsaanah-gold': '#a6822c',
+              'ihsaanah-gold-light': '#f2e9d2',
+              'ihsaanah-black': '#1a1a1a',
+            },
+            fontFamily: {
+              heading: ['Poppins', 'Segoe UI', 'sans-serif'],
+              body: ['Inter', 'Segoe UI', 'sans-serif'],
+            },
+          },
+        },
+      };
+    </script>
+	<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="flex min-h-screen flex-col bg-white text-ihsaanah-black font-body">
+	<header class="border-b border-ihsaanah-gold-light bg-white">
+		<div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
+			<a href="index.html" class="font-heading text-xl font-bold tracking-wide text-ihsaanah-black">IHSAANAH</a>
+			<nav class="hidden gap-6 lg:flex">
+				<a href="index.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Home</a>
+				<a href="about-ihsaanah.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">About Ihsaanah</a>
+				<a href="preschool.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Preschool</a>
+				<a href="products.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Products</a>
+				<a href="book-club.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Book Club</a>
+				<a href="community-programmes.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Programmes</a>
+				<a href="blog.html" class="text-sm font-medium text-ihsaanah-gold hover:text-ihsaanah-gold transition-colors">Blog & Events</a>
+				<a href="donate.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Donate</a>
+				<a href="contact.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Contact</a>
+			</nav>
+			<button id="menu-btn" class="text-sm font-semibold text-ihsaanah-gold lg:hidden">Menu</button>
+		</div>
+		<div id="mobile-menu" class="hidden flex-col gap-1 border-t border-ihsaanah-gold-light bg-white px-4 py-3 lg:hidden">
+				<a href="index.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Home</a>
+				<a href="about-ihsaanah.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">About Ihsaanah</a>
+				<a href="preschool.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Preschool</a>
+				<a href="products.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Products</a>
+				<a href="book-club.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Book Club</a>
+				<a href="community-programmes.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Programmes</a>
+				<a href="blog.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Blog & Events</a>
+				<a href="donate.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Donate</a>
+				<a href="contact.html" class="py-1 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Contact</a>
+		</div>
+	</header>
+	<main class="flex-1">
+		<section class="relative overflow-hidden bg-ihsaanah-black py-16 text-white">
+			<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-x-0 top-0 h-16 w-full opacity-20"></div>
+			<div class="relative mx-auto max-w-4xl px-4 text-center">
+				<h1 class="font-heading text-3xl font-bold text-white sm:text-4xl">Sample Event</h1>
+			<p class="mt-3 text-white/70">1 September 2026 &middot; TBD</p>
+			</div>
+		</section>
+		<article class="prose prose-sm mx-auto max-w-3xl px-4 py-14">
+			<p>Placeholder event details. Replace with real content once supplied by Ihsaanah.</p>
+		</article>
+	</main>
+	<footer class="relative overflow-hidden bg-ihsaanah-black text-white">
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-x-0 bottom-0 h-24 w-full opacity-20"></div>
+		<div class="relative mx-auto max-w-6xl px-4 py-10">
+			<div class="grid gap-8 sm:grid-cols-3">
+				<div>
+					<p class="font-heading text-lg font-bold text-ihsaanah-gold">IHSAANAH</p>
+					<p class="mt-2 text-sm text-white/70">An Islamic educational and community initiative.</p>
+				</div>
+				<div>
+					<p class="text-sm font-semibold text-ihsaanah-gold">Quick Links</p>
+					<ul class="mt-2 space-y-1 text-sm text-white/70">
+						<li><a href="about-ihsaanah.html" class="hover:text-ihsaanah-gold">About Ihsaanah</a></li>
+						<li><a href="donate.html" class="hover:text-ihsaanah-gold">Donate</a></li>
+						<li><a href="contact.html" class="hover:text-ihsaanah-gold">Contact</a></li>
+					</ul>
+				</div>
+				<div>
+					<p class="text-sm font-semibold text-ihsaanah-gold">Connect</p>
+					<ul class="mt-2 space-y-1 text-sm text-white/70">
+						<li><a href="#" class="hover:text-ihsaanah-gold">Facebook</a></li>
+						<li><a href="#" class="hover:text-ihsaanah-gold">Email</a></li>
+					</ul>
+				</div>
+			</div>
+			<p class="mt-8 border-t border-white/10 pt-6 text-xs text-white/50">&copy; 2026 Ihsaanah. All rights reserved.</p>
+		</div>
+	</footer>
+	<script src="js/main.js"></script>
+</body>
+</html>
