@@ -4,27 +4,180 @@
    ============================================================ */
 
 :root {
-  --ihsaanah-gold: #a6822c;
-  --ihsaanah-gold-light: #f2e9d2;
+  --ihsaanah-gold: #c9972a;
+  --ihsaanah-gold-light: #f5ede0;
   --ihsaanah-black: #1a1a1a;
+  --ihsaanah-cream: #faf7f2;
 }
 
-/* Original, generic 8-point-star geometric tessellation, used as
-   decorative framing per the agreed design direction (white bg +
-   Islamic pattern framing, gold/black accents). This is a traditional
-   construction method, not a copy of any specific existing artwork.
-   Swap for a client-supplied pattern asset if Ihsaanah has one. */
-.ihsaanah-pattern {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23a6822c' stroke-width='1'%3E%3Cpath d='M20 2 L26 14 L38 14 L28 22 L32 34 L20 26 L8 34 L12 22 L2 14 L14 14 Z'/%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: repeat;
+/* ── Load & scroll animations ─────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.ihsaanah-pattern-gold {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1'%3E%3Cpath d='M20 2 L26 14 L38 14 L28 22 L32 34 L20 26 L8 34 L12 22 L2 14 L14 14 Z'/%3E%3Ccircle cx='20' cy='20' r='3'/%3E%3C/g%3E%3C/svg%3E");
-  background-repeat: repeat;
+@keyframes shimmer {
+  from { transform: translateX(-150%) skewX(-20deg); }
+  to   { transform: translateX(250%) skewX(-20deg); }
 }
 
-/* Simple mobile nav toggle, no framework needed */
-#mobile-menu.open {
+.animate-fade-up {
+  animation: fadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Primary CTA button shimmer ──────────────────────────── */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%);
+  transform: translateX(-150%) skewX(-20deg);
+}
+
+/* ── Mobile nav — slide-down animation ───────────────────── */
+#mobile-menu {
   display: flex;
+  flex-direction: column;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease;
+}
+#mobile-menu.open {
+  max-height: 500px;
+  opacity: 1;
+}
+@media (min-width: 1024px) {
+  #mobile-menu { display: none !important; }
+}
+
+/* ── Hamburger icon — animates to X when menu is open ────── */
+.hamburger-icon {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.hamburger-icon .line {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--ihsaanah-gold);
+  border-radius: 1px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease;
+}
+#menu-btn.open .line-1 { transform: translateY(7px) rotate(45deg); }
+#menu-btn.open .line-2 { opacity: 0; transform: scaleX(0); }
+#menu-btn.open .line-3 { transform: translateY(-7px) rotate(-45deg); }
+
+/* ── Desktop nav — underline slide ───────────────────────── */
+header nav a {
+  position: relative;
+}
+header nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--ihsaanah-gold);
+  border-radius: 1px;
+  transition: width 0.25s ease;
+}
+
+/* ── Card hover lift + gold top accent ────────────────────── */
+.ihsaanah-card {
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+.ihsaanah-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--ihsaanah-gold), transparent);
+  opacity: 0.45;
+  transition: opacity 0.28s ease;
+}
+
+/* ── Touch device guard — hover effects only where hover is real ── */
+/* Prevents sticky hover states on iOS/Android after tap            */
+@media (hover: hover) {
+  header nav a:hover::after { width: 100%; }
+  .ihsaanah-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 36px rgba(201, 151, 42, 0.14);
+    border-color: var(--ihsaanah-gold);
+  }
+  .ihsaanah-card:hover::before { opacity: 1; }
+  .btn-shimmer:hover::after { animation: shimmer 0.55s ease forwards; }
+}
+
+/* ── Section heading ornamental underline ─────────────────── */
+.section-heading::after {
+  content: '';
+  display: block;
+  margin-top: 10px;
+  width: 36px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ihsaanah-gold), var(--ihsaanah-gold-light));
+  border-radius: 2px;
+}
+
+/* ── Ornamental content divider (lines + diamond) ─────────── */
+.ornament-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 40px 0;
+}
+.ornament-divider::before,
+.ornament-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--ihsaanah-gold-light);
+}
+.ornament-divider span {
+  display: block;
+  width: 8px;
+  height: 8px;
+  transform: rotate(45deg);
+  background: var(--ihsaanah-gold);
+  opacity: 0.5;
+}
+
+/* ── Contact form — focus glow ───────────────────────────── */
+input, textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--ihsaanah-gold) !important;
+  box-shadow: 0 0 0 3px rgba(201, 151, 42, 0.15) !important;
+}
+
+/* ── Islamic lattice pattern ──────────────────────────────── */
+/* multiply makes white areas transparent — dark lines over cream bg */
+.ihsaanah-pattern {
+  background-image: url('../img/islamic_pattern1.png');
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  mix-blend-mode: multiply;
+}
+
+/* invert turns black lines white, screen hides dark fill — white lines over black bg */
+.ihsaanah-pattern-gold {
+  background-image: url('../img/islamic_pattern1.png');
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  filter: invert(1);
+  mix-blend-mode: screen;
 }
