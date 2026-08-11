@@ -4,9 +4,9 @@
    ============================================================ */
 
 :root {
-  --ihsaanah-gold: #c9972a;
+  --ihsaanah-gold: #C9A030;
   --ihsaanah-gold-light: #f5ede0;
-  --ihsaanah-black: #1a1a1a;
+  --ihsaanah-black: #0D0D0D;
   --ihsaanah-cream: #faf7f2;
 }
 
@@ -113,7 +113,7 @@ header nav a::after {
   header nav a:hover::after { width: 100%; }
   .ihsaanah-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 14px 36px rgba(201, 151, 42, 0.14);
+    box-shadow: 0 14px 36px rgba(201, 160, 48, 0.14);
     border-color: var(--ihsaanah-gold);
   }
   .ihsaanah-card:hover::before { opacity: 1; }
@@ -161,7 +161,7 @@ input, textarea {
 input:focus, textarea:focus {
   outline: none;
   border-color: var(--ihsaanah-gold) !important;
-  box-shadow: 0 0 0 3px rgba(201, 151, 42, 0.15) !important;
+  box-shadow: 0 0 0 3px rgba(201, 160, 48, 0.15) !important;
 }
 
 /* ── Islamic lattice pattern ──────────────────────────────── */
