@@ -3,78 +3,215 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Ihsaanah blog and events." />
-	<title>Blog & Events | Ihsaanah</title>
+	<meta name="description" content="Blog and events from Al-Ihsaanah — reflections, stories, and community updates." />
+	<title>Blog & Events | Al-Ihsaanah</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'ihsaanah-gold': '#C9A030',
-              'ihsaanah-gold-light': '#f5ede0',
-              'ihsaanah-black': '#0D0D0D',
-              'ihsaanah-cream': '#faf7f2',
-            },
-            fontFamily: {
-              heading: ['Poppins', 'Segoe UI', 'sans-serif'],
-              body: ['Inter', 'Segoe UI', 'sans-serif'],
-            },
-          },
-        },
-      };
-    </script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+	  tailwind.config = {
+	    theme: {
+	      extend: {
+	        colors: {
+	          'ihsaanah-gold':       '#C9A030',
+	          'ihsaanah-gold-light': '#f5ede0',
+	          'ihsaanah-black':      '#0D0D0D',
+	          'ihsaanah-cream':      '#faf7f2',
+	        },
+	        fontFamily: {
+	          heading: ['Poppins', 'Segoe UI', 'sans-serif'],
+	          body:    ['Inter', 'Segoe UI', 'sans-serif'],
+	          display: ['DM Serif Display', 'Georgia', 'serif'],
+	        },
+	      },
+	    },
+	  };
+	</script>
 	<link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
 </head>
+<!-- Static/minimal per agreement -- no CMS. To add a new post or event:
+     copy blog-post-template.html or event-template.html, rename it,
+     edit the content, then add a card below and redeploy. -->
 <body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="blog.html">
-	<div id="site-header"></div>
-	<main class="flex-1">
-		<section class="relative overflow-hidden bg-ihsaanah-black py-20 text-white">
-			<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.12]"></div>
-			<div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
-			<div class="relative mx-auto max-w-4xl px-4 text-center">
-				<div class="mb-5 flex items-center justify-center gap-4">
-					<div class="h-px w-14 bg-gradient-to-r from-transparent to-ihsaanah-gold/60"></div>
-					<div class="h-2 w-2 rotate-45 bg-ihsaanah-gold opacity-80"></div>
-					<div class="h-px w-14 bg-gradient-to-l from-transparent to-ihsaanah-gold/60"></div>
+<div id="site-header"></div>
+<main class="flex-1">
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 1 — EDITORIAL HERO
+	     Publication masthead feel
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="relative overflow-hidden bg-ihsaanah-black">
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.16]"></div>
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: radial-gradient(ellipse 50% 60% at 75% 40%, rgba(201,160,48,0.11) 0%, transparent 65%);"></div>
+
+		<div class="relative mx-auto max-w-5xl px-6 py-20 sm:py-28">
+
+			<div class="grid gap-6 sm:grid-cols-5 items-end">
+
+				<!-- Main title -->
+				<div class="sm:col-span-3 animate-fade-up">
+					<span class="section-label block mb-4">Community Publishing</span>
+					<h1 class="font-display italic text-white leading-tight"
+					    style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
+						Stories.<br>Reflections.<br>Community.
+					</h1>
 				</div>
-				<h1 class="font-heading text-3xl font-bold text-white sm:text-4xl animate-fade-up">Blog & Events</h1>
+
+				<!-- Side descriptor -->
+				<div class="sm:col-span-2 sm:pb-2 animate-fade-up" style="animation-delay:0.12s">
+					<p class="text-white/40 text-sm leading-relaxed border-l border-ihsaanah-gold/30 pl-5">
+						Reflections, announcements, and community updates from Al-Ihsaanah — published
+						as our journey continues, in sha Allah.
+					</p>
+				</div>
+
 			</div>
-		</section>
-		<!-- Static/minimal per the agreement -- no CMS. To add a new post or
-		     event: copy blog-post-template.html or event-template.html,
-		     rename it, edit the content, and add a link below. -->
-		<section class="mx-auto max-w-4xl px-4 py-14">
-			<h2 class="section-heading font-heading text-xl font-bold text-ihsaanah-black" data-aos="fade-up">Upcoming Events</h2>
-			<ul class="mt-4 space-y-3">
-				<li class="ihsaanah-card rounded-lg border border-ihsaanah-gold-light bg-white p-5 shadow-sm" data-aos="fade-up">
-					<div class="flex items-start justify-between gap-3">
-						<a href="event-sample-event.html" class="font-heading font-semibold text-ihsaanah-black hover:text-ihsaanah-gold">Sample Event</a>
-						<span class="shrink-0 rounded-full bg-ihsaanah-gold/10 px-2.5 py-0.5 text-xs font-medium text-ihsaanah-gold">Event</span>
+
+			<!-- Thin gold rule under the title — publication style -->
+			<div class="mt-10 h-px bg-gradient-to-r from-ihsaanah-gold/50 via-ihsaanah-gold/20 to-transparent animate-fade-up"
+			     style="animation-delay:0.2s"></div>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 2 — UPCOMING EVENTS
+	     event-card with event-date-box
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-16">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<div class="flex items-center justify-between mb-8 gap-4" data-aos="fade-up">
+				<div>
+					<span class="section-label block mb-1">What's On</span>
+					<h2 class="font-display italic text-2xl text-ihsaanah-black">Upcoming Events</h2>
+				</div>
+				<!-- ── add upcoming event cards below this comment ── -->
+			</div>
+
+			<div class="space-y-4">
+
+				<a href="event-sample-event.html" class="event-card group" data-aos="fade-up">
+					<div class="event-date-box">
+						<span class="event-date-box-day">01</span>
+						<span class="event-date-box-month">Sep</span>
 					</div>
-					<p class="mt-1 text-sm text-ihsaanah-black/60">1 September 2026 &middot; TBD</p>
-				</li>
-			</ul>
-			<div class="ornament-divider" data-aos="fade-up"><span></span></div>
-			<h2 class="section-heading font-heading text-xl font-bold text-ihsaanah-black" data-aos="fade-up">Blog</h2>
-			<ul class="mt-4 space-y-3">
-				<li class="ihsaanah-card rounded-lg border border-ihsaanah-gold-light bg-white p-5 shadow-sm" data-aos="fade-up">
-					<div class="flex items-start justify-between gap-3">
-						<a href="blog-post-welcome.html" class="font-heading font-semibold text-ihsaanah-black hover:text-ihsaanah-gold">Welcome to Ihsaanah</a>
-						<span class="shrink-0 rounded-full bg-ihsaanah-gold/10 px-2.5 py-0.5 text-xs font-medium text-ihsaanah-gold">Post</span>
+					<div class="flex-1 min-w-0">
+						<div class="flex items-start justify-between gap-3">
+							<h3 class="font-heading text-sm font-semibold text-ihsaanah-black group-hover:text-ihsaanah-gold transition-colors">
+								Sample Event
+							</h3>
+							<span class="shrink-0 rounded-full bg-ihsaanah-gold/10 px-2.5 py-0.5 text-xs font-semibold text-ihsaanah-gold">
+								Event
+							</span>
+						</div>
+						<p class="mt-1 text-xs text-ihsaanah-black/45">
+							1 September 2026 &middot; Location TBD
+						</p>
+						<p class="mt-2 text-xs text-ihsaanah-black/55 leading-relaxed">
+							Event details to be confirmed — check back closer to the date.
+						</p>
 					</div>
-					<p class="mt-1 text-sm text-ihsaanah-black/60">4 August 2026</p>
-				</li>
-			</ul>
-		</section>
-	</main>
-	<div id="site-footer"></div>
-	<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-	<script src="js/main.js"></script>
+				</a>
+
+			</div>
+
+			<p class="mt-6 text-xs text-ihsaanah-black/30 text-center italic" data-aos="fade-up">
+				New events are added here as they are confirmed. Follow us on Facebook for the latest.
+			</p>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 3 — BLOG POSTS
+	     Editorial card layout — date column + content
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-16 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<div class="flex items-center justify-between mb-10 gap-4" data-aos="fade-up">
+				<div>
+					<span class="section-label block mb-1">From the Archive</span>
+					<h2 class="font-display italic text-2xl text-white">Blog Posts</h2>
+				</div>
+				<!-- ── add blog post cards below this comment ── -->
+			</div>
+
+			<div class="space-y-5">
+
+				<a href="blog-post-welcome.html"
+				   class="group flex gap-5 rounded-xl border border-ihsaanah-gold/15 bg-ihsaanah-black p-6
+				          transition-all duration-300 hover:border-ihsaanah-gold/40 hover:bg-ihsaanah-gold/4"
+				   data-aos="fade-up">
+
+					<!-- Date column -->
+					<div class="shrink-0 text-center w-12">
+						<span class="block font-display italic text-3xl text-ihsaanah-gold leading-none">04</span>
+						<span class="block text-[10px] tracking-widest uppercase text-white/30 mt-1">Aug<br>2026</span>
+					</div>
+
+					<!-- Vertical divider -->
+					<div class="w-px bg-ihsaanah-gold/15 shrink-0 self-stretch"></div>
+
+					<!-- Content -->
+					<div class="flex-1 min-w-0">
+						<span class="text-[10px] font-bold tracking-widest uppercase text-ihsaanah-gold/70">Post</span>
+						<h3 class="font-display italic text-xl text-white mt-1 leading-snug group-hover:text-ihsaanah-gold transition-colors">
+							Welcome to Ihsaanah
+						</h3>
+						<p class="mt-2 text-sm text-white/40 leading-relaxed">
+							An introduction to Al-Ihsaanah — who we are, what we stand for,
+							and the community we are building together.
+						</p>
+						<span class="mt-3 inline-block text-xs font-semibold text-ihsaanah-gold/70 group-hover:text-ihsaanah-gold transition-colors">
+							Read more →
+						</span>
+					</div>
+
+				</a>
+
+			</div>
+
+			<p class="mt-8 text-xs text-white/20 text-center italic" data-aos="fade-up">
+				More posts will appear here as Ihsaanah publishes. To add a new post, copy
+				<code class="text-white/30">blog-post-template.html</code>, fill in the content, and link it above.
+			</p>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 4 — STAY CONNECTED
+	     Simple dark CTA strip
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black border-t border-ihsaanah-gold/10 py-14">
+		<div class="mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
+			<span class="section-label block mb-3">Stay Connected</span>
+			<p class="font-display italic text-xl text-white mb-2">
+				Don't miss an update from Al-Ihsaanah
+			</p>
+			<p class="text-white/35 text-sm mb-7 max-w-xs mx-auto">
+				Follow us on Facebook for events, announcements, and community news.
+			</p>
+			<a href="contact.html"
+			   class="inline-block rounded-md border border-ihsaanah-gold/40 px-7 py-3 text-sm font-semibold text-ihsaanah-gold
+			          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
+				Contact Us
+			</a>
+		</div>
+	</section>
+
+</main>
+<div id="site-footer"></div>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

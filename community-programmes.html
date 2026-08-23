@@ -3,71 +3,272 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Kidpreneurs, Genius Anlad, Project Mihrab." />
-	<title>Community Programmes | Ihsaanah</title>
+	<meta name="description" content="Al-Ihsaanah community programmes — Kidpreneurs, Genius Awlad, Project Mihrab, and weekly seminars." />
+	<title>Community Programmes | Al-Ihsaanah</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'ihsaanah-gold': '#C9A030',
-              'ihsaanah-gold-light': '#f5ede0',
-              'ihsaanah-black': '#0D0D0D',
-              'ihsaanah-cream': '#faf7f2',
-            },
-            fontFamily: {
-              heading: ['Poppins', 'Segoe UI', 'sans-serif'],
-              body: ['Inter', 'Segoe UI', 'sans-serif'],
-            },
-          },
-        },
-      };
-    </script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+	  tailwind.config = {
+	    theme: {
+	      extend: {
+	        colors: {
+	          'ihsaanah-gold':       '#C9A030',
+	          'ihsaanah-gold-light': '#f5ede0',
+	          'ihsaanah-black':      '#0D0D0D',
+	          'ihsaanah-cream':      '#faf7f2',
+	        },
+	        fontFamily: {
+	          heading: ['Poppins', 'Segoe UI', 'sans-serif'],
+	          body:    ['Inter', 'Segoe UI', 'sans-serif'],
+	          display: ['DM Serif Display', 'Georgia', 'serif'],
+	        },
+	      },
+	    },
+	  };
+	</script>
 	<link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
 </head>
+<!-- These 3 programmes are combined on ONE page deliberately —
+     see CLAUDE.md "fallback priority" before splitting into separate pages. -->
 <body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="community-programmes.html">
-	<div id="site-header"></div>
-	<main class="flex-1">
-		<section class="relative overflow-hidden bg-ihsaanah-black py-20 text-white">
-			<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.12]"></div>
-			<div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
-			<div class="relative mx-auto max-w-4xl px-4 text-center">
-				<div class="mb-5 flex items-center justify-center gap-4">
-					<div class="h-px w-14 bg-gradient-to-r from-transparent to-ihsaanah-gold/60"></div>
-					<div class="h-2 w-2 rotate-45 bg-ihsaanah-gold opacity-80"></div>
-					<div class="h-px w-14 bg-gradient-to-l from-transparent to-ihsaanah-gold/60"></div>
+<div id="site-header"></div>
+<main class="flex-1">
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 1 — HERO
+	     Community-forward editorial tone
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="relative overflow-hidden bg-ihsaanah-black">
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.18]"></div>
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: radial-gradient(ellipse 60% 55% at 20% 60%, rgba(201,160,48,0.13) 0%, transparent 68%);"></div>
+
+		<div class="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
+			<div class="max-w-2xl">
+
+				<span class="section-label block mb-5 animate-fade-up">Community Programmes</span>
+
+				<h1 class="font-display italic text-4xl text-white leading-tight sm:text-6xl animate-fade-up"
+				    style="animation-delay:0.08s">
+					Beyond the<br>classroom.
+				</h1>
+
+				<p class="mt-6 text-base text-white/50 leading-relaxed max-w-md animate-fade-up"
+				   style="animation-delay:0.18s">
+					Ihsaanah's impact extends beyond courses — into events, initiatives,
+					and programmes that serve families and strengthen the wider Ummah.
+				</p>
+
+				<div class="mt-9 flex flex-wrap gap-5 animate-fade-up" style="animation-delay:0.28s">
+					<div>
+						<p class="font-display italic text-3xl text-ihsaanah-gold">3+</p>
+						<p class="text-xs tracking-widest uppercase text-white/35 mt-0.5">Active Programmes</p>
+					</div>
+					<div>
+						<p class="font-display italic text-3xl text-ihsaanah-gold">Weekly</p>
+						<p class="text-xs tracking-widest uppercase text-white/35 mt-0.5">Community Seminars</p>
+					</div>
 				</div>
-				<h1 class="font-heading text-3xl font-bold text-white sm:text-4xl animate-fade-up">Community Programmes</h1>
-				<p class="mt-3 text-white/70 animate-fade-up" style="animation-delay:0.15s">Kidpreneurs, Genius Anlad, and Project Mihrab.</p>
+
 			</div>
-		</section>
-		<!-- These 3 programmes are combined on ONE page deliberately -- see
-		     CLAUDE.md "fallback priority" before splitting into separate pages. -->
-		<section class="mx-auto max-w-3xl px-4 py-14">
-			<div class="ihsaanah-card flex flex-col overflow-hidden rounded-lg border border-ihsaanah-gold-light bg-white p-6 shadow-sm" data-aos="fade-up">
-				<h3 class="font-heading text-xl font-semibold text-ihsaanah-black">Kidpreneurs</h3>
-				<p class="mt-2 text-sm text-ihsaanah-black/70">Awaiting a description from Ihsaanah.</p>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 2 — KIDPRENEURS (full-bleed photo)
+	     Real event photo — our best visual asset here
+	     ═══════════════════════════════════════════════════════ -->
+	<div class="full-bleed-photo" data-aos="fade-up">
+		<img src="img/kidpreneur_content.jpeg"
+		     alt="Little Mumin KidPreneur market day event with children and balloon arch"
+		     class="w-full object-cover object-center"
+		     style="max-height: 580px;">
+		<div class="photo-overlay-bottom"></div>
+		<div class="photo-content">
+			<div class="max-w-3xl mx-auto w-full">
+				<span class="section-label block mb-3">Programme 01</span>
+				<h2 class="font-display italic text-3xl text-white leading-snug sm:text-5xl">
+					Little Mumin Kidpreneurs
+				</h2>
+				<div class="mt-4 flex flex-wrap gap-2">
+					<span class="trust-badge">Discover</span>
+					<span class="trust-badge">Create</span>
+					<span class="trust-badge">Serve</span>
+					<span class="trust-badge">Lead</span>
+				</div>
 			</div>
-			<div class="ornament-divider" data-aos="fade-up"><span></span></div>
-			<div class="ihsaanah-card flex flex-col overflow-hidden rounded-lg border border-ihsaanah-gold-light bg-white p-6 shadow-sm" data-aos="fade-up">
-				<h3 class="font-heading text-xl font-semibold text-ihsaanah-black">Genius Awlad</h3>
-				<p class="mt-2 text-sm text-ihsaanah-black/70">Awaiting a description from Ihsaanah.</p>
+		</div>
+	</div>
+
+	<!-- Kidpreneurs description — immediately below the photo -->
+	<section class="bg-ihsaanah-cream py-14">
+		<div class="mx-auto max-w-3xl px-6">
+			<div class="grid gap-10 sm:grid-cols-5 items-start" data-aos="fade-up">
+
+				<div class="sm:col-span-3">
+					<p class="text-ihsaanah-black/70 text-sm leading-relaxed">
+						An entrepreneurship and leadership programme for young Muslims — encouraging children
+						to discover their talents, create with purpose, serve their community, and grow into
+						confident leaders grounded in Islamic values.
+					</p>
+					<p class="mt-4 text-ihsaanah-black/70 text-sm leading-relaxed">
+						Events include market days where young participants set up stalls, sell their creations,
+						visit and encourage one another, and practise generosity and enterprise as acts of worship.
+					</p>
+				</div>
+
+				<div class="sm:col-span-2">
+					<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5">
+						<p class="text-xs font-semibold uppercase tracking-widest text-ihsaanah-gold mb-3">Programme Pillars</p>
+						<ol class="space-y-2">
+							<li class="flex items-center gap-3 text-sm text-ihsaanah-black/70">
+								<span class="font-display italic text-ihsaanah-gold/50 text-lg leading-none">01</span>
+								<span>Discover your gifts</span>
+							</li>
+							<li class="flex items-center gap-3 text-sm text-ihsaanah-black/70">
+								<span class="font-display italic text-ihsaanah-gold/50 text-lg leading-none">02</span>
+								<span>Create with purpose</span>
+							</li>
+							<li class="flex items-center gap-3 text-sm text-ihsaanah-black/70">
+								<span class="font-display italic text-ihsaanah-gold/50 text-lg leading-none">03</span>
+								<span>Serve the community</span>
+							</li>
+							<li class="flex items-center gap-3 text-sm text-ihsaanah-black/70">
+								<span class="font-display italic text-ihsaanah-gold/50 text-lg leading-none">04</span>
+								<span>Lead with integrity</span>
+							</li>
+						</ol>
+					</div>
+				</div>
+
 			</div>
-			<div class="ornament-divider" data-aos="fade-up"><span></span></div>
-			<div class="ihsaanah-card flex flex-col overflow-hidden rounded-lg border border-ihsaanah-gold-light bg-white p-6 shadow-sm" data-aos="fade-up">
-				<h3 class="font-heading text-xl font-semibold text-ihsaanah-black">Project Mihrab</h3>
-				<p class="mt-2 text-sm text-ihsaanah-black/70">Awaiting a description from Ihsaanah.</p>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 3 — GENIUS AWLAD + PROJECT MIHRAB
+	     Coming-soon panels — aspirational, not empty
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<span class="section-label block mb-3 text-center" data-aos="fade-up">More Programmes</span>
+			<h2 class="font-display italic text-3xl text-white text-center mb-10" data-aos="fade-up" data-aos-delay="40">
+				Watch this space
+			</h2>
+
+			<div class="grid gap-5 sm:grid-cols-2">
+
+				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="0">
+					<span class="panel-eyebrow">Programme 02</span>
+					<p class="panel-title">Genius Awlad</p>
+					<p class="panel-sub">Full programme details coming soon — stay connected for the announcement.</p>
+				</div>
+
+				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="100">
+					<span class="panel-eyebrow">Programme 03</span>
+					<p class="panel-title">Project Mihrab</p>
+					<p class="panel-sub">Full programme details coming soon — stay connected for the announcement.</p>
+				</div>
+
 			</div>
-		</section>
-	</main>
-	<div id="site-footer"></div>
-	<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-	<script src="js/main.js"></script>
+
+			<p class="mt-8 text-center text-xs text-white/25" data-aos="fade-up" data-aos-delay="160">
+				Follow Al-Ihsaanah on Facebook for updates on upcoming programmes.
+			</p>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 4 — WEEKLY SEMINARS
+	     Two-column: description + topic pills
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<div class="grid gap-10 sm:grid-cols-2 items-start">
+
+				<div data-aos="fade-up">
+					<span class="section-label block mb-3">Every Week</span>
+					<h2 class="font-display italic text-3xl text-ihsaanah-black leading-snug">
+						Weekly Community Seminars
+					</h2>
+					<p class="mt-5 text-sm text-ihsaanah-black/60 leading-relaxed">
+						Every week, Ihsaanah hosts community seminars on topics that matter to
+						Muslim families, parents, and individuals — rooted in Islamic guidance
+						and relevant to everyday life.
+					</p>
+					<a href="contact.html"
+					   class="mt-6 inline-block text-sm font-semibold text-ihsaanah-gold hover:underline">
+						Ask about upcoming seminar dates →
+					</a>
+				</div>
+
+				<div data-aos="fade-up" data-aos-delay="80">
+					<p class="text-xs font-semibold uppercase tracking-widest text-ihsaanah-black/35 mb-4">
+						Recent Topics
+					</p>
+					<div class="flex flex-wrap gap-2">
+						<span class="trust-badge">Islamic Parenting</span>
+						<span class="trust-badge">ADHD Awareness</span>
+						<span class="trust-badge">Mental Health</span>
+						<span class="trust-badge">Art &amp; Crafts for Juniors</span>
+					</div>
+					<p class="mt-4 text-xs text-ihsaanah-black/35 italic">
+						Topics vary each week — many more to come.
+					</p>
+
+					<!-- Decorative large quote on the side -->
+					<blockquote class="mt-8 border-l-2 border-ihsaanah-gold/30 pl-5">
+						<p class="font-display italic text-lg text-ihsaanah-black/50 leading-relaxed">
+							"Knowledge shared in community is knowledge that takes root."
+						</p>
+					</blockquote>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 5 — CTA STRIP
+	     Dark closing strip — contact + Facebook
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-16 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
+			<span class="section-label block mb-4">Get Involved</span>
+			<h2 class="font-display italic text-2xl text-white mb-3">
+				Be part of the community
+			</h2>
+			<p class="text-white/40 text-sm max-w-sm mx-auto mb-8">
+				Whether you want to enrol, volunteer, or simply stay informed — we'd love to hear from you.
+			</p>
+			<div class="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+				<a href="contact.html"
+				   class="rounded-md bg-ihsaanah-gold px-7 py-3 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+					Contact Us
+				</a>
+				<a href="donate.html"
+				   class="rounded-md border border-ihsaanah-gold/40 px-7 py-3 text-sm font-semibold text-ihsaanah-gold
+				          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
+					Support Our Work
+				</a>
+			</div>
+		</div>
+	</section>
+
+</main>
+<div id="site-footer"></div>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

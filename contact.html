@@ -3,70 +3,265 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Contact Ihsaanah." />
-	<title>Contact | Ihsaanah</title>
+	<meta name="description" content="Contact Al-Ihsaanah — get in touch for course enquiries, donations, or general questions." />
+	<title>Contact | Al-Ihsaanah</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'ihsaanah-gold': '#C9A030',
-              'ihsaanah-gold-light': '#f5ede0',
-              'ihsaanah-black': '#0D0D0D',
-              'ihsaanah-cream': '#faf7f2',
-            },
-            fontFamily: {
-              heading: ['Poppins', 'Segoe UI', 'sans-serif'],
-              body: ['Inter', 'Segoe UI', 'sans-serif'],
-            },
-          },
-        },
-      };
-    </script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+	  tailwind.config = {
+	    theme: {
+	      extend: {
+	        colors: {
+	          'ihsaanah-gold':       '#C9A030',
+	          'ihsaanah-gold-light': '#f5ede0',
+	          'ihsaanah-black':      '#0D0D0D',
+	          'ihsaanah-cream':      '#faf7f2',
+	        },
+	        fontFamily: {
+	          heading: ['Poppins', 'Segoe UI', 'sans-serif'],
+	          body:    ['Inter', 'Segoe UI', 'sans-serif'],
+	          display: ['DM Serif Display', 'Georgia', 'serif'],
+	        },
+	      },
+	    },
+	  };
+	</script>
 	<link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<style>
+	  /* Form input focus: gold ring */
+	  .contact-input:focus {
+	    outline: none;
+	    border-color: #C9A030;
+	    box-shadow: 0 0 0 3px rgba(201,160,48,0.12);
+	  }
+	</style>
 </head>
 <body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="contact.html">
-	<div id="site-header"></div>
-	<main class="flex-1">
-		<section class="relative overflow-hidden bg-ihsaanah-black py-20 text-white">
-			<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.12]"></div>
-			<div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
-			<div class="relative mx-auto max-w-4xl px-4 text-center">
-				<div class="mb-5 flex items-center justify-center gap-4">
-					<div class="h-px w-14 bg-gradient-to-r from-transparent to-ihsaanah-gold/60"></div>
-					<div class="h-2 w-2 rotate-45 bg-ihsaanah-gold opacity-80"></div>
-					<div class="h-px w-14 bg-gradient-to-l from-transparent to-ihsaanah-gold/60"></div>
-				</div>
-				<h1 class="font-heading text-3xl font-bold text-white sm:text-4xl animate-fade-up">Contact Us</h1>
+<div id="site-header"></div>
+<main class="flex-1">
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 1 — HERO
+	     Welcoming, not dramatic — this page is a conversation
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="relative overflow-hidden bg-ihsaanah-black">
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.16]"></div>
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: radial-gradient(ellipse 50% 55% at 85% 30%, rgba(201,160,48,0.10) 0%, transparent 65%);"></div>
+
+		<div class="relative mx-auto max-w-5xl px-6 py-20 sm:py-28">
+			<div class="max-w-xl">
+				<span class="section-label block mb-4 animate-fade-up">Get in Touch</span>
+				<h1 class="font-display italic text-white leading-tight animate-fade-up"
+				    style="font-size: clamp(2.4rem, 6vw, 4rem); animation-delay:0.08s">
+					We'd love to<br>hear from you.
+				</h1>
+				<p class="mt-5 text-white/50 text-base leading-relaxed max-w-sm animate-fade-up"
+				   style="animation-delay:0.18s">
+					Whether you have a question about a course, want to support our work,
+					or simply want to connect — reach out and we'll get back to you.
+				</p>
 			</div>
-		</section>
-		<section class="mx-auto max-w-xl px-4 py-14">
-			<form action="https://api.web3forms.com/submit" method="POST" class="space-y-4">
-				<input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_KEY" />
-				<div>
-					<label class="text-sm font-medium text-ihsaanah-black" for="name">Name</label>
-					<input id="name" name="name" required class="mt-1 w-full rounded-md border border-ihsaanah-gold-light px-3 py-2 text-sm" />
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 2 — CONTACT LAYOUT
+	     Two-column: info left, form right
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-20">
+		<div class="mx-auto max-w-5xl px-6">
+
+			<div class="grid gap-14 sm:grid-cols-5 items-start">
+
+				<!-- LEFT — Contact info -->
+				<div class="sm:col-span-2" data-aos="fade-up">
+
+					<span class="section-label block mb-6">Contact Details</span>
+
+					<!-- What to contact about -->
+					<div class="space-y-5 mb-10">
+
+						<div class="flex gap-4">
+							<div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full
+							            border border-ihsaanah-gold/30 bg-ihsaanah-gold/5">
+								<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+									<path d="M7 1.5a4 4 0 1 1 0 8 4 4 0 0 1 0-8ZM1.5 12.5c0-2 2.46-3.5 5.5-3.5s5.5 1.5 5.5 3.5"
+									      stroke="#C9A030" stroke-width="1.2" stroke-linecap="round"/>
+								</svg>
+							</div>
+							<div>
+								<p class="text-sm font-semibold text-ihsaanah-black">Course Enquiries</p>
+								<p class="text-xs text-ihsaanah-black/50 mt-0.5 leading-relaxed">
+									Ask about availability, fees, schedules, or enrolment for any course or programme.
+								</p>
+							</div>
+						</div>
+
+						<div class="flex gap-4">
+							<div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full
+							            border border-ihsaanah-gold/30 bg-ihsaanah-gold/5">
+								<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+									<path d="M7 2v5l3 2" stroke="#C9A030" stroke-width="1.2" stroke-linecap="round"/>
+									<circle cx="7" cy="7" r="5.5" stroke="#C9A030" stroke-width="1.2"/>
+								</svg>
+							</div>
+							<div>
+								<p class="text-sm font-semibold text-ihsaanah-black">Donation &amp; Support</p>
+								<p class="text-xs text-ihsaanah-black/50 mt-0.5 leading-relaxed">
+									To give to the Dream Mosque or Scholarship Fund — contact us for bank details.
+								</p>
+							</div>
+						</div>
+
+						<div class="flex gap-4">
+							<div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full
+							            border border-ihsaanah-gold/30 bg-ihsaanah-gold/5">
+								<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+									<path d="M2 4l5 4 5-4" stroke="#C9A030" stroke-width="1.2" stroke-linecap="round"/>
+									<rect x="1" y="2.5" width="12" height="9" rx="1.5" stroke="#C9A030" stroke-width="1.2"/>
+								</svg>
+							</div>
+							<div>
+								<p class="text-sm font-semibold text-ihsaanah-black">General Questions</p>
+								<p class="text-xs text-ihsaanah-black/50 mt-0.5 leading-relaxed">
+									Anything else — we're happy to help. Use the form or reach out on Facebook.
+								</p>
+							</div>
+						</div>
+
+					</div>
+
+					<!-- Divider -->
+					<div class="h-px bg-ihsaanah-gold/15 mb-8"></div>
+
+					<!-- Location -->
+					<div class="mb-6">
+						<p class="text-xs font-semibold uppercase tracking-widest text-ihsaanah-black/35 mb-2">
+							Location
+						</p>
+						<p class="text-sm text-ihsaanah-black/65 leading-relaxed">
+							274 Pashchim Monipur<br>
+							Bareka Mollar Mor<br>
+							(beside Yamaha Showroom)<br>
+							60 Ft Road, Mirpur-2, Dhaka
+						</p>
+					</div>
+
+					<!-- Facebook -->
+					<div>
+						<p class="text-xs font-semibold uppercase tracking-widest text-ihsaanah-black/35 mb-2">
+							Follow Us
+						</p>
+						<p class="text-sm text-ihsaanah-black/65">
+							Al-Ihsaanah on
+							<span class="font-semibold text-ihsaanah-gold">Facebook</span>
+							— for events, announcements, and updates.
+						</p>
+					</div>
+
 				</div>
-				<div>
-					<label class="text-sm font-medium text-ihsaanah-black" for="email">Email</label>
-					<input id="email" type="email" name="email" required class="mt-1 w-full rounded-md border border-ihsaanah-gold-light px-3 py-2 text-sm" />
+
+				<!-- RIGHT — Contact form -->
+				<div class="sm:col-span-3" data-aos="fade-up" data-aos-delay="80">
+
+					<div class="rounded-2xl border border-ihsaanah-gold/20 bg-white p-8 shadow-sm">
+
+						<h2 class="font-display italic text-2xl text-ihsaanah-black mb-6">
+							Send a message
+						</h2>
+
+						<!-- Web3Forms — replace key before going live -->
+						<form action="https://api.web3forms.com/submit" method="POST" class="space-y-5"
+						      id="contact-form">
+							<input type="hidden" name="access_key" value="REPLACE_WITH_WEB3FORMS_KEY" />
+							<input type="hidden" name="subject" value="New message from Al-Ihsaanah website" />
+
+							<div class="grid gap-5 sm:grid-cols-2">
+								<div>
+									<label class="block text-xs font-semibold uppercase tracking-widest text-ihsaanah-black/50 mb-1.5"
+									       for="name">Your Name</label>
+									<input id="name" name="name" type="text" required
+									       placeholder="Fatima Ahmed"
+									       class="contact-input w-full rounded-lg border border-ihsaanah-gold/20
+									              bg-ihsaanah-cream px-4 py-3 text-sm text-ihsaanah-black
+									              placeholder-ihsaanah-black/25 transition-all" />
+								</div>
+								<div>
+									<label class="block text-xs font-semibold uppercase tracking-widest text-ihsaanah-black/50 mb-1.5"
+									       for="email">Email Address</label>
+									<input id="email" name="email" type="email" required
+									       placeholder="you@example.com"
+									       class="contact-input w-full rounded-lg border border-ihsaanah-gold/20
+									              bg-ihsaanah-cream px-4 py-3 text-sm text-ihsaanah-black
+									              placeholder-ihsaanah-black/25 transition-all" />
+								</div>
+							</div>
+
+							<div>
+								<label class="block text-xs font-semibold uppercase tracking-widest text-ihsaanah-black/50 mb-1.5"
+								       for="subject-field">Subject</label>
+								<input id="subject-field" name="enquiry_subject" type="text"
+								       placeholder="e.g. Course enquiry, Donation, General question"
+								       class="contact-input w-full rounded-lg border border-ihsaanah-gold/20
+								              bg-ihsaanah-cream px-4 py-3 text-sm text-ihsaanah-black
+								              placeholder-ihsaanah-black/25 transition-all" />
+							</div>
+
+							<div>
+								<label class="block text-xs font-semibold uppercase tracking-widest text-ihsaanah-black/50 mb-1.5"
+								       for="message">Message</label>
+								<textarea id="message" name="message" rows="5" required
+								          placeholder="Write your message here…"
+								          class="contact-input w-full rounded-lg border border-ihsaanah-gold/20
+								                 bg-ihsaanah-cream px-4 py-3 text-sm text-ihsaanah-black
+								                 placeholder-ihsaanah-black/25 transition-all resize-none"></textarea>
+							</div>
+
+							<!-- Honeypot spam trap -->
+							<input type="checkbox" name="botcheck" class="hidden" style="display:none" tabindex="-1" autocomplete="off">
+
+							<button type="submit" id="submit-btn"
+							        class="w-full rounded-lg bg-ihsaanah-gold px-6 py-3.5 text-sm font-semibold
+							               text-white transition-opacity hover:opacity-90 disabled:opacity-60">
+								Send Message
+							</button>
+
+						</form>
+
+					</div>
+
 				</div>
-				<div>
-					<label class="text-sm font-medium text-ihsaanah-black" for="message">Message</label>
-					<textarea id="message" name="message" rows="5" required class="mt-1 w-full rounded-md border border-ihsaanah-gold-light px-3 py-2 text-sm"></textarea>
-				</div>
-				<button type="submit" class="rounded-md bg-ihsaanah-gold px-6 py-3 text-sm font-semibold text-white hover:opacity-90">Send Message</button>
-			</form>
-		</section>
-	</main>
-	<div id="site-footer"></div>
-	<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-	<script src="js/main.js"></script>
+
+			</div>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 3 — CLOSING QUOTE
+	     A warm note to close the page
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-16 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-3xl px-8 text-center" data-aos="fade-up">
+			<p class="font-display italic text-xl text-white/70 leading-relaxed">
+				"And cooperate in righteousness and piety."
+			</p>
+			<span class="mt-3 block text-xs tracking-widest uppercase text-ihsaanah-gold/50">
+				Al-Ma'idah 5:2
+			</span>
+		</div>
+	</section>
+
+</main>
+<div id="site-footer"></div>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

@@ -3,72 +3,307 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Little Mumin Islamic Preschool." />
-	<title>Preschool | Ihsaanah</title>
+	<meta name="description" content="Little Mumin Islamic Preschool — nurturing the youngest hearts through play-based Islamic learning at Al-Ihsaanah." />
+	<title>Little Mumin Preschool | Al-Ihsaanah</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'ihsaanah-gold': '#C9A030',
-              'ihsaanah-gold-light': '#f5ede0',
-              'ihsaanah-black': '#0D0D0D',
-              'ihsaanah-cream': '#faf7f2',
-            },
-            fontFamily: {
-              heading: ['Poppins', 'Segoe UI', 'sans-serif'],
-              body: ['Inter', 'Segoe UI', 'sans-serif'],
-            },
-          },
-        },
-      };
-    </script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+	  tailwind.config = {
+	    theme: {
+	      extend: {
+	        colors: {
+	          'ihsaanah-gold':       '#C9A030',
+	          'ihsaanah-gold-light': '#f5ede0',
+	          'ihsaanah-black':      '#0D0D0D',
+	          'ihsaanah-cream':      '#faf7f2',
+	        },
+	        fontFamily: {
+	          heading: ['Poppins', 'Segoe UI', 'sans-serif'],
+	          body:    ['Inter', 'Segoe UI', 'sans-serif'],
+	          display: ['DM Serif Display', 'Georgia', 'serif'],
+	        },
+	      },
+	    },
+	  };
+	</script>
 	<link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
 </head>
 <body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="preschool.html">
-	<div id="site-header"></div>
-	<main class="flex-1">
-		<section class="relative overflow-hidden bg-ihsaanah-black py-20 text-white">
-			<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.12]"></div>
-			<div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
-			<div class="relative mx-auto max-w-4xl px-4 text-center">
-				<div class="mb-5 flex items-center justify-center gap-4">
-					<div class="h-px w-14 bg-gradient-to-r from-transparent to-ihsaanah-gold/60"></div>
-					<div class="h-2 w-2 rotate-45 bg-ihsaanah-gold opacity-80"></div>
-					<div class="h-px w-14 bg-gradient-to-l from-transparent to-ihsaanah-gold/60"></div>
+<div id="site-header"></div>
+<main class="flex-1">
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 1 — HERO (cream, not dark)
+	     Warm, family-focused — a deliberate departure from the
+	     dark heroes on all other pages
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="relative overflow-hidden bg-ihsaanah-cream border-b border-ihsaanah-gold/15">
+
+		<!-- Subtle geometric pattern at very low opacity for texture -->
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.06]"></div>
+
+		<!-- Warm gold glow from top-right -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: radial-gradient(ellipse 55% 60% at 90% 10%, rgba(201,160,48,0.12) 0%, transparent 70%);"></div>
+
+		<div class="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
+			<div class="max-w-2xl">
+
+				<span class="section-label block mb-5 animate-fade-up">Early Childhood · Al-Ihsaanah</span>
+
+				<h1 class="animate-fade-up" style="animation-delay:0.08s">
+					<span class="block font-heading text-lg font-semibold text-ihsaanah-gold mb-2 tracking-wide">
+						Little Mumin Islamic Preschool
+					</span>
+					<span class="block font-display italic text-ihsaanah-black leading-tight"
+					      style="font-size: clamp(2.4rem, 6vw, 4.5rem);">
+						Nurturing little<br>hearts from the<br>very first step.
+					</span>
+				</h1>
+
+				<p class="mt-6 text-ihsaanah-black/55 text-base leading-relaxed max-w-md animate-fade-up"
+				   style="animation-delay:0.18s">
+					A warm, Islamic early-learning environment for children in the
+					play and pre-play stage — where faith, character, and curiosity
+					are grown together.
+				</p>
+
+				<div class="mt-8 flex flex-wrap gap-2 animate-fade-up" style="animation-delay:0.28s">
+					<span class="trust-badge" style="border-color: rgba(201,160,48,0.3); color: rgba(13,13,13,0.6); background: transparent;">
+						Play stage
+					</span>
+					<span class="trust-badge" style="border-color: rgba(201,160,48,0.3); color: rgba(13,13,13,0.6); background: transparent;">
+						Pre-play stage
+					</span>
+					<span class="trust-badge" style="border-color: rgba(201,160,48,0.3); color: rgba(13,13,13,0.6); background: transparent;">
+						In-person · Mirpur-2
+					</span>
 				</div>
-				<h1 class="font-heading text-3xl font-bold text-white sm:text-4xl animate-fade-up">Little Mumin Islamic Preschool</h1>
-				<p class="mt-3 text-white/70 animate-fade-up" style="animation-delay:0.15s">Part of the Ihsaanah community.</p>
-			</div>
-		</section>
-		<section class="mx-auto max-w-4xl px-4 py-14">
-			<p class="text-ihsaanah-black/70">Placeholder overview of the preschool programme. Replace with approved copy once supplied.</p>
-			<div class="mt-10">
-		<div class="grid gap-6 sm:grid-cols-3">
-			<div class="ihsaanah-card rounded-lg border border-ihsaanah-gold-light p-6" data-aos="fade-up" data-aos-delay="0">
-				<p class="font-heading text-sm font-bold uppercase tracking-wide text-ihsaanah-gold">Vision</p>
-				<p class="mt-2 text-sm text-ihsaanah-black/70">Placeholder vision statement for the preschool.</p>
-			</div>
-			<div class="ihsaanah-card rounded-lg border border-ihsaanah-gold-light p-6" data-aos="fade-up" data-aos-delay="100">
-				<p class="font-heading text-sm font-bold uppercase tracking-wide text-ihsaanah-gold">Mission</p>
-				<p class="mt-2 text-sm text-ihsaanah-black/70">Placeholder mission statement for the preschool.</p>
-			</div>
-			<div class="ihsaanah-card rounded-lg border border-ihsaanah-gold-light p-6" data-aos="fade-up" data-aos-delay="200">
-				<p class="font-heading text-sm font-bold uppercase tracking-wide text-ihsaanah-gold">Values</p>
-				<p class="mt-2 text-sm text-ihsaanah-black/70">Placeholder values statement for the preschool.</p>
+
 			</div>
 		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 2 — PHILOSOPHY PULL QUOTE
+	     The "why" of the preschool — warm editorial
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-3xl px-8" data-aos="fade-up">
+			<span class="section-label block mb-6">Our Philosophy</span>
+			<blockquote class="editorial-quote-light">
+				Every child carries a fitra — a pure, natural inclination towards
+				goodness and the Divine. Our role is simply to nurture what Allah ﷻ
+				has already placed within them.
+			</blockquote>
+			<p class="mt-8 text-white/45 text-sm leading-relaxed max-w-lg">
+				Little Mumin Islamic Preschool introduces children to faith, character,
+				and learning through age-appropriate activities in a loving and safe space.
+				We believe the earliest years are the most formative — and we take that
+				responsibility with care.
+			</p>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 3 — OFFLINE MAKTAB CURRICULUM
+	     4 subjects as numbered curriculum panels on cream
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<div class="mb-10" data-aos="fade-up">
+				<span class="section-label block mb-2">Kids Offline Maktab</span>
+				<h2 class="font-display italic text-3xl text-ihsaanah-black leading-snug">
+					What children learn
+				</h2>
+				<p class="mt-3 text-ihsaanah-black/55 text-sm max-w-md leading-relaxed">
+					Our in-person Maktab programme gives children a strong Islamic foundation
+					from a young age — in a structured, caring environment.
+				</p>
 			</div>
-		</section>
-	</main>
-	<div id="site-footer"></div>
-	<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-	<script src="js/main.js"></script>
+
+			<div class="grid gap-5 sm:grid-cols-2">
+
+				<!-- 1 — Kids Hifz -->
+				<div class="group rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm
+				            transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_6px_24px_rgba(201,160,48,0.10)]"
+				     data-aos="fade-up" data-aos-delay="0">
+					<div class="flex items-start gap-4">
+						<span class="font-display italic text-ihsaanah-gold/30 text-4xl leading-none shrink-0 select-none">01</span>
+						<div>
+							<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Kids Hifz</h3>
+							<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
+								Beginning Quran memorisation tailored for young learners — structured
+								progressively so children build confidence with each juz.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- 2 — Nazeera -->
+				<div class="group rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm
+				            transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_6px_24px_rgba(201,160,48,0.10)]"
+				     data-aos="fade-up" data-aos-delay="60">
+					<div class="flex items-start gap-4">
+						<span class="font-display italic text-ihsaanah-gold/30 text-4xl leading-none shrink-0 select-none">02</span>
+						<div>
+							<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Nazeera</h3>
+							<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
+								Correct Quran recitation with proper pronunciation — so children
+								learn to read beautifully and confidently from the very beginning.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- 3 — Tajweed -->
+				<div class="group rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm
+				            transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_6px_24px_rgba(201,160,48,0.10)]"
+				     data-aos="fade-up" data-aos-delay="120">
+					<div class="flex items-start gap-4">
+						<span class="font-display italic text-ihsaanah-gold/30 text-4xl leading-none shrink-0 select-none">03</span>
+						<div>
+							<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Basic to Advanced Tajweed</h3>
+							<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
+								Age-appropriate Tajweed rules introduced gently, helping children
+								read the Quran with care and beauty at every level.
+							</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- 4 — Basic Islam -->
+				<div class="group rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm
+				            transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_6px_24px_rgba(201,160,48,0.10)]"
+				     data-aos="fade-up" data-aos-delay="180">
+					<div class="flex items-start gap-4">
+						<span class="font-display italic text-ihsaanah-gold/30 text-4xl leading-none shrink-0 select-none">04</span>
+						<div>
+							<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Basic Islam Learning</h3>
+							<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
+								Foundational Islamic education — pillars of faith, everyday duas,
+								Islamic character, and the etiquettes of a Muslim life.
+							</p>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 4 — PREMISES SNAPSHOT
+	     A look at the learning space — service_content.jpeg
+	     ═══════════════════════════════════════════════════════ -->
+	<div class="full-bleed-photo" data-aos="fade-up">
+		<img src="img/service_content.jpeg"
+		     alt="Al-Ihsaanah classroom and children's play area — Mirpur-2, Dhaka"
+		     class="w-full object-cover"
+		     style="max-height: 460px; object-position: center;">
+		<div class="photo-overlay-bottom"></div>
+		<div class="photo-content">
+			<div class="max-w-4xl mx-auto w-full">
+				<span class="section-label block mb-2">Our Space</span>
+				<p class="font-display italic text-xl text-white leading-snug sm:text-2xl">
+					A classroom built for little ones — colourful, safe, and full of learning.
+				</p>
+				<p class="mt-2 text-xs text-white/50">
+					274 Pashchim Monipur, 60 Ft Road, Mirpur-2, Dhaka
+				</p>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 5 — VISION / MISSION / VALUES
+	     Graceful placeholders awaiting Ihsaanah's content
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<div class="text-center mb-10" data-aos="fade-up">
+				<span class="section-label block mb-3">Little Mumin Preschool</span>
+				<h2 class="font-display italic text-3xl text-white">
+					Vision, Mission &amp; Values
+				</h2>
+			</div>
+
+			<div class="grid gap-5 sm:grid-cols-3">
+
+				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="0">
+					<span class="panel-eyebrow">Vision</span>
+					<p class="panel-title" style="font-size:1.1rem;">Little Mumin Vision</p>
+					<p class="panel-sub">To be provided by Ihsaanah.</p>
+				</div>
+
+				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="80">
+					<span class="panel-eyebrow">Mission</span>
+					<p class="panel-title" style="font-size:1.1rem;">Little Mumin Mission</p>
+					<p class="panel-sub">To be provided by Ihsaanah.</p>
+				</div>
+
+				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="160">
+					<span class="panel-eyebrow">Values</span>
+					<p class="panel-title" style="font-size:1.1rem;">Little Mumin Values</p>
+					<p class="panel-sub">To be provided by Ihsaanah.</p>
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 6 — ENROL CTA
+	     Warm cream closing — speaking directly to parents
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/15">
+		<div class="mx-auto max-w-3xl px-6">
+
+			<div class="grid gap-10 sm:grid-cols-2 items-center" data-aos="fade-up">
+
+				<div>
+					<span class="section-label block mb-3">Enrol Your Child</span>
+					<h2 class="font-display italic text-3xl text-ihsaanah-black leading-snug">
+						Give your child the gift of a strong beginning.
+					</h2>
+					<p class="mt-4 text-sm text-ihsaanah-black/55 leading-relaxed">
+						Places are limited. Get in touch to find out about availability,
+						age requirements, and start dates.
+					</p>
+				</div>
+
+				<div class="flex flex-col gap-3">
+					<a href="contact.html"
+					   class="block text-center rounded-md bg-ihsaanah-gold px-7 py-3.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+						Enquire Now
+					</a>
+					<a href="about-ihsaanah.html"
+					   class="block text-center rounded-md border border-ihsaanah-gold/40 px-7 py-3.5 text-sm font-semibold text-ihsaanah-gold
+					          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
+						Learn About Ihsaanah
+					</a>
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+
+</main>
+<div id="site-footer"></div>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

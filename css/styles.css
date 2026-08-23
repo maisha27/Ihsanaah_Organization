@@ -1,31 +1,83 @@
 /* ============================================================
-   IHSAANAH — custom styles (used alongside Tailwind CDN utility
-   classes; only things Tailwind utilities can't express live here)
+   IHSAANAH — Design System v2
+   Sections:
+     1. CSS custom properties
+     2. Load & scroll animations (original + new)
+     3. Button styles
+     4. Nav & mobile menu
+     5. Card system (original ihsaanah-card + new variants)
+     6. Section utilities (headings, dividers, labels)
+     7. Impact strip & stat items
+     8. Course card v2
+     9. Process steps
+    10. Trust badge
+    11. Event card
+    12. Editorial quote
+    13. Feature card (homepage asymmetric grid)
+    14. Values row (homepage)
+    15. Full-bleed photo section
+    16. Coming-soon panel
+    17. Reading list (book club)
+    18. Logo glow
+    19. Islamic lattice pattern
+    20. Contact form focus
    ============================================================ */
 
+
+/* ── 1. CSS custom properties ─────────────────────────────── */
 :root {
-  --ihsaanah-gold: #C9A030;
+  --ihsaanah-gold:       #C9A030;
   --ihsaanah-gold-light: #f5ede0;
-  --ihsaanah-black: #0D0D0D;
-  --ihsaanah-cream: #faf7f2;
+  --ihsaanah-black:      #0D0D0D;
+  --ihsaanah-cream:      #faf7f2;
+  --gold-rgb:            201, 160, 48;
 }
 
-/* ── Load & scroll animations ─────────────────────────────── */
+
+/* ── 2. Load & scroll animations ──────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(22px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0);    }
 }
 
 @keyframes shimmer {
   from { transform: translateX(-150%) skewX(-20deg); }
-  to   { transform: translateX(250%) skewX(-20deg); }
+  to   { transform: translateX(250%)  skewX(-20deg); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+@keyframes clipReveal {
+  from { clip-path: inset(0 0 100% 0); opacity: 0; }
+  to   { clip-path: inset(0 0 0%   0); opacity: 1; }
+}
+
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0);    }
 }
 
 .animate-fade-up {
   animation: fadeUp 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* ── Primary CTA button shimmer ──────────────────────────── */
+.animate-scale-in {
+  animation: scaleIn 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-clip-reveal {
+  animation: clipReveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.animate-count-up {
+  animation: countUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+
+/* ── 3. Button styles ─────────────────────────────────────── */
 .btn-shimmer {
   position: relative;
   overflow: hidden;
@@ -37,8 +89,12 @@
   background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.22) 50%, transparent 60%);
   transform: translateX(-150%) skewX(-20deg);
 }
+@media (hover: hover) {
+  .btn-shimmer:hover::after { animation: shimmer 0.55s ease forwards; }
+}
 
-/* ── Mobile nav — slide-down animation ───────────────────── */
+
+/* ── 4. Nav & mobile menu ─────────────────────────────────── */
 #mobile-menu {
   display: flex;
   flex-direction: column;
@@ -46,7 +102,7 @@
   overflow: hidden;
   opacity: 0;
   transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.25s ease;
+              opacity    0.25s ease;
 }
 #mobile-menu.open {
   max-height: 500px;
@@ -56,7 +112,6 @@
   #mobile-menu { display: none !important; }
 }
 
-/* ── Hamburger icon — animates to X when menu is open ────── */
 .hamburger-icon {
   display: flex;
   flex-direction: column;
@@ -69,29 +124,18 @@
   background-color: var(--ihsaanah-gold);
   border-radius: 1px;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-              opacity 0.25s ease;
+              opacity   0.25s ease;
 }
 #menu-btn.open .line-1 { transform: translateY(7px) rotate(45deg); }
 #menu-btn.open .line-2 { opacity: 0; transform: scaleX(0); }
 #menu-btn.open .line-3 { transform: translateY(-7px) rotate(-45deg); }
 
-/* ── Desktop nav — underline slide ───────────────────────── */
-header nav a {
-  position: relative;
-}
-header nav a::after {
-  content: '';
-  position: absolute;
-  bottom: -3px;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background-color: var(--ihsaanah-gold);
-  border-radius: 1px;
-  transition: width 0.25s ease;
-}
+/* header link underline now handled by .header-link::after in section 21 */
 
-/* ── Card hover lift + gold top accent ────────────────────── */
+
+/* ── 5. Card system ───────────────────────────────────────── */
+
+/* Original ihsaanah-card — kept for pages not yet redesigned */
 .ihsaanah-card {
   position: relative;
   overflow: hidden;
@@ -106,21 +150,19 @@ header nav a::after {
   opacity: 0.45;
   transition: opacity 0.28s ease;
 }
-
-/* ── Touch device guard — hover effects only where hover is real ── */
-/* Prevents sticky hover states on iOS/Android after tap            */
 @media (hover: hover) {
-  header nav a:hover::after { width: 100%; }
   .ihsaanah-card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 14px 36px rgba(201, 160, 48, 0.14);
+    box-shadow: 0 14px 36px rgba(var(--gold-rgb), 0.14);
     border-color: var(--ihsaanah-gold);
   }
   .ihsaanah-card:hover::before { opacity: 1; }
-  .btn-shimmer:hover::after { animation: shimmer 0.55s ease forwards; }
 }
 
-/* ── Section heading ornamental underline ─────────────────── */
+
+/* ── 6. Section utilities ─────────────────────────────────── */
+
+/* Section heading with ornamental underline */
 .section-heading::after {
   content: '';
   display: block;
@@ -131,7 +173,7 @@ header nav a::after {
   border-radius: 2px;
 }
 
-/* ── Ornamental content divider (lines + diamond) ─────────── */
+/* Ornamental content divider (lines + diamond) */
 .ornament-divider {
   display: flex;
   align-items: center;
@@ -154,17 +196,600 @@ header nav a::after {
   opacity: 0.5;
 }
 
-/* ── Contact form — focus glow ───────────────────────────── */
-input, textarea {
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-input:focus, textarea:focus {
-  outline: none;
-  border-color: var(--ihsaanah-gold) !important;
-  box-shadow: 0 0 0 3px rgba(201, 160, 48, 0.15) !important;
+/* Section label — Yaqeen-style small-caps category label */
+.section-label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ihsaanah-gold);
 }
 
-/* ── Islamic lattice pattern ──────────────────────────────── */
+/* Gold gradient text (for display headings) */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #e8c040 0%, var(--ihsaanah-gold) 50%, #a07820 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+
+/* ── 7. Impact strip & stat items ─────────────────────────── */
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0 1.5rem;
+}
+
+.stat-item-number {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(2.25rem, 5vw, 3.75rem);
+  color: var(--ihsaanah-gold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.stat-item-label {
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+}
+
+.stat-divider {
+  width: 1px;
+  min-height: 3rem;
+  background: rgba(var(--gold-rgb), 0.2);
+  align-self: center;
+  flex-shrink: 0;
+}
+
+
+/* ── 8. Course card v2 ────────────────────────────────────── */
+.course-card-v2 {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.75rem;
+  border: 1px solid var(--ihsaanah-gold-light);
+  background: white;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+}
+
+.course-card-v2 .card-category-band {
+  height: 5px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--ihsaanah-gold) 0%, rgba(var(--gold-rgb), 0.35) 100%);
+  flex-shrink: 0;
+}
+
+.course-card-v2 .card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.course-card-v2 .card-category-label {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ihsaanah-gold);
+  margin-bottom: 0.35rem;
+}
+
+.course-card-v2 .card-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--ihsaanah-black);
+  line-height: 1.3;
+}
+
+.course-card-v2 .card-duration {
+  display: inline-block;
+  margin-top: 0.6rem;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  background: var(--ihsaanah-gold-light);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(13, 13, 13, 0.65);
+  width: fit-content;
+}
+
+.course-card-v2 .card-schedule {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.45rem;
+  margin-top: 0.75rem;
+  font-size: 0.78rem;
+  color: rgba(13, 13, 13, 0.6);
+  line-height: 1.5;
+}
+
+.course-card-v2 .card-schedule-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+  opacity: 0.45;
+}
+
+.course-card-v2 .card-fee-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.875rem;
+  margin-top: 1rem;
+  border-top: 1px solid var(--ihsaanah-gold-light);
+}
+
+.course-card-v2 .card-fee-col {}
+
+.course-card-v2 .card-fee-label {
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(13, 13, 13, 0.38);
+  display: block;
+  margin-bottom: 0.15rem;
+}
+
+.course-card-v2 .card-fee-value {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--ihsaanah-black);
+}
+
+.course-card-v2 .card-link {
+  display: inline-block;
+  margin-top: 0.875rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ihsaanah-gold);
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+.course-card-v2 .card-link:hover { opacity: 0.75; text-decoration: underline; }
+
+@media (hover: hover) {
+  .course-card-v2:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 32px rgba(var(--gold-rgb), 0.14);
+    border-color: var(--ihsaanah-gold);
+  }
+}
+
+
+/* ── 9. Process steps ─────────────────────────────────────── */
+.process-steps {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+}
+
+.process-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0 0.75rem;
+  position: relative;
+}
+
+/* connecting line between steps */
+.process-step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 1.25rem;
+  left: calc(50% + 1.4rem);
+  right: calc(-50% + 1.4rem);
+  height: 1px;
+  background: linear-gradient(90deg, rgba(var(--gold-rgb), 0.45), rgba(var(--gold-rgb), 0.1));
+}
+
+.process-step-number {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--ihsaanah-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  color: var(--ihsaanah-gold);
+  background: transparent;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.process-step-title {
+  margin-top: 0.875rem;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: var(--ihsaanah-black);
+}
+
+.process-step-desc {
+  margin-top: 0.3rem;
+  font-size: 0.75rem;
+  color: rgba(13, 13, 13, 0.5);
+  line-height: 1.55;
+}
+
+/* Dark variant — steps on dark background */
+.process-steps.dark .process-step-title { color: white; }
+.process-steps.dark .process-step-desc  { color: rgba(255,255,255,0.45); }
+
+
+/* ── 10. Trust badge ──────────────────────────────────────── */
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid rgba(var(--gold-rgb), 0.3);
+  background: rgba(var(--gold-rgb), 0.06);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ihsaanah-gold);
+  white-space: nowrap;
+}
+
+.trust-badge::before {
+  content: '✓';
+  font-size: 0.68rem;
+  font-weight: 900;
+}
+
+
+/* ── 11. Event card ───────────────────────────────────────── */
+.event-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: white;
+  border: 1px solid var(--ihsaanah-gold-light);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.event-date-box {
+  flex-shrink: 0;
+  width: 3.5rem;
+  border: 1px solid rgba(var(--gold-rgb), 0.4);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  text-align: center;
+}
+
+.event-date-box-day {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 1.75rem;
+  line-height: 1;
+  color: var(--ihsaanah-gold);
+  padding: 0.4rem 0.25rem 0.2rem;
+  display: block;
+}
+
+.event-date-box-month {
+  display: block;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--ihsaanah-gold);
+  color: white;
+  padding: 0.25rem 0.25rem;
+}
+
+@media (hover: hover) {
+  .event-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(var(--gold-rgb), 0.12);
+  }
+}
+
+
+/* ── 12. Editorial quote ──────────────────────────────────── */
+.editorial-quote {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  line-height: 1.55;
+  color: var(--ihsaanah-black);
+  padding-left: 1.75rem;
+  border-left: 3px solid var(--ihsaanah-gold);
+}
+
+.editorial-quote-light {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-style: italic;
+  font-size: clamp(1.35rem, 2.5vw, 1.85rem);
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.88);
+  padding-left: 1.75rem;
+  border-left: 3px solid var(--ihsaanah-gold);
+}
+
+.editorial-attribution {
+  display: block;
+  margin-top: 1rem;
+  font-family: 'Inter', sans-serif;
+  font-style: normal;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ihsaanah-gold);
+}
+
+
+/* ── 13. Feature card (homepage asymmetric grid) ──────────── */
+.feature-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: white;
+  border: 1px solid var(--ihsaanah-gold-light);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ihsaanah-gold) 0%, rgba(var(--gold-rgb), 0.2) 100%);
+  opacity: 0.55;
+  transition: opacity 0.3s ease;
+}
+
+/* Large background numeral — purely decorative */
+.feature-card .card-bg-numeral {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: 6rem;
+  line-height: 1;
+  color: var(--ihsaanah-gold);
+  opacity: 0.06;
+  position: absolute;
+  bottom: -0.75rem;
+  right: 0.75rem;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 0.3s ease;
+}
+
+@media (hover: hover) {
+  .feature-card:hover {
+    transform: translateY(-7px);
+    box-shadow: 0 18px 44px rgba(var(--gold-rgb), 0.13);
+    border-color: var(--ihsaanah-gold);
+  }
+  .feature-card:hover::before      { opacity: 1; }
+  .feature-card:hover .card-bg-numeral { opacity: 0.1; }
+}
+
+
+/* ── 14. Values row (homepage) ────────────────────────────── */
+.values-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.15rem 1.5rem;
+}
+
+.values-row-item {
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-size: clamp(1.5rem, 3.5vw, 2.5rem);
+  color: white;
+  opacity: 0.8;
+  letter-spacing: -0.01em;
+  transition: opacity 0.2s ease;
+  cursor: default;
+}
+.values-row-item:hover { opacity: 1; }
+
+.values-row-sep {
+  font-size: 1rem;
+  color: var(--ihsaanah-gold);
+  opacity: 0.4;
+  align-self: center;
+}
+
+
+/* ── 15. Full-bleed photo section ─────────────────────────── */
+.full-bleed-photo {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.full-bleed-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-overlay-left {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right,
+    rgba(13,13,13,0.88) 0%,
+    rgba(13,13,13,0.55) 55%,
+    rgba(13,13,13,0.15) 100%);
+}
+
+.photo-overlay-bottom {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top,
+    rgba(13,13,13,0.85) 0%,
+    rgba(13,13,13,0.3)  50%,
+    transparent         100%);
+}
+
+.photo-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem;
+}
+
+.photo-content-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 3rem 2rem;
+}
+
+
+/* ── 16. Coming-soon panel ────────────────────────────────── */
+.coming-soon-panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(var(--gold-rgb), 0.22);
+  border-radius: 0.75rem;
+  background: var(--ihsaanah-black);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.coming-soon-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('../img/islamic_pattern1.png');
+  background-repeat: repeat;
+  background-size: 100px 100px;
+  filter: invert(1);
+  mix-blend-mode: screen;
+  opacity: 0.04;
+  pointer-events: none;
+}
+
+.coming-soon-panel .panel-eyebrow {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(var(--gold-rgb), 0.55);
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+.coming-soon-panel .panel-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: white;
+}
+
+.coming-soon-panel .panel-sub {
+  margin-top: 0.6rem;
+  font-family: 'DM Serif Display', Georgia, serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+
+/* ── 17. Reading list (book club) ─────────────────────────── */
+.reading-list-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--ihsaanah-gold-light);
+}
+
+.reading-list-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.reading-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.reading-status-dot.completed { background-color: #16a34a; }
+.reading-status-dot.ongoing   { background-color: var(--ihsaanah-gold); }
+.reading-status-dot.upcoming  { background-color: rgba(13,13,13,0.18); }
+
+.reading-list-title {
+  flex: 1;
+  font-size: 0.875rem;
+  color: var(--ihsaanah-black);
+  line-height: 1.4;
+}
+
+.reading-list-author {
+  font-size: 0.75rem;
+  color: rgba(13,13,13,0.45);
+  white-space: nowrap;
+}
+
+.reading-status-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.reading-status-label.completed {
+  background: rgba(22,163,74,0.1);
+  color: #16a34a;
+}
+.reading-status-label.ongoing {
+  background: rgba(var(--gold-rgb), 0.12);
+  color: var(--ihsaanah-gold);
+}
+.reading-status-label.upcoming {
+  background: rgba(13,13,13,0.06);
+  color: rgba(13,13,13,0.4);
+}
+
+
+/* ── 18. Logo glow (homepage hero) ───────────────────────── */
+.logo-glow {
+  filter: drop-shadow(0 0 48px rgba(var(--gold-rgb), 0.4))
+          drop-shadow(0 0 12px rgba(var(--gold-rgb), 0.2));
+}
+
+
+/* ── 19. Islamic lattice pattern ──────────────────────────── */
 /* multiply makes white areas transparent — dark lines over cream bg */
 .ihsaanah-pattern {
   background-image: url('../img/islamic_pattern1.png');
@@ -180,4 +805,185 @@ input:focus, textarea:focus {
   background-size: 100px 100px;
   filter: invert(1);
   mix-blend-mode: screen;
+}
+
+
+/* ── 20. Contact form focus ───────────────────────────────── */
+input, textarea {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+input:focus, textarea:focus {
+  outline: none;
+  border-color: var(--ihsaanah-gold) !important;
+  box-shadow: 0 0 0 3px rgba(var(--gold-rgb), 0.15) !important;
+}
+
+
+/* ── 21. Fixed transparent / scrolled header ──────────────── */
+#site-header-bar {
+  transition: background 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease;
+}
+
+/* Solid white state (non-home pages and home after scroll) */
+#site-header-bar.header-solid {
+  background: white;
+  border-bottom: 1px solid var(--ihsaanah-gold-light);
+  box-shadow: 0 1px 24px rgba(0, 0, 0, 0.07);
+}
+#site-header-bar.header-solid .header-link  { color: var(--ihsaanah-black); }
+#site-header-bar.header-solid .header-link:hover { color: var(--ihsaanah-gold); }
+#site-header-bar.header-solid .header-link.nav-active { color: var(--ihsaanah-gold); }
+#site-header-bar.header-solid #mobile-menu  { background: white; border-top: 1px solid var(--ihsaanah-gold-light); }
+#site-header-bar.header-solid .mobile-link  { color: var(--ihsaanah-black); }
+#site-header-bar.header-solid .mobile-link:hover { color: var(--ihsaanah-gold); }
+#site-header-bar.header-solid .mobile-link.nav-active { color: var(--ihsaanah-gold); }
+#site-header-bar.header-solid .hamburger-icon .line { background-color: var(--ihsaanah-black); }
+
+/* Transparent state (homepage, scrolled to top) */
+#site-header-bar.header-transparent {
+  background: transparent;
+  border-bottom: 1px solid rgba(201, 160, 48, 0.15);
+}
+#site-header-bar.header-transparent .header-link  { color: rgba(255, 255, 255, 0.82); }
+#site-header-bar.header-transparent .header-link:hover { color: var(--ihsaanah-gold); }
+#site-header-bar.header-transparent .header-link.nav-active { color: var(--ihsaanah-gold); }
+#site-header-bar.header-transparent #mobile-menu  { background: rgba(13, 13, 13, 0.96); border-top: 1px solid rgba(201, 160, 48, 0.18); }
+#site-header-bar.header-transparent .mobile-link  { color: rgba(255, 255, 255, 0.78); }
+#site-header-bar.header-transparent .mobile-link:hover { color: var(--ihsaanah-gold); }
+#site-header-bar.header-transparent .mobile-link.nav-active { color: var(--ihsaanah-gold); }
+#site-header-bar.header-transparent .hamburger-icon .line { background-color: white; }
+
+/* Nav link underline (works in both states) */
+#site-header-bar .header-link {
+  position: relative;
+}
+#site-header-bar .header-link::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background-color: var(--ihsaanah-gold);
+  border-radius: 1px;
+  transition: width 0.25s ease;
+}
+@media (hover: hover) {
+  #site-header-bar .header-link:hover::after { width: 100%; }
+}
+
+/* Pre-hide hero elements so GSAP animates them in without flash */
+#hero-bismillah, #hero-title, #hero-tagline, #hero-body, #hero-ctas {
+  opacity: 0;
+}
+
+
+/* ── 22. Mosque parallax numbers strip ────────────────────── */
+.mosque-parallax {
+  background-image: url('https://images.pexels.com/photos/27397439/pexels-photo-27397439.jpeg?auto=compress&cs=tinysrgb&w=1920');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+/* iOS Safari doesn't support background-attachment:fixed — fall back to scroll */
+@supports (-webkit-touch-callout: none) {
+  .mosque-parallax { background-attachment: scroll; }
+}
+
+
+/* ── 23. Explore cards — image-fill + hover reveal ─────────── */
+.explore-card {
+  position: relative;
+  overflow: hidden;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  border: 1px solid var(--ihsaanah-gold-light);
+  /* No border-radius — sharp editorial corners */
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.explore-card-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Always-visible category label at bottom of image */
+.explore-card-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 2.5rem 1.5rem 1rem;
+  background: linear-gradient(to top, rgba(13, 13, 13, 0.75) 0%, transparent 100%);
+  font-size: 0.63rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ihsaanah-gold);
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+/* Text reveal panel — slides up from bottom on hover */
+.explore-card-reveal {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: white;
+  transform: translateY(100%);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 2rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  z-index: 2;
+}
+
+@media (hover: hover) {
+  .explore-card:hover { border-color: var(--ihsaanah-gold); }
+  .explore-card:hover .explore-card-img { transform: scale(1.06); }
+  .explore-card:hover .explore-card-reveal { transform: translateY(0); }
+  .explore-card:hover .explore-card-label { opacity: 0; }
+}
+
+/* Touch: show a peek of the label, tap navigates (no hover) */
+@media (hover: none) {
+  .explore-card-reveal { transform: translateY(100%); }
+}
+
+
+/* ── 24. Mission section image collage ────────────────────── */
+.mission-img-cluster {
+  position: relative;
+}
+
+.mission-img-left,
+.mission-img-center,
+.mission-img-right {
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.mission-img-left img,
+.mission-img-center img,
+.mission-img-right img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.mission-img-left:hover img,
+.mission-img-center:hover img,
+.mission-img-right:hover img {
+  transform: scale(1.04);
 }

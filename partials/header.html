@@ -1,32 +1,61 @@
-<header class="border-b border-ihsaanah-gold-light bg-white">
-	<div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4">
-		<a href="index.html" class="flex-shrink-0">
-			<img src="img/Ihsaana%20logo.jpeg" alt="Al-Ihsaanah" class="h-12 w-auto rounded-xl">
-		</a>
-		<nav class="hidden gap-6 lg:flex">
-			<a href="index.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Home</a>
-			<a href="about-ihsaanah.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">About Ihsaanah</a>
-			<a href="community-programmes.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Programmes</a>
-			<a href="products.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Products</a>
-			<a href="book-club.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Book Club</a>
-			<a href="blog.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Blog & Events</a>
-			<a href="preschool.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Preschool</a>
-			<a href="donate.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Donate</a>
-			<a href="contact.html" class="text-sm font-medium text-ihsaanah-black hover:text-ihsaanah-gold transition-colors">Contact</a>
+<header id="site-header-bar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
+
+	<!-- ── Desktop: 3-column grid — left nav · logo · right nav ── -->
+	<div class="hidden lg:grid items-center mx-auto px-6 py-2"
+	     style="grid-template-columns: 1fr auto 1fr; max-width: 1440px;">
+
+		<!-- Left 4 links -->
+		<nav class="flex items-center gap-7 justify-start">
+			<a href="index.html"                class="header-link text-sm font-medium transition-colors">Home</a>
+			<a href="about-ihsaanah.html"       class="header-link text-sm font-medium transition-colors">About</a>
+			<a href="community-programmes.html" class="header-link text-sm font-medium transition-colors">Programs</a>
+			<a href="products.html"             class="header-link text-sm font-medium transition-colors">Products</a>
 		</nav>
-		<button id="menu-btn" class="flex h-11 w-11 items-center justify-center lg:hidden" aria-label="Toggle navigation">
-			<span class="hamburger-icon"><span class="line line-1"></span><span class="line line-2"></span><span class="line line-3"></span></span>
+
+		<!-- Centered circular logo -->
+		<a href="index.html" class="flex items-center justify-center py-1">
+			<img src="img/Ihsaana%20logo.jpeg" alt="Al-Ihsaanah"
+			     class="h-[68px] w-[68px] rounded-full object-cover transition-transform duration-300 hover:scale-105"
+			     style="box-shadow: 0 0 0 2px rgba(201,160,48,0.45), 0 0 22px rgba(201,160,48,0.2);">
+		</a>
+
+		<!-- Right 5 links -->
+		<nav class="flex items-center gap-7 justify-end">
+			<a href="book-club.html" class="header-link text-sm font-medium transition-colors">Book Club</a>
+			<a href="blog.html"      class="header-link text-sm font-medium transition-colors">Blog &amp; Events</a>
+			<a href="preschool.html" class="header-link text-sm font-medium transition-colors">Preschool</a>
+			<a href="donate.html"    class="header-link text-sm font-medium transition-colors">Donate</a>
+			<a href="contact.html"   class="header-link text-sm font-medium transition-colors">Contact</a>
+		</nav>
+	</div>
+
+	<!-- ── Mobile: logo left, hamburger right ── -->
+	<div class="flex items-center justify-between px-4 py-2.5 lg:hidden">
+		<a href="index.html">
+			<img src="img/Ihsaana%20logo.jpeg" alt="Al-Ihsaanah"
+			     class="h-12 w-12 rounded-full object-cover"
+			     style="box-shadow: 0 0 0 2px rgba(201,160,48,0.45);">
+		</a>
+		<button id="menu-btn" class="flex h-11 w-11 items-center justify-center" aria-label="Toggle navigation">
+			<span class="hamburger-icon">
+				<span class="line line-1"></span>
+				<span class="line line-2"></span>
+				<span class="line line-3"></span>
+			</span>
 		</button>
 	</div>
-	<div id="mobile-menu" class="border-t border-ihsaanah-gold-light bg-white px-4 py-3">
-		<a href="index.html" class="py-3 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Home</a>
-		<a href="about-ihsaanah.html" class="py-3 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">About Ihsaanah</a>
-		<a href="community-programmes.html" class="py-3 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Programmes</a>
-		<a href="products.html" class="py-3 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Products</a>
-		<a href="book-club.html" class="py-3 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Book Club</a>
-		<a href="blog.html" class="py-3 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Blog & Events</a>
-		<a href="preschool.html" class="py-3 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Preschool</a>
-		<a href="donate.html" class="py-3 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Donate</a>
-		<a href="contact.html" class="py-3 text-sm text-ihsaanah-black hover:text-ihsaanah-gold">Contact</a>
+
+	<!-- ── Mobile dropdown menu ── -->
+	<div id="mobile-menu" class="px-4 py-2 lg:hidden">
+		<a href="index.html"                class="mobile-link block py-2.5 text-sm transition-colors">Home</a>
+		<a href="about-ihsaanah.html"       class="mobile-link block py-2.5 text-sm transition-colors">About Ihsaanah</a>
+		<a href="community-programmes.html" class="mobile-link block py-2.5 text-sm transition-colors">Programs</a>
+		<a href="products.html"             class="mobile-link block py-2.5 text-sm transition-colors">Products</a>
+		<a href="book-club.html"            class="mobile-link block py-2.5 text-sm transition-colors">Book Club</a>
+		<a href="blog.html"                 class="mobile-link block py-2.5 text-sm transition-colors">Blog &amp; Events</a>
+		<a href="preschool.html"            class="mobile-link block py-2.5 text-sm transition-colors">Preschool</a>
+		<a href="donate.html"               class="mobile-link block py-2.5 text-sm transition-colors">Donate</a>
+		<a href="contact.html"              class="mobile-link block py-2.5 text-sm transition-colors">Contact</a>
 	</div>
+
 </header>

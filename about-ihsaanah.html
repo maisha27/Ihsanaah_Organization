@@ -3,72 +3,304 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="About Ihsaanah at the organisation level." />
-	<title>About Ihsaanah | Ihsaanah</title>
+	<meta name="description" content="About Al-Ihsaanah — Islamic education and empowerment initiative nurturing Goodness for the Ummah." />
+	<title>Our Story | Al-Ihsaanah</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'ihsaanah-gold': '#C9A030',
-              'ihsaanah-gold-light': '#f5ede0',
-              'ihsaanah-black': '#0D0D0D',
-              'ihsaanah-cream': '#faf7f2',
-            },
-            fontFamily: {
-              heading: ['Poppins', 'Segoe UI', 'sans-serif'],
-              body: ['Inter', 'Segoe UI', 'sans-serif'],
-            },
-          },
-        },
-      };
-    </script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+	  tailwind.config = {
+	    theme: {
+	      extend: {
+	        colors: {
+	          'ihsaanah-gold':       '#C9A030',
+	          'ihsaanah-gold-light': '#f5ede0',
+	          'ihsaanah-black':      '#0D0D0D',
+	          'ihsaanah-cream':      '#faf7f2',
+	        },
+	        fontFamily: {
+	          heading: ['Poppins', 'Segoe UI', 'sans-serif'],
+	          body:    ['Inter', 'Segoe UI', 'sans-serif'],
+	          display: ['DM Serif Display', 'Georgia', 'serif'],
+	        },
+	      },
+	    },
+	  };
+	</script>
 	<link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
 </head>
 <body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="about-ihsaanah.html">
-	<div id="site-header"></div>
-	<main class="flex-1">
-		<section class="relative overflow-hidden bg-ihsaanah-black py-20 text-white">
-			<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.12]"></div>
-			<div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
-			<div class="relative mx-auto max-w-4xl px-4 text-center">
-				<div class="mb-5 flex items-center justify-center gap-4">
-					<div class="h-px w-14 bg-gradient-to-r from-transparent to-ihsaanah-gold/60"></div>
-					<div class="h-2 w-2 rotate-45 bg-ihsaanah-gold opacity-80"></div>
-					<div class="h-px w-14 bg-gradient-to-l from-transparent to-ihsaanah-gold/60"></div>
+<div id="site-header"></div>
+<main class="flex-1">
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 1 — VIDEO BACKGROUND HERO
+	     introduction.mp4 plays silently as background.
+	     Content sits over a dark + pattern overlay — AlMaghrib style.
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="relative flex min-h-screen items-end overflow-hidden bg-ihsaanah-black">
+
+		<!-- Background video — autoplay, muted, looping -->
+		<video autoplay muted loop playsinline
+		       class="absolute inset-0 h-full w-full object-cover"
+		       style="opacity: 0.55;">
+			<source src="img/introduction.mp4" type="video/mp4">
+		</video>
+
+		<!-- Layer 1a: Dark gradient — heavy at bottom where text lives, fades up -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: linear-gradient(to top,
+		       rgba(13,13,13,0.95) 0%,
+		       rgba(13,13,13,0.65) 35%,
+		       rgba(13,13,13,0.25) 65%,
+		       rgba(13,13,13,0.10) 100%);"></div>
+
+		<!-- Layer 1b: Left-side gradient — ensures text column is always readable -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: linear-gradient(to right,
+		       rgba(13,13,13,0.82) 0%,
+		       rgba(13,13,13,0.55) 30%,
+		       rgba(13,13,13,0.15) 58%,
+		       transparent 80%);"></div>
+
+		<!-- Layer 2: Islamic geometric pattern overlay at ~50% on the lower half -->
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0"
+		     style="opacity: 0.12;
+		            -webkit-mask-image: linear-gradient(to top, black 0%, black 40%, transparent 75%);
+		            mask-image: linear-gradient(to top, black 0%, black 40%, transparent 75%);"></div>
+
+		<!-- Layer 3: Warm gold glow from bottom-left -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: radial-gradient(ellipse 60% 40% at 20% 100%, rgba(201,160,48,0.18) 0%, transparent 65%);"></div>
+
+		<!-- Content — sits at the bottom over the gradient -->
+		<div class="relative mx-auto w-full max-w-5xl px-6 pb-20 pt-40">
+
+			<div class="max-w-2xl border-l-2 border-ihsaanah-gold/50 pl-8">
+
+				<span class="section-label block mb-4 animate-fade-up">Our Story</span>
+
+				<h1 class="font-display italic text-white leading-tight animate-fade-up"
+				    style="font-size: clamp(2.8rem, 6vw, 4.8rem); animation-delay:0.1s">
+					Nurturing<br>Goodness<br>for the Ummah
+				</h1>
+
+				<p class="mt-5 text-base text-white/55 leading-relaxed max-w-md animate-fade-up"
+				   style="animation-delay:0.2s">
+					An Islamic education and empowerment initiative rooted in faith,
+					excellence, and a lifelong commitment to serving Allah ﷻ and the community.
+				</p>
+
+				<div class="mt-9 flex flex-wrap gap-8 animate-fade-up" style="animation-delay:0.3s">
+					<div>
+						<p class="font-display italic text-3xl text-ihsaanah-gold">8</p>
+						<p class="text-xs tracking-widest uppercase text-white/40 mt-0.5">Courses</p>
+					</div>
+					<div>
+						<p class="font-display italic text-3xl text-ihsaanah-gold">3+</p>
+						<p class="text-xs tracking-widest uppercase text-white/40 mt-0.5">Programmes</p>
+					</div>
+					<div>
+						<p class="font-display italic text-3xl text-ihsaanah-gold">100+</p>
+						<p class="text-xs tracking-widest uppercase text-white/40 mt-0.5">Members</p>
+					</div>
 				</div>
-				<h1 class="font-heading text-3xl font-bold text-white sm:text-4xl animate-fade-up">About Ihsaanah</h1>
-				<p class="mt-3 text-white/70 animate-fade-up" style="animation-delay:0.15s">Organisation-level identity — distinct from the Academy's own About Us (Version 1).</p>
-			</div>
-		</section>
-		<section class="mx-auto max-w-4xl px-4 py-14">
-			<p class="text-ihsaanah-black/70">Placeholder background text about Ihsaanah as a whole. Replace with approved copy once supplied by Tahira.</p>
-			<div class="mt-10">
-		<div class="grid gap-6 sm:grid-cols-3">
-			<div class="ihsaanah-card rounded-lg border border-ihsaanah-gold-light p-6" data-aos="fade-up" data-aos-delay="0">
-				<p class="font-heading text-sm font-bold uppercase tracking-wide text-ihsaanah-gold">Vision</p>
-				<p class="mt-2 text-sm text-ihsaanah-black/70">Placeholder vision statement.</p>
-			</div>
-			<div class="ihsaanah-card rounded-lg border border-ihsaanah-gold-light p-6" data-aos="fade-up" data-aos-delay="100">
-				<p class="font-heading text-sm font-bold uppercase tracking-wide text-ihsaanah-gold">Mission</p>
-				<p class="mt-2 text-sm text-ihsaanah-black/70">Placeholder mission statement.</p>
-			</div>
-			<div class="ihsaanah-card rounded-lg border border-ihsaanah-gold-light p-6" data-aos="fade-up" data-aos-delay="200">
-				<p class="font-heading text-sm font-bold uppercase tracking-wide text-ihsaanah-gold">Values</p>
-				<p class="mt-2 text-sm text-ihsaanah-black/70">Placeholder values statement.</p>
+
 			</div>
 		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 2 — ABOUT IHSAANAH
+	     Bigger label + editorial pull quote
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-5xl px-6">
+			<div class="grid gap-12 sm:grid-cols-2 sm:gap-16 items-start">
+
+				<div data-aos="fade-up">
+					<span class="section-label block mb-5" style="font-size:0.9rem">About Ihsaanah</span>
+					<blockquote class="editorial-quote">
+						We believe education is an act of worship, and every learner a trust.
+					</blockquote>
+				</div>
+
+				<div class="space-y-5 text-sm text-ihsaanah-black/70 leading-relaxed" data-aos="fade-up" data-aos-delay="80">
+					<p>
+						Ihsaanah is an Islamic education and empowerment initiative dedicated to nurturing
+						individuals who strive for excellence in both this life and the Hereafter. Rooted in
+						the values of Iman, Ihsaan, knowledge, character, and service, Ihsaanah creates
+						meaningful learning experiences for children, women, families, and the wider community.
+					</p>
+					<p>
+						Our approach to Islamic education goes beyond knowledge alone — we seek to cultivate
+						faith, character, competence, and a sense of responsibility to serve. Every course,
+						programme, and gathering is designed with this purpose at its heart.
+					</p>
+					<p>
+						Based in Mirpur-2, Dhaka, Ihsaanah has grown into a home for those who desire
+						learning with sincerity — where the Quran is taught with care, entrepreneurship
+						is encouraged through an Islamic lens, and the youngest hearts are nurtured from
+						their earliest years.
+					</p>
+				</div>
+
 			</div>
-		</section>
-	</main>
-	<div id="site-footer"></div>
-	<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-	<script src="js/main.js"></script>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 3 — MISSION
+	     Dark section — directly under About Ihsaanah
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+			<div class="grid gap-12 sm:grid-cols-5 items-start" data-aos="fade-up">
+
+				<div class="sm:col-span-2">
+					<span class="section-label block mb-3">Our Mission</span>
+					<p class="font-display italic text-3xl text-white leading-snug sm:text-4xl">
+						Faith.<br>Excellence.<br>Service.
+					</p>
+				</div>
+
+				<div class="sm:col-span-3">
+					<p class="text-white/60 text-sm leading-relaxed">
+						Al Ihsaanah exists to nurture and empower Muslim women, children, and families
+						through holistic education rooted in the Qur'an and Sunnah. We integrate Islamic
+						values with academic excellence, life skills, leadership, entrepreneurship, and
+						community service — developing individuals who worship Allah ﷻ with Ihsan,
+						live with purpose and integrity, and contribute meaningfully to society.
+					</p>
+					<div class="mt-8 flex flex-wrap gap-2">
+						<span class="trust-badge">Qur'an &amp; Sunnah grounded</span>
+						<span class="trust-badge">Holistic education</span>
+						<span class="trust-badge">Community-centred</span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 4 — VISION
+	     Full-width editorial statement on cream
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream border-t border-ihsaanah-gold/15 py-20">
+		<div class="mx-auto max-w-3xl px-8" data-aos="fade-up">
+			<span class="section-label block mb-6">Our Vision</span>
+			<blockquote class="editorial-quote">
+				To nurture a generation of Allah-conscious, knowledgeable, compassionate,
+				and purpose-driven Muslims who embody Ihsan and lead positive change in
+				their families, communities, and the wider world.
+			</blockquote>
+			<span class="editorial-attribution">— Al-Ihsaanah Vision</span>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 5 — OUR PREMISES
+	     Service highlights extracted from the brochure —
+	     no image, just a compelling overview of what's here
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-5xl px-6">
+
+			<div class="mb-10" data-aos="fade-up">
+				<span class="section-label block mb-2">Our Premises</span>
+				<h2 class="font-display italic text-3xl text-ihsaanah-black leading-snug">
+					A warm space built for learning
+				</h2>
+				<p class="mt-3 text-ihsaanah-black/55 text-sm max-w-md leading-relaxed">
+					274 Pashchim Monipur, Bareka Mollar Mor (beside Yamaha Showroom),
+					60 Ft Road, Mirpur-2, Dhaka — home to all of the following:
+				</p>
+			</div>
+
+			<!-- Service highlights grid — data extracted from brochure -->
+			<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-aos="fade-up" data-aos-delay="60">
+
+				<div class="rounded-xl border border-ihsaanah-gold/18 bg-white px-5 py-4 shadow-sm">
+					<span class="card-category-label" style="display:block; margin-bottom:0.3rem;">Quranic Sciences</span>
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Basic to Advanced Tajweed</p>
+					<p class="mt-1 text-xs text-ihsaanah-black/45">6–8 months · Fri &amp; Sat 3:30–4:30 pm</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/18 bg-white px-5 py-4 shadow-sm">
+					<span class="card-category-label" style="display:block; margin-bottom:0.3rem;">Quranic Sciences</span>
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Nazeratul Quran &amp; Quran Mashq</p>
+					<p class="mt-1 text-xs text-ihsaanah-black/45">1 year · Mon &amp; Wed 3:00–4:00 pm</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/18 bg-white px-5 py-4 shadow-sm">
+					<span class="card-category-label" style="display:block; margin-bottom:0.3rem;">Quranic Sciences</span>
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Hifzul Quran</p>
+					<p class="mt-1 text-xs text-ihsaanah-black/45">Need basis · Thu &amp; Sat (offline + online)</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/18 bg-white px-5 py-4 shadow-sm">
+					<span class="card-category-label" style="display:block; margin-bottom:0.3rem;">Quranic Sciences</span>
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Quranic Language</p>
+					<p class="mt-1 text-xs text-ihsaanah-black/45">6–8 months · Fri 5:00–6:00 pm · Online</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/18 bg-white px-5 py-4 shadow-sm">
+					<span class="card-category-label" style="display:block; margin-bottom:0.3rem;">Skills &amp; Enrichment</span>
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Abacus &amp; Brain Gym</p>
+					<p class="mt-1 text-xs text-ihsaanah-black/45">1 year · Fri &amp; Sat 6:00–7:00 am</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/18 bg-white px-5 py-4 shadow-sm">
+					<span class="card-category-label" style="display:block; margin-bottom:0.3rem;">Skills &amp; Enrichment</span>
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Islamic Art &amp; Crafts</p>
+					<p class="mt-1 text-xs text-ihsaanah-black/45">6–8 months · Fri &amp; Sat 3:00–4:00 pm</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/18 bg-white px-5 py-4 shadow-sm">
+					<span class="card-category-label" style="display:block; margin-bottom:0.3rem;">Skills &amp; Enrichment</span>
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Martial Art</p>
+					<p class="mt-1 text-xs text-ihsaanah-black/45">3 years · Fri &amp; Sat (separate timings)</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/18 bg-white px-5 py-4 shadow-sm">
+					<span class="card-category-label" style="display:block; margin-bottom:0.3rem;">Book Club</span>
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Verses &amp; Vibes</p>
+					<p class="mt-1 text-xs text-ihsaanah-black/45">Ages 13–23 · Wed 3:00–5:00 pm (offline + online)</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/18 bg-white px-5 py-4 shadow-sm">
+					<span class="card-category-label" style="display:block; margin-bottom:0.3rem;">Early Childhood</span>
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Little Mumin Preschool &amp; Maktab</p>
+					<p class="mt-1 text-xs text-ihsaanah-black/45">Play &amp; pre-play · Hifz, Nazeera, Tajweed, Islamic Learning</p>
+				</div>
+
+			</div>
+
+			<!-- Weekly seminars strip -->
+			<div class="mt-6 rounded-xl border border-ihsaanah-gold/20 bg-ihsaanah-gold/4 px-6 py-4 flex flex-wrap items-center gap-3"
+			     data-aos="fade-up" data-aos-delay="100">
+				<span class="card-category-label shrink-0" style="display:inline;">Community ·</span>
+				<span class="text-sm font-semibold text-ihsaanah-black shrink-0">Weekly Seminars:</span>
+				<span class="text-xs text-ihsaanah-black/55">Islamic Parenting · ADHD Awareness · Mental Health · Art &amp; Crafts for Juniors · and more</span>
+				<a href="products.html" class="ml-auto shrink-0 text-xs font-semibold text-ihsaanah-gold hover:underline">See all courses →</a>
+			</div>
+
+		</div>
+	</section>
+
+
+
+</main>
+<div id="site-footer"></div>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>

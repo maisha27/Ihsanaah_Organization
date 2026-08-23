@@ -1,28 +1,65 @@
 <footer class="relative overflow-hidden bg-ihsaanah-black text-white">
-	<!-- Pattern fades from visible at the bottom to invisible at the top -->
-	<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 w-full" style="opacity:0.07; -webkit-mask-image:linear-gradient(to top, black 0%, transparent 70%); mask-image:linear-gradient(to top, black 0%, transparent 70%);"></div>
-	<div class="relative mx-auto max-w-6xl px-4 py-10">
-		<div class="grid gap-8 sm:grid-cols-3">
-			<div>
-				<img src="img/Ihsaana%20logo.jpeg" alt="Al-Ihsaanah" class="h-16 w-auto rounded-xl">
-				<p class="mt-3 text-sm text-white/70">An Islamic educational and community initiative.</p>
+
+	<!-- Gold gradient bar at the very top — makes footer distinct from page content -->
+	<div class="absolute top-0 left-0 right-0 h-px"
+	     style="background: linear-gradient(90deg, transparent 0%, #C9A030 30%, #C9A030 70%, transparent 100%); opacity: 0.55;"></div>
+	<div class="absolute top-0 left-0 right-0 h-16 pointer-events-none"
+	     style="background: linear-gradient(to bottom, rgba(201,160,48,0.10) 0%, transparent 100%);"></div>
+
+	<!-- Subtle pattern fades up from the bottom -->
+	<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 w-full"
+	     style="opacity:0.06; -webkit-mask-image:linear-gradient(to top, black 0%, transparent 60%); mask-image:linear-gradient(to top, black 0%, transparent 60%);"></div>
+
+	<div class="relative mx-auto max-w-6xl px-6 py-12">
+
+		<!-- Main footer grid: logo left, nav right (pushed far right) -->
+		<div class="flex flex-col gap-10 sm:flex-row sm:items-start sm:justify-between">
+
+			<!-- Logo + tagline — left anchor -->
+			<div class="max-w-xs">
+				<img src="img/Ihsaana%20logo.jpeg" alt="Al-Ihsaanah"
+			     class="h-16 w-16 rounded-full object-cover"
+			     style="box-shadow: 0 0 0 2px rgba(201,160,48,0.35);">
+				<p class="mt-3 text-sm text-white/55 leading-relaxed">
+					An Islamic education and community initiative nurturing goodness for the Ummah.
+				</p>
+				<p class="mt-4 text-xs text-white/30 leading-relaxed">
+					274 Pashchim Monipur, 60 Ft Road<br>Mirpur-2, Dhaka
+				</p>
 			</div>
-			<div>
-				<p class="text-sm font-semibold text-ihsaanah-gold">Quick Links</p>
-				<ul class="mt-2 space-y-1 text-sm text-white/70">
-					<li><a href="about-ihsaanah.html" class="hover:text-ihsaanah-gold">About Ihsaanah</a></li>
-					<li><a href="donate.html" class="hover:text-ihsaanah-gold">Donate</a></li>
-					<li><a href="contact.html" class="hover:text-ihsaanah-gold">Contact</a></li>
-				</ul>
-			</div>
-			<div>
-				<p class="text-sm font-semibold text-ihsaanah-gold">Connect</p>
-				<ul class="mt-2 space-y-1 text-sm text-white/70">
-					<li><a href="#" class="hover:text-ihsaanah-gold">Facebook</a></li>
-					<li><a href="#" class="hover:text-ihsaanah-gold">Email</a></li>
-				</ul>
+
+			<!-- Nav columns — grouped right with generous gap between them -->
+			<div class="flex gap-16 sm:gap-20">
+
+				<div>
+					<p class="text-xs font-bold uppercase tracking-[0.15em] text-ihsaanah-gold mb-4">Quick Links</p>
+					<ul class="space-y-2.5 text-sm">
+						<li><a href="index.html"               class="text-white/55 hover:text-ihsaanah-gold transition-colors">Home</a></li>
+						<li><a href="about-ihsaanah.html"      class="text-white/55 hover:text-ihsaanah-gold transition-colors">About Ihsaanah</a></li>
+						<li><a href="products.html"            class="text-white/55 hover:text-ihsaanah-gold transition-colors">Courses</a></li>
+						<li><a href="book-club.html"           class="text-white/55 hover:text-ihsaanah-gold transition-colors">Book Club</a></li>
+						<li><a href="community-programmes.html" class="text-white/55 hover:text-ihsaanah-gold transition-colors">Community</a></li>
+						<li><a href="donate.html"              class="text-white/55 hover:text-ihsaanah-gold transition-colors">Donate</a></li>
+					</ul>
+				</div>
+
+				<div>
+					<p class="text-xs font-bold uppercase tracking-[0.15em] text-ihsaanah-gold mb-4">Connect</p>
+					<ul class="space-y-2.5 text-sm">
+						<li><a href="#" class="text-white/55 hover:text-ihsaanah-gold transition-colors">Facebook</a></li>
+						<li><a href="contact.html" class="text-white/55 hover:text-ihsaanah-gold transition-colors">Contact Us</a></li>
+						<li><a href="blog.html" class="text-white/55 hover:text-ihsaanah-gold transition-colors">Blog &amp; Events</a></li>
+					</ul>
+				</div>
+
 			</div>
 		</div>
-		<p class="mt-8 border-t border-white/10 pt-6 text-xs text-white/50">&copy; 2026 Ihsaanah. All rights reserved.</p>
+
+		<!-- Bottom strip -->
+		<div class="mt-10 flex flex-col gap-1 border-t border-white/8 pt-6 sm:flex-row sm:items-center sm:justify-between">
+			<p class="text-xs text-white/30">&copy; 2026 Al-Ihsaanah. All rights reserved.</p>
+			<p class="text-xs text-white/20 font-display italic">Nurturing Goodness for the Ummah</p>
+		</div>
+
 	</div>
 </footer>

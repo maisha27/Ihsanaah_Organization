@@ -3,64 +3,421 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta name="description" content="Verses & Vibes and Little Mumin Book Club." />
-	<title>Book Club | Ihsaanah</title>
+	<meta name="description" content="Verses & Vibes — a creative, reflective book club for Muslimah youth, presented by Al Ihsaanah." />
+	<title>Verses & Vibes Book Club | Al-Ihsaanah</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              'ihsaanah-gold': '#C9A030',
-              'ihsaanah-gold-light': '#f5ede0',
-              'ihsaanah-black': '#0D0D0D',
-              'ihsaanah-cream': '#faf7f2',
-            },
-            fontFamily: {
-              heading: ['Poppins', 'Segoe UI', 'sans-serif'],
-              body: ['Inter', 'Segoe UI', 'sans-serif'],
-            },
-          },
-        },
-      };
-    </script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+	  tailwind.config = {
+	    theme: {
+	      extend: {
+	        colors: {
+	          'ihsaanah-gold':       '#C9A030',
+	          'ihsaanah-gold-light': '#f5ede0',
+	          'ihsaanah-black':      '#0D0D0D',
+	          'ihsaanah-cream':      '#faf7f2',
+	        },
+	        fontFamily: {
+	          heading: ['Poppins', 'Segoe UI', 'sans-serif'],
+	          body:    ['Inter', 'Segoe UI', 'sans-serif'],
+	          display: ['DM Serif Display', 'Georgia', 'serif'],
+	        },
+	      },
+	    },
+	  };
+	</script>
 	<link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
 </head>
 <body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="book-club.html">
-	<div id="site-header"></div>
-	<main class="flex-1">
-		<section class="relative overflow-hidden bg-ihsaanah-black py-20 text-white">
-			<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.12]"></div>
-			<div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
-			<div class="relative mx-auto max-w-4xl px-4 text-center">
-				<div class="mb-5 flex items-center justify-center gap-4">
-					<div class="h-px w-14 bg-gradient-to-r from-transparent to-ihsaanah-gold/60"></div>
-					<div class="h-2 w-2 rotate-45 bg-ihsaanah-gold opacity-80"></div>
-					<div class="h-px w-14 bg-gradient-to-l from-transparent to-ihsaanah-gold/60"></div>
+<div id="site-header"></div>
+<main class="flex-1">
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 1 — LITERARY HERO
+	     Full-page magazine cover feel for the book club
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="relative overflow-hidden bg-ihsaanah-black">
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.16]"></div>
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: radial-gradient(ellipse 55% 65% at 80% 40%, rgba(201,160,48,0.12) 0%, transparent 68%);"></div>
+
+		<!-- Decorative large numeral -->
+		<span class="pointer-events-none select-none absolute right-8 top-1/2 -translate-y-1/2
+		             font-display italic text-ihsaanah-gold opacity-[0.04]"
+		      style="font-size: clamp(12rem, 25vw, 20rem); line-height:1;" aria-hidden="true">9</span>
+
+		<div class="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
+
+			<span class="section-label block mb-6 animate-fade-up">Book Club · Al-Ihsaanah</span>
+
+			<h1 class="animate-fade-up" style="animation-delay:0.08s">
+				<span class="block font-display italic text-white leading-none"
+				      style="font-size: clamp(3rem, 9vw, 7rem);">Verses</span>
+				<span class="block font-display italic text-ihsaanah-gold leading-none"
+				      style="font-size: clamp(3rem, 9vw, 7rem);">&amp; Vibes</span>
+			</h1>
+
+			<p class="mt-6 max-w-md text-base text-white/50 leading-relaxed animate-fade-up"
+			   style="animation-delay:0.18s">
+				A Creative, Reflective Reading Circle for Muslimah Youth
+			</p>
+
+			<div class="mt-7 flex flex-wrap gap-2 animate-fade-up" style="animation-delay:0.28s">
+				<span class="trust-badge">Ages 13–23</span>
+				<span class="trust-badge">Wed sessions</span>
+				<span class="trust-badge">Offline &amp; Online</span>
+				<span class="trust-badge">9 Books &amp; counting</span>
+			</div>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 2 — MISSION PULL QUOTE
+	     The purpose of the club in editorial type
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-3xl px-8" data-aos="fade-up">
+			<span class="section-label block mb-6">What We're About</span>
+			<blockquote class="editorial-quote">
+				A safe, inspiring space to explore books with deep Islamic themes, engage in
+				meaningful discussions, and grow spiritually, intellectually, and creatively.
+			</blockquote>
+			<span class="editorial-attribution">— Verses &amp; Vibes Mission</span>
+			<p class="mt-7 max-w-lg text-sm text-ihsaanah-black/60 leading-relaxed">
+				The club aims to nurture sisterhood, self-expression, and a love for books among
+				young Muslimahs — serving as an educational, faith-centred form of entertainment.
+			</p>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 3 — VISION
+	     One-line editorial statement, cream
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream border-t border-ihsaanah-gold/12 py-14">
+		<div class="mx-auto max-w-3xl px-8" data-aos="fade-up">
+			<span class="section-label block mb-5">Our Vision</span>
+			<p class="font-display italic text-2xl text-ihsaanah-black leading-relaxed sm:text-3xl">
+				"A vibrant space where young Muslimahs build positive connections,
+				deepen their understanding of Islam, and express themselves authentically."
+			</p>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 4 — HOSTS
+	     Contributor-style profiles with initial avatars
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<span class="section-label block mb-10 text-center" data-aos="fade-up">Your Hosts</span>
+
+			<div class="grid gap-8 sm:grid-cols-2" data-aos="fade-up" data-aos-delay="60">
+
+				<!-- Zoomana -->
+				<div class="rounded-2xl border border-ihsaanah-gold/20 bg-ihsaanah-black p-7
+				            transition-colors hover:border-ihsaanah-gold/40">
+					<div class="flex items-center gap-4 mb-5">
+						<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full
+						            border border-ihsaanah-gold/40 bg-ihsaanah-gold/8">
+							<span class="font-display italic text-2xl text-ihsaanah-gold">Z</span>
+						</div>
+						<div>
+							<h3 class="font-heading text-base font-semibold text-white">Zoomana Mehdi</h3>
+							<span class="text-xs text-ihsaanah-gold/60 tracking-wide">Youth Lead &amp; Host</span>
+						</div>
+					</div>
+					<p class="text-sm text-white/50 leading-relaxed">
+						An artist, book enthusiast, and advocate of mindful parenting — Zoomana brings
+						creativity and heart to every Verses &amp; Vibes session.
+					</p>
 				</div>
-				<h1 class="font-heading text-3xl font-bold text-white sm:text-4xl animate-fade-up">Book Club</h1>
+
+				<!-- Rameesa -->
+				<div class="rounded-2xl border border-ihsaanah-gold/20 bg-ihsaanah-black p-7
+				            transition-colors hover:border-ihsaanah-gold/40">
+					<div class="flex items-center gap-4 mb-5">
+						<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full
+						            border border-ihsaanah-gold/40 bg-ihsaanah-gold/8">
+							<span class="font-display italic text-2xl text-ihsaanah-gold">R</span>
+						</div>
+						<div>
+							<h3 class="font-heading text-base font-semibold text-white">Rameesa Mehdi</h3>
+							<span class="text-xs text-ihsaanah-gold/60 tracking-wide">Youth Lead &amp; Co-Host</span>
+						</div>
+					</div>
+					<p class="text-sm text-white/50 leading-relaxed">
+						Together with her twin sister Zoomana, Rameesa is passionate about creating meaningful
+						spaces where young Muslimahs can thrive and find their voices.
+					</p>
+				</div>
+
 			</div>
-		</section>
-		<section class="mx-auto max-w-4xl px-4 py-14">
+
+			<p class="mt-8 text-center text-xs text-white/25" data-aos="fade-up" data-aos-delay="120">
+				Twin sisters · Artists · Book enthusiasts · Advocates of mindful parenting
+			</p>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 5 — WHAT WE PROVIDE
+	     6 features in editorial grid on cream
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<span class="section-label block mb-3" data-aos="fade-up">Membership Includes</span>
+			<h2 class="font-display italic text-3xl text-ihsaanah-black mb-10" data-aos="fade-up" data-aos-delay="40">
+				What We Provide
+			</h2>
+
+			<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+
+				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
+				     data-aos="fade-up" data-aos-delay="0">
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">2 Sessions / Month</p>
+					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">Structured, regular gatherings to keep the rhythm of reading alive.</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
+				     data-aos="fade-up" data-aos-delay="50">
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Reflective Reading Sheets</p>
+					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">Guided prompts to help members engage deeply with each book.</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
+				     data-aos="fade-up" data-aos-delay="100">
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Creative Journaling</p>
+					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">Guided journaling sessions combining writing, calligraphy, and doodles.</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
+				     data-aos="fade-up" data-aos-delay="0">
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Author Sessions</p>
+					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">Special conversations with authors — virtually or in-person when available.</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
+				     data-aos="fade-up" data-aos-delay="50">
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Cosy Space &amp; Snacks</p>
+					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">A welcoming discussion environment with snacks for offline members.</p>
+				</div>
+
+				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
+				     data-aos="fade-up" data-aos-delay="100">
+					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Strong Sisterhood</p>
+					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">A community of 15–20 committed offline members, plus unlimited online.</p>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 6 — SESSION STRUCTURE
+	     Day 1 / Day 2 editorial layout on dark
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<span class="section-label block mb-3 text-center" data-aos="fade-up">Each Month</span>
+			<h2 class="font-display italic text-3xl text-white mb-12 text-center" data-aos="fade-up" data-aos-delay="40">
+				Session Structure
+			</h2>
+
 			<div class="grid gap-6 sm:grid-cols-2">
-			<div class="ihsaanah-card flex flex-col overflow-hidden rounded-lg border border-ihsaanah-gold-light bg-white p-5 shadow-sm" data-aos="fade-up" data-aos-delay="0">
-				<h3 class="font-heading text-lg font-semibold text-ihsaanah-black">Verses & Vibes</h3>
-				<p class="mt-2 flex-1 text-sm text-ihsaanah-black/70">Placeholder description once supplied.</p>
+
+				<!-- Day 1 -->
+				<div class="rounded-2xl border border-ihsaanah-gold/20 p-7"
+				     data-aos="fade-up" data-aos-delay="0">
+					<span class="font-display italic text-ihsaanah-gold/40 text-4xl block mb-4 leading-none">01</span>
+					<h3 class="font-heading text-base font-semibold text-white mb-5">Book Discussion</h3>
+					<ul class="space-y-3 text-sm text-white/50">
+						<li class="flex gap-3">
+							<span class="text-ihsaanah-gold/50 shrink-0 mt-0.5">→</span>
+							<span>Introduction to the new book</span>
+						</li>
+						<li class="flex gap-3">
+							<span class="text-ihsaanah-gold/50 shrink-0 mt-0.5">→</span>
+							<span>Discussion of the previous book — reader's reflections, author's intent, personal connections &amp; Islamic themes</span>
+						</li>
+					</ul>
+				</div>
+
+				<!-- Day 2 -->
+				<div class="rounded-2xl border border-ihsaanah-gold/20 p-7"
+				     data-aos="fade-up" data-aos-delay="80">
+					<span class="font-display italic text-ihsaanah-gold/40 text-4xl block mb-4 leading-none">02</span>
+					<h3 class="font-heading text-base font-semibold text-white mb-5">Creative Journaling &amp; Gameplay</h3>
+					<ul class="space-y-4 text-sm text-white/50">
+						<li>
+							<p class="text-white/75 font-medium mb-1">Reading Journal</p>
+							<p>Each member keeps a personal journal — written reflections, quotes, doodles, calligraphy, and decorative elements for each completed book.</p>
+						</li>
+						<li>
+							<p class="text-white/75 font-medium mb-1">Gameplay</p>
+							<p>Informative, intellectual, and bonding games — non-competitive. Think Code Names, Book Bingo, 5 Pillars of Islam, The Game.</p>
+						</li>
+					</ul>
+				</div>
+
 			</div>
-			<div class="ihsaanah-card flex flex-col overflow-hidden rounded-lg border border-ihsaanah-gold-light bg-white p-5 shadow-sm" data-aos="fade-up" data-aos-delay="150">
-				<h3 class="font-heading text-lg font-semibold text-ihsaanah-black">Little Mumin Book Club</h3>
-				<p class="mt-2 flex-1 text-sm text-ihsaanah-black/70">Placeholder description once supplied.</p>
+
+			<!-- Author segment note -->
+			<div class="mt-6 rounded-xl border border-ihsaanah-gold/25 bg-ihsaanah-gold/5 px-6 py-5"
+			     data-aos="fade-up" data-aos-delay="120">
+				<p class="text-sm font-semibold text-ihsaanah-gold mb-1">Special Segment — Conversation with the Author</p>
+				<p class="text-sm text-white/45 leading-relaxed">
+					When available, the author joins virtually or in-person to share their story, insights,
+					and intentions — followed by a live Q&amp;A with club members.
+				</p>
 			</div>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 7 — READING LIST
+	     9 books with status dots — the star element
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-3xl px-6">
+
+			<div class="flex items-end justify-between mb-10 gap-4" data-aos="fade-up">
+				<div>
+					<span class="section-label block mb-1">Our Library</span>
+					<h2 class="font-display italic text-3xl text-ihsaanah-black">Books We've Read</h2>
+				</div>
+				<div class="flex flex-col gap-1.5 shrink-0 text-right" data-aos="fade-up" data-aos-delay="60">
+					<span class="flex items-center justify-end gap-1.5 text-xs text-ihsaanah-black/45">
+						<span class="reading-status-dot completed inline-block"></span> Completed
+					</span>
+					<span class="flex items-center justify-end gap-1.5 text-xs text-ihsaanah-black/45">
+						<span class="reading-status-dot ongoing inline-block"></span> Reading now
+					</span>
+					<span class="flex items-center justify-end gap-1.5 text-xs text-ihsaanah-black/45">
+						<span class="reading-status-dot upcoming inline-block"></span> Coming next
+					</span>
+				</div>
 			</div>
-		</section>
-	</main>
-	<div id="site-footer"></div>
-	<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
-	<script src="js/main.js"></script>
+
+			<div class="rounded-2xl border border-ihsaanah-gold/20 bg-white px-6 py-2 shadow-sm"
+			     data-aos="fade-up" data-aos-delay="80">
+
+				<div class="reading-list-item">
+					<div class="reading-status-dot completed"></div>
+					<span class="reading-list-title">Show Up</span>
+					<span class="reading-status-label completed">Completed</span>
+				</div>
+
+				<div class="reading-list-item">
+					<div class="reading-status-dot completed"></div>
+					<span class="reading-list-title">তিনি আমার রব</span>
+					<span class="reading-status-label completed">Completed</span>
+				</div>
+
+				<div class="reading-list-item">
+					<div class="reading-status-dot completed"></div>
+					<span class="reading-list-title">জীবন যেখানে যেমন</span>
+					<span class="reading-status-label completed">Completed</span>
+				</div>
+
+				<div class="reading-list-item">
+					<div class="reading-status-dot completed"></div>
+					<span class="reading-list-title">ফেরা</span>
+					<span class="reading-status-label completed">Completed</span>
+				</div>
+
+				<div class="reading-list-item">
+					<div class="reading-status-dot completed"></div>
+					<span class="reading-list-title">শিকড়ের সন্ধানে</span>
+					<span class="reading-list-author">হামিদা মুবাশ্বেরা</span>
+					<span class="reading-status-label completed">Completed</span>
+				</div>
+
+				<div class="reading-list-item">
+					<div class="reading-status-dot completed"></div>
+					<span class="reading-list-title">ধরণির পথে পথে</span>
+					<span class="reading-list-author">জিয়াউল হক</span>
+					<span class="reading-status-label completed">Completed</span>
+				</div>
+
+				<div class="reading-list-item">
+					<div class="reading-status-dot completed"></div>
+					<span class="reading-list-title">তিনি আমার প্রাণের নবী</span>
+					<span class="reading-list-author">শাইখ আলী জাবির আল-ফাইফী</span>
+					<span class="reading-status-label completed">Completed</span>
+				</div>
+
+				<div class="reading-list-item">
+					<div class="reading-status-dot ongoing"></div>
+					<span class="reading-list-title">গ্রে লেডি অফ বাগরাম <span class="text-ihsaanah-black/40 text-xs">(আফিয়া সিদ্দিকী)</span></span>
+					<span class="reading-list-author">টিম প্রজন্ম</span>
+					<span class="reading-status-label ongoing">Reading now</span>
+				</div>
+
+				<div class="reading-list-item">
+					<div class="reading-status-dot upcoming"></div>
+					<span class="reading-list-title">অনেক আঁধার পেরিয়ে</span>
+					<span class="reading-list-author">মুহাম্মদ জাভেদ কায়সার</span>
+					<span class="reading-status-label upcoming">Coming next</span>
+				</div>
+
+			</div>
+
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 8 — JOIN CTA + LITTLE MUMIN PLACEHOLDER
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-4xl px-6">
+
+			<!-- Join CTA -->
+			<div class="text-center mb-12" data-aos="fade-up">
+				<span class="section-label block mb-4">Join the Club</span>
+				<h2 class="font-display italic text-3xl text-white mb-4">
+					Ready to read with us?
+				</h2>
+				<p class="text-white/45 text-sm max-w-sm mx-auto mb-7">
+					Sessions run on Wednesdays. Open to Muslimah youth ages 13–23.
+					Both offline (Mirpur-2) and online formats available.
+				</p>
+				<a href="contact.html"
+				   class="inline-block rounded-md bg-ihsaanah-gold px-7 py-3 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+					Express Your Interest
+				</a>
+			</div>
+
+			<!-- Little Mumin Book Club — coming soon -->
+			<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="80">
+				<span class="panel-eyebrow">Coming Soon</span>
+				<p class="panel-title">Little Mumin Book Club</p>
+				<p class="panel-sub">A reading programme for our youngest learners within the Ihsaanah community — details to be announced.</p>
+			</div>
+
+		</div>
+	</section>
+
+</main>
+<div id="site-footer"></div>
+<script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+<script src="js/main.js"></script>
 </body>
 </html>
