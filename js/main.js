@@ -43,8 +43,9 @@
       });
     }
 
-    // Transparent header on homepage; solid on all other pages
-    if (isHomePage) {
+    // Transparent header on homepage + any page with data-transparent-header="true"
+    var wantsTransparentHeader = isHomePage || document.body.getAttribute('data-transparent-header') === 'true';
+    if (wantsTransparentHeader) {
       header.classList.add('header-transparent');
       window.addEventListener('scroll', function () {
         if (window.scrollY > 60) {
