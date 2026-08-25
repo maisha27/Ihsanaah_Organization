@@ -31,187 +31,683 @@
 	</script>
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+	<style>
+
+	/* ── Hero ─────────────────────────────────────────────────── */
+	#blog-hero {
+	  position: sticky;
+	  top: 0;
+	  z-index: 1;
+	  height: 100vh;
+	  display: flex;
+	  align-items: center;
+	  overflow: hidden;
+	}
+
+	#blog-hero-headline,
+	#blog-hero-sub,
+	#blog-hero-rule,
+	#blog-hero-divider { opacity: 0; }
+
+	/* ── Content wrapper — slides over hero on scroll ─────────── */
+	.blog-content {
+	  position: relative;
+	  z-index: 2;
+	  background: #0D0D0D;
+	}
+
+	/* ── Blog staircase grid ──────────────────────────────────── */
+	.blog-staircase {
+	  display: grid;
+	  grid-template-columns: 1fr 1fr;
+	  column-gap: 28px;
+	  row-gap: 0;
+	}
+
+	.blog-card {
+	  position: relative;
+	  overflow: hidden;
+	  display: block;
+	  text-decoration: none;
+	  color: inherit;
+	  border: 1px solid rgba(201, 160, 48, 0.16);
+	  transition: border-color 0.4s ease;
+	  margin-bottom: 28px;
+	}
+
+	.blog-card:nth-child(odd)  { grid-column: 1; }
+	.blog-card:nth-child(even) { grid-column: 2; margin-top: 9rem; }
+
+	.blog-card-img-wrap {
+	  position: relative;
+	  aspect-ratio: 3 / 4;
+	  overflow: hidden;
+	}
+
+	.blog-card-img {
+	  position: absolute;
+	  inset: 0;
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  object-position: 50% 60%;
+	  transition: transform 0.75s cubic-bezier(0.4, 0, 0.2, 1);
+	  will-change: transform;
+	}
+
+	.blog-card-gradient {
+	  position: absolute;
+	  inset: 0;
+	  background: linear-gradient(
+	    to top,
+	    rgba(13, 13, 13, 0.92) 0%,
+	    rgba(13, 13, 13, 0.40) 52%,
+	    rgba(13, 13, 13, 0.08) 100%
+	  );
+	  z-index: 1;
+	}
+
+	/* Category — top left, hidden until hover */
+	.blog-card-category {
+	  position: absolute;
+	  top: 1.1rem;
+	  left: 1.1rem;
+	  z-index: 3;
+	  font-size: 0.58rem;
+	  font-weight: 700;
+	  letter-spacing: 0.16em;
+	  text-transform: uppercase;
+	  background: #C9A030;
+	  color: #0D0D0D;
+	  padding: 0.3rem 0.8rem;
+	  opacity: 0;
+	  transform: translateY(-8px);
+	  transition: opacity 0.35s ease, transform 0.35s ease;
+	}
+
+	/* Bottom content row */
+	.blog-card-content {
+	  position: absolute;
+	  bottom: 0;
+	  left: 0;
+	  right: 0;
+	  z-index: 2;
+	  padding: 1.5rem 1.4rem 1.4rem;
+	  display: flex;
+	  align-items: flex-end;
+	  justify-content: space-between;
+	  gap: 0.75rem;
+	}
+
+	.blog-card-title {
+	  font-family: 'Poppins', sans-serif;
+	  font-weight: 700;
+	  font-size: clamp(0.92rem, 1.8vw, 1.2rem);
+	  color: white;
+	  line-height: 1.3;
+	  flex: 1;
+	  transition: color 0.3s ease;
+	}
+
+	/* Islamic ornament — bottom right, rotates on hover */
+	.blog-card-ornament {
+	  flex-shrink: 0;
+	  width: 34px;
+	  height: 34px;
+	  border: 1.5px solid rgba(201, 160, 48, 0.38);
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  transition: border-color 0.35s ease, background 0.35s ease;
+	}
+	.blog-card-ornament svg {
+	  transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	@media (hover: hover) {
+	  .blog-card:hover { border-color: rgba(201, 160, 48, 0.45); }
+	  .blog-card:hover .blog-card-category { opacity: 1; transform: translateY(0); }
+	  .blog-card:hover .blog-card-img { transform: scale(1.06); }
+	  .blog-card:hover .blog-card-title { color: #C9A030; }
+	  .blog-card:hover .blog-card-ornament { border-color: #C9A030; background: rgba(201, 160, 48, 0.10); }
+	  .blog-card:hover .blog-card-ornament svg { transform: rotate(45deg) scale(1.15); }
+	}
+
+	/* ── Events carousel ──────────────────────────────────────── */
+	.events-carousel-viewport { overflow: hidden; }
+
+	.events-carousel-track {
+	  display: flex;
+	  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+	  will-change: transform;
+	}
+
+	.event-slide {
+	  flex-shrink: 0;
+	  width: 100%;
+	}
+
+	.event-card-inner {
+	  position: relative;
+	  width: 100%;
+	  aspect-ratio: 21 / 9;
+	  overflow: hidden;
+	}
+
+	.event-card-img {
+	  position: absolute;
+	  inset: 0;
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  opacity: 0.55;
+	}
+
+	.event-card-overlay {
+	  position: absolute;
+	  inset: 0;
+	  background: linear-gradient(
+	    135deg,
+	    rgba(13, 13, 13, 0.75) 0%,
+	    rgba(13, 13, 13, 0.22) 50%,
+	    rgba(13, 13, 13, 0.58) 100%
+	  );
+	  z-index: 1;
+	}
+
+	.event-card-content {
+	  position: absolute;
+	  inset: 0;
+	  z-index: 2;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: space-between;
+	  padding: 2.5rem 3rem;
+	}
+
+	.event-card-title {
+	  font-family: 'Poppins', sans-serif;
+	  font-weight: 700;
+	  font-size: clamp(1.3rem, 3vw, 2.3rem);
+	  color: white;
+	  line-height: 1.2;
+	  max-width: 62%;
+	}
+
+	.event-card-meta {
+	  text-align: right;
+	  color: rgba(255, 255, 255, 0.85);
+	  font-size: clamp(0.75rem, 1.2vw, 0.93rem);
+	  line-height: 1.8;
+	  font-family: 'Inter', sans-serif;
+	}
+
+	/* Carousel arrows */
+	.event-nav-btn {
+	  background: transparent;
+	  border: none;
+	  cursor: pointer;
+	  padding: 0;
+	  flex-shrink: 0;
+	  transition: opacity 0.2s;
+	  display: flex;
+	  align-items: center;
+	}
+	.event-nav-btn:hover { opacity: 0.65; }
+
+	/* Dot indicators */
+	.event-dot {
+	  width: 6px;
+	  height: 6px;
+	  border-radius: 50%;
+	  background: rgba(201, 160, 48, 0.25);
+	  border: none;
+	  cursor: pointer;
+	  padding: 0;
+	  transition: background 0.3s ease, transform 0.3s ease;
+	}
+	.event-dot.active {
+	  background: #C9A030;
+	  transform: scale(1.5);
+	}
+
+	/* ── Mobile adjustments ───────────────────────────────────── */
+	@media (max-width: 640px) {
+	  .blog-staircase {
+	    grid-template-columns: 1fr;
+	  }
+	  .blog-card:nth-child(odd),
+	  .blog-card:nth-child(even) {
+	    grid-column: 1;
+	    margin-top: 0;
+	  }
+	  .blog-card-img-wrap { aspect-ratio: 4 / 3; }
+	  .event-card-inner   { aspect-ratio: 16 / 9; }
+	  .event-card-content { padding: 1.25rem 1.5rem; }
+	  .event-card-title   { max-width: 100%; font-size: clamp(1rem, 4.5vw, 1.4rem); }
+	  .event-card-meta    { font-size: 0.72rem; }
+	}
+
+	</style>
 </head>
-<!-- Static/minimal per agreement -- no CMS. To add a new post or event:
+<!-- Static/minimal per agreement — no CMS. To add a new post or event:
      copy blog-post-template.html or event-template.html, rename it,
-     edit the content, then add a card below and redeploy. -->
-<body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="blog.html" data-transparent-header="true">
+     edit the content, then add a card/slide below and redeploy. -->
+<body class="flex min-h-screen flex-col bg-ihsaanah-black text-ihsaanah-black font-body"
+      data-active-nav="blog.html"
+      data-transparent-header="true">
 <div id="site-header"></div>
 <main class="flex-1">
 
+
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 1 — EDITORIAL HERO
-	     Publication masthead feel
+	     SECTION 1 — STICKY HERO
+	     Same layering as About hero; headline left / sub right,
+	     both vertically centred; GSAP reveal on load
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="relative overflow-hidden bg-ihsaanah-black">
-		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.16]"></div>
+	<section id="blog-hero">
+
+		<!-- Background image -->
+		<img src="https://images.pexels.com/photos/3030188/pexels-photo-3030188.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1"
+		     alt=""
+		     class="absolute inset-0 w-full h-full object-cover pointer-events-none"
+		     style="opacity:0.42; object-position:center 40%;">
+
+		<!-- Gradient: bottom dark → transparent -->
 		<div class="pointer-events-none absolute inset-0"
-		     style="background: radial-gradient(ellipse 50% 60% at 75% 40%, rgba(201,160,48,0.11) 0%, transparent 65%);"></div>
+		     style="background:linear-gradient(to top,rgba(13,13,13,0.97) 0%,rgba(13,13,13,0.62) 38%,rgba(13,13,13,0.22) 68%,rgba(13,13,13,0.05) 100%);"></div>
 
-		<div class="relative mx-auto max-w-5xl px-6 py-20 sm:py-28">
+		<!-- Gradient: left-edge darkening -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background:linear-gradient(to right,rgba(13,13,13,0.58) 0%,rgba(13,13,13,0.12) 52%,transparent 100%);"></div>
 
-			<div class="grid gap-6 sm:grid-cols-5 items-end">
+		<!-- Islamic pattern overlay (bottom half only) -->
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0"
+		     style="opacity:0.08;
+		            -webkit-mask-image:linear-gradient(to top,black 0%,black 38%,transparent 66%);
+		            mask-image:linear-gradient(to top,black 0%,black 38%,transparent 66%);"></div>
 
-				<!-- Main title -->
-				<div class="sm:col-span-3 animate-fade-up">
-					<span class="section-label block mb-4">Community Publishing</span>
-					<h1 class="font-display italic text-white leading-tight"
-					    style="font-size: clamp(2.5rem, 6vw, 4.5rem);">
+		<!-- Radial gold glow bottom-left -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background:radial-gradient(ellipse 52% 36% at 12% 100%,rgba(201,160,48,0.14) 0%,transparent 62%);"></div>
+
+		<!-- Text layout: full-width centred row, headline LEFT · sub RIGHT -->
+		<div class="relative w-full px-8 mx-auto" style="max-width:1300px;">
+
+			<!-- Thin horizontal gold rule above the text -->
+			<div id="blog-hero-rule"
+			     style="width:100%;height:1px;background:rgba(255,255,255,0.16);margin-bottom:3rem;"></div>
+
+			<div style="display:flex;align-items:center;justify-content:space-between;gap:3rem;">
+
+				<!-- LEFT — main headline, slides from left -->
+				<div id="blog-hero-headline" style="flex-shrink:0;">
+					<span style="font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,160,48,0.72);display:block;margin-bottom:1rem;">
+						Community Publishing
+					</span>
+					<h1 class="font-display italic text-white"
+					    style="font-size:clamp(2.8rem,5.8vw,5rem);line-height:1.08;">
 						Stories.<br>Reflections.<br>Community.
 					</h1>
 				</div>
 
-				<!-- Side descriptor -->
-				<div class="sm:col-span-2 sm:pb-2 animate-fade-up" style="animation-delay:0.12s">
-					<p class="text-white/40 text-sm leading-relaxed border-l border-ihsaanah-gold/30 pl-5">
-						Reflections, announcements, and community updates from Al-Ihsaanah — published
-						as our journey continues, in sha Allah.
+				<!-- Vertical divider -->
+				<div id="blog-hero-divider"
+				     style="width:1px;min-height:170px;background:rgba(201,160,48,0.22);flex-shrink:0;align-self:stretch;"></div>
+
+				<!-- RIGHT — sub-description, slides from right -->
+				<div id="blog-hero-sub" style="max-width:300px;">
+					<p class="text-white/70 leading-relaxed"
+					   style="font-size:clamp(0.85rem,1.35vw,1rem);">
+						Reflections, announcements, and community updates from Al-Ihsaanah —
+						published as our journey continues, in sha Allah.
+					</p>
+					<div style="margin-top:1.6rem;height:1px;background:linear-gradient(to right,rgba(201,160,48,0.38),transparent);"></div>
+					<p style="margin-top:0.8rem;font-size:0.6rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:rgba(201,160,48,0.50);">
+						Scroll to explore
 					</p>
 				</div>
 
 			</div>
-
-			<!-- Thin gold rule under the title — publication style -->
-			<div class="mt-10 h-px bg-gradient-to-r from-ihsaanah-gold/50 via-ihsaanah-gold/20 to-transparent animate-fade-up"
-			     style="animation-delay:0.2s"></div>
-
 		</div>
 	</section>
 
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 2 — UPCOMING EVENTS
-	     event-card with event-date-box
+	     SECTIONS 2 & 3 — scroll up over the sticky hero
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-cream py-16">
-		<div class="mx-auto max-w-4xl px-6">
+	<div class="blog-content">
 
-			<div class="flex items-center justify-between mb-8 gap-4" data-aos="fade-up">
-				<div>
-					<span class="section-label block mb-1">What's On</span>
-					<h2 class="font-display italic text-2xl text-ihsaanah-black">Upcoming Events</h2>
-				</div>
-				<!-- ── add upcoming event cards below this comment ── -->
-			</div>
+		<!-- ─────────────────────────────────────────────────────
+		     SECTION 2 — BLOG ARCHIVE (staircase image grid)
+		     ───────────────────────────────────────────────────── -->
+		<section class="py-24" style="background:#faf7f2;border-top:1px solid rgba(201,160,48,0.18);">
+			<div class="mx-auto px-6" style="max-width:1100px;">
 
-			<div class="space-y-4">
-
-				<a href="event-sample-event.html" class="event-card group" data-aos="fade-up">
-					<div class="event-date-box">
-						<span class="event-date-box-day">01</span>
-						<span class="event-date-box-month">Sep</span>
+				<!-- Section heading -->
+				<div class="mb-16" style="display:flex;align-items:flex-end;gap:2rem;" data-aos="fade-up">
+					<div>
+						<span class="section-label block mb-3">From the Archive</span>
+						<h2 class="font-display italic"
+						    style="font-size:clamp(1.8rem,3.5vw,3rem);color:#0D0D0D;">Blog Posts</h2>
 					</div>
-					<div class="flex-1 min-w-0">
-						<div class="flex items-start justify-between gap-3">
-							<h3 class="font-heading text-sm font-semibold text-ihsaanah-black group-hover:text-ihsaanah-gold transition-colors">
-								Sample Event
-							</h3>
-							<span class="shrink-0 rounded-full bg-ihsaanah-gold/10 px-2.5 py-0.5 text-xs font-semibold text-ihsaanah-gold">
-								Event
-							</span>
+					<div style="height:1px;flex:1;background:linear-gradient(to right,rgba(201,160,48,0.4),transparent);align-self:center;"></div>
+				</div>
+
+				<!-- Staircase grid
+				     To add a new post: copy one .blog-card block, paste it here,
+				     update href, img src, category, date, and title. -->
+				<div class="blog-staircase">
+
+					<!-- Card 1 — odd → left column -->
+					<a href="blog-post-welcome.html" class="blog-card" data-aos="fade-up">
+						<div class="blog-card-img-wrap">
+							<img class="blog-card-img"
+							     src="https://images.pexels.com/photos/3936358/pexels-photo-3936358.jpeg?auto=compress&cs=tinysrgb&w=800"
+							     alt="Welcome to Ihsaanah"
+							     loading="lazy">
+							<div class="blog-card-gradient"></div>
+							<span class="blog-card-category">Community</span>
+							<div class="blog-card-content">
+								<div>
+									<p style="font-size:0.56rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(201,160,48,0.68);margin-bottom:0.45rem;">
+										04 Aug 2026
+									</p>
+									<h3 class="blog-card-title">Welcome to Ihsaanah</h3>
+								</div>
+								<div class="blog-card-ornament">
+									<svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+										<rect x="1.5" y="1.5" width="10" height="10"
+										      stroke="#C9A030" stroke-width="1.5"
+										      transform="rotate(45 6.5 6.5)" fill="none"/>
+									</svg>
+								</div>
+							</div>
 						</div>
-						<p class="mt-1 text-xs text-ihsaanah-black/45">
-							1 September 2026 &middot; Location TBD
-						</p>
-						<p class="mt-2 text-xs text-ihsaanah-black/55 leading-relaxed">
-							Event details to be confirmed — check back closer to the date.
-						</p>
-					</div>
-				</a>
+					</a>
 
-			</div>
+					<!-- Card 2 — even → right column, pushed down for staircase
+					     Replace this placeholder with real content when it arrives -->
+					<a href="#" class="blog-card" data-aos="fade-up" data-aos-delay="120">
+						<div class="blog-card-img-wrap">
+							<img class="blog-card-img"
+							     src="https://images.pexels.com/photos/8471855/pexels-photo-8471855.jpeg?auto=compress&cs=tinysrgb&w=800"
+							     alt="More posts coming soon"
+							     loading="lazy">
+							<div class="blog-card-gradient"></div>
+							<span class="blog-card-category">Reflections</span>
+							<div class="blog-card-content">
+								<div>
+									<p style="font-size:0.56rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:rgba(201,160,48,0.68);margin-bottom:0.45rem;">
+										Coming Soon
+									</p>
+									<h3 class="blog-card-title">More posts coming in sha Allah</h3>
+								</div>
+								<div class="blog-card-ornament">
+									<svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+										<rect x="1.5" y="1.5" width="10" height="10"
+										      stroke="#C9A030" stroke-width="1.5"
+										      transform="rotate(45 6.5 6.5)" fill="none"/>
+									</svg>
+								</div>
+							</div>
+						</div>
+					</a>
 
-			<p class="mt-6 text-xs text-ihsaanah-black/30 text-center italic" data-aos="fade-up">
-				New events are added here as they are confirmed. Follow us on Facebook for the latest.
-			</p>
-
-		</div>
-	</section>
-
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 3 — BLOG POSTS
-	     Editorial card layout — date column + content
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black py-16 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
-
-			<div class="flex items-center justify-between mb-10 gap-4" data-aos="fade-up">
-				<div>
-					<span class="section-label block mb-1">From the Archive</span>
-					<h2 class="font-display italic text-2xl text-white">Blog Posts</h2>
 				</div>
-				<!-- ── add blog post cards below this comment ── -->
-			</div>
-
-			<div class="space-y-5">
-
-				<a href="blog-post-welcome.html"
-				   class="group flex gap-5 rounded-xl border border-ihsaanah-gold/15 bg-ihsaanah-black p-6
-				          transition-all duration-300 hover:border-ihsaanah-gold/40 hover:bg-ihsaanah-gold/4"
-				   data-aos="fade-up">
-
-					<!-- Date column -->
-					<div class="shrink-0 text-center w-12">
-						<span class="block font-display italic text-3xl text-ihsaanah-gold leading-none">04</span>
-						<span class="block text-[10px] tracking-widest uppercase text-white/30 mt-1">Aug<br>2026</span>
-					</div>
-
-					<!-- Vertical divider -->
-					<div class="w-px bg-ihsaanah-gold/15 shrink-0 self-stretch"></div>
-
-					<!-- Content -->
-					<div class="flex-1 min-w-0">
-						<span class="text-[10px] font-bold tracking-widest uppercase text-ihsaanah-gold/70">Post</span>
-						<h3 class="font-display italic text-xl text-white mt-1 leading-snug group-hover:text-ihsaanah-gold transition-colors">
-							Welcome to Ihsaanah
-						</h3>
-						<p class="mt-2 text-sm text-white/40 leading-relaxed">
-							An introduction to Al-Ihsaanah — who we are, what we stand for,
-							and the community we are building together.
-						</p>
-						<span class="mt-3 inline-block text-xs font-semibold text-ihsaanah-gold/70 group-hover:text-ihsaanah-gold transition-colors">
-							Read more →
-						</span>
-					</div>
-
-				</a>
 
 			</div>
-
-			<p class="mt-8 text-xs text-white/20 text-center italic" data-aos="fade-up">
-				More posts will appear here as Ihsaanah publishes. To add a new post, copy
-				<code class="text-white/30">blog-post-template.html</code>, fill in the content, and link it above.
-			</p>
-
-		</div>
-	</section>
+		</section>
 
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 4 — STAY CONNECTED
-	     Simple dark CTA strip
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black border-t border-ihsaanah-gold/10 py-14">
-		<div class="mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
-			<span class="section-label block mb-3">Stay Connected</span>
-			<p class="font-display italic text-xl text-white mb-2">
-				Don't miss an update from Al-Ihsaanah
-			</p>
-			<p class="text-white/35 text-sm mb-7 max-w-xs mx-auto">
-				Follow us on Facebook for events, announcements, and community news.
-			</p>
-			<a href="contact.html"
-			   class="inline-block rounded-md border border-ihsaanah-gold/40 px-7 py-3 text-sm font-semibold text-ihsaanah-gold
-			          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
-				Contact Us
-			</a>
-		</div>
-	</section>
+		<!-- ─────────────────────────────────────────────────────
+		     SECTION 3 — UPCOMING EVENTS (auto-sliding carousel)
+		     Islamic ornamental frame wraps the event card.
+		     Arrows sit left + right as flex siblings of the frame.
+		     ───────────────────────────────────────────────────── -->
+		<section class="py-24" style="border-top:1px solid rgba(201,160,48,0.08);">
+			<div class="mx-auto px-6" style="max-width:1100px;">
+
+				<!-- Section heading -->
+				<div class="mb-20" style="display:flex;align-items:flex-end;gap:2rem;" data-aos="fade-up">
+					<div>
+						<h2 class="font-display italic text-white"
+						    style="font-size:clamp(1.8rem,3.5vw,3rem);">Upcoming Events</h2>
+					</div>
+					<div style="height:1px;flex:1;background:linear-gradient(to right,rgba(201,160,48,0.28),transparent);align-self:center;"></div>
+				</div>
+
+				<!-- Carousel row: [left arrow] [frame + viewport] [right arrow] -->
+				<div style="display:flex;align-items:center;gap:28px;" data-aos="fade-up" data-aos-delay="80">
+
+					<!-- Left arrow -->
+					<button class="event-nav-btn" id="events-prev" aria-label="Previous event">
+						<svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+							<circle cx="27" cy="27" r="26" stroke="rgba(201,160,48,0.20)" stroke-width="1"/>
+							<circle cx="27" cy="27" r="20" stroke="#C9A030" stroke-width="1.2" fill="rgba(201,160,48,0.06)"/>
+							<rect x="0.5"  y="25.5" width="3" height="3" transform="rotate(45 2 27)"  fill="#C9A030" opacity="0.42"/>
+							<rect x="50.5" y="25.5" width="3" height="3" transform="rotate(45 52 27)" fill="#C9A030" opacity="0.42"/>
+							<rect x="25.5" y="0.5"  width="3" height="3" transform="rotate(45 27 2)"  fill="#C9A030" opacity="0.42"/>
+							<rect x="25.5" y="50.5" width="3" height="3" transform="rotate(45 27 52)" fill="#C9A030" opacity="0.42"/>
+							<path d="M30 19L21 27L30 35" stroke="#C9A030" stroke-width="1.8"
+							      stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</button>
+
+					<!-- Islamic ornamental frame + viewport -->
+					<div style="flex:1;position:relative;padding:14px;">
+
+						<!-- Outer thin border -->
+						<div style="position:absolute;inset:0;border:1px solid rgba(201,160,48,0.20);pointer-events:none;z-index:3;"></div>
+						<!-- Inner thicker border -->
+						<div style="position:absolute;inset:9px;border:1.8px solid rgba(201,160,48,0.55);pointer-events:none;z-index:3;"></div>
+
+						<!-- Corner ornaments -->
+						<div style="position:absolute;top:0;left:0;width:22px;height:22px;border-top:2.5px solid #C9A030;border-left:2.5px solid #C9A030;pointer-events:none;z-index:4;"></div>
+						<div style="position:absolute;top:0;right:0;width:22px;height:22px;border-top:2.5px solid #C9A030;border-right:2.5px solid #C9A030;pointer-events:none;z-index:4;"></div>
+						<div style="position:absolute;bottom:0;left:0;width:22px;height:22px;border-bottom:2.5px solid #C9A030;border-left:2.5px solid #C9A030;pointer-events:none;z-index:4;"></div>
+						<div style="position:absolute;bottom:0;right:0;width:22px;height:22px;border-bottom:2.5px solid #C9A030;border-right:2.5px solid #C9A030;pointer-events:none;z-index:4;"></div>
+
+						<!-- Top-centre arch motif -->
+						<div style="position:absolute;top:-32px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;pointer-events:none;z-index:4;">
+							<div style="height:1px;width:54px;background:linear-gradient(to right,transparent,rgba(201,160,48,0.48));"></div>
+							<svg width="26" height="16" viewBox="0 0 28 17" fill="none">
+								<path d="M1 16 Q1 1 14 1 Q27 1 27 16" stroke="#C9A030" stroke-width="1.2" fill="none" opacity="0.62"/>
+								<circle cx="14" cy="1.5" r="1.8" fill="#C9A030" opacity="0.52"/>
+							</svg>
+							<div style="height:1px;width:54px;background:linear-gradient(to left,transparent,rgba(201,160,48,0.48));"></div>
+						</div>
+
+						<!-- Carousel viewport (clips slides) -->
+						<div class="events-carousel-viewport">
+							<div class="events-carousel-track" id="events-track">
+
+								<!-- ── Event slide 1 ────────────────────────────────
+								     Copy this block to add a new event slide.
+								     ──────────────────────────────────────────────── -->
+								<div class="event-slide">
+									<div class="event-card-inner">
+										<img class="event-card-img"
+										     src="https://images.pexels.com/photos/1516440/pexels-photo-1516440.jpeg?auto=compress&cs=tinysrgb&w=1400"
+										     alt="Sample Event">
+										<div class="event-card-overlay"></div>
+										<div class="event-card-content">
+											<div>
+												<p style="font-size:0.58rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,160,48,0.82);margin-bottom:0.65rem;">
+													Upcoming Event
+												</p>
+												<h3 class="event-card-title">Sample Event</h3>
+											</div>
+											<div class="event-card-meta">
+												<p>1 September 2026</p>
+												<p>Location TBD</p>
+												<p style="color:rgba(201,160,48,0.85);font-weight:600;margin-top:0.2rem;">
+													Details to be confirmed
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- ── Event slide 2 (placeholder) ───────────────── -->
+								<div class="event-slide">
+									<div class="event-card-inner">
+										<img class="event-card-img"
+										     src="https://images.pexels.com/photos/1117132/pexels-photo-1117132.jpeg?auto=compress&cs=tinysrgb&w=1400"
+										     alt="More events coming soon">
+										<div class="event-card-overlay"></div>
+										<div class="event-card-content">
+											<div>
+												<p style="font-size:0.58rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:rgba(201,160,48,0.82);margin-bottom:0.65rem;">
+													Coming Soon
+												</p>
+												<h3 class="event-card-title">More Events In sha Allah</h3>
+											</div>
+											<div class="event-card-meta">
+												<p>Date TBD</p>
+												<p>Location TBD</p>
+											</div>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+					<!-- Right arrow -->
+					<button class="event-nav-btn" id="events-next" aria-label="Next event">
+						<svg width="54" height="54" viewBox="0 0 54 54" fill="none">
+							<circle cx="27" cy="27" r="26" stroke="rgba(201,160,48,0.20)" stroke-width="1"/>
+							<circle cx="27" cy="27" r="20" stroke="#C9A030" stroke-width="1.2" fill="rgba(201,160,48,0.06)"/>
+							<rect x="0.5"  y="25.5" width="3" height="3" transform="rotate(45 2 27)"  fill="#C9A030" opacity="0.42"/>
+							<rect x="50.5" y="25.5" width="3" height="3" transform="rotate(45 52 27)" fill="#C9A030" opacity="0.42"/>
+							<rect x="25.5" y="0.5"  width="3" height="3" transform="rotate(45 27 2)"  fill="#C9A030" opacity="0.42"/>
+							<rect x="25.5" y="50.5" width="3" height="3" transform="rotate(45 27 52)" fill="#C9A030" opacity="0.42"/>
+							<path d="M24 19L33 27L24 35" stroke="#C9A030" stroke-width="1.8"
+							      stroke-linecap="round" stroke-linejoin="round"/>
+						</svg>
+					</button>
+
+				</div>
+
+				<!-- Dot indicators -->
+				<div style="display:flex;justify-content:center;gap:8px;margin-top:2rem;"
+				     id="events-dots"></div>
+
+			</div>
+		</section>
+
+	</div><!-- /.blog-content -->
 
 </main>
 <div id="site-footer"></div>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ══════════════════════════════════════════════════════════
+     1. HERO — GSAP entry animations
+     Headline slides from left, sub from right;
+     rule and divider fade in.
+     ══════════════════════════════════════════════════════════ */
+  if (typeof gsap !== 'undefined') {
+
+    gsap.to('#blog-hero-rule', {
+      opacity: 1, duration: 0.7, delay: 0.1, ease: 'power2.out'
+    });
+    gsap.fromTo('#blog-hero-headline',
+      { opacity: 0, x: -72 },
+      { opacity: 1, x: 0, duration: 1.05, delay: 0.28, ease: 'power3.out' }
+    );
+    gsap.fromTo('#blog-hero-sub',
+      { opacity: 0, x: 72 },
+      { opacity: 1, x: 0, duration: 1.05, delay: 0.42, ease: 'power3.out' }
+    );
+    gsap.to('#blog-hero-divider', {
+      opacity: 1, duration: 0.8, delay: 0.58, ease: 'power2.out'
+    });
+
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     2. BLOG CARDS — scroll parallax
+     As each card enters the viewport the image shifts
+     object-position from 60% (bottom) → 38% (top),
+     giving the "image moving inside its frame" feeling.
+     ══════════════════════════════════════════════════════════ */
+  var blogCards = document.querySelectorAll('.blog-card');
+
+  function updateParallax() {
+    var vH = window.innerHeight;
+    blogCards.forEach(function (card) {
+      var rect = card.getBoundingClientRect();
+      /* 0 = card bottom just entering viewport bottom
+         1 = card top just leaving viewport top */
+      var prog = 1 - (rect.top / vH);
+      prog = Math.max(0, Math.min(1, prog));
+      /* map 0→1 to 60%→38% */
+      var pos = 60 - prog * 22;
+      var img = card.querySelector('.blog-card-img');
+      if (img) img.style.objectPosition = '50% ' + pos + '%';
+    });
+  }
+
+  if (blogCards.length) {
+    window.addEventListener('scroll', updateParallax, { passive: true });
+    updateParallax();
+  }
+
+  /* ══════════════════════════════════════════════════════════
+     3. EVENTS CAROUSEL — auto-advance + manual arrows
+     ══════════════════════════════════════════════════════════ */
+  var track   = document.getElementById('events-track');
+  var prevBtn = document.getElementById('events-prev');
+  var nextBtn = document.getElementById('events-next');
+  var dotsEl  = document.getElementById('events-dots');
+  if (!track) return;
+
+  var slides = Array.prototype.slice.call(track.querySelectorAll('.event-slide'));
+  var total  = slides.length;
+  var cur    = 0;
+  var timer;
+
+  /* Build dot buttons */
+  var dots = slides.map(function (_, i) {
+    var d = document.createElement('button');
+    d.className = 'event-dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Event ' + (i + 1));
+    d.addEventListener('click', function () { goTo(i); resetTimer(); });
+    dotsEl.appendChild(d);
+    return d;
+  });
+
+  function goTo(idx) {
+    cur = ((idx % total) + total) % total;
+    track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+    dots.forEach(function (d, i) {
+      d.classList.toggle('active', i === cur);
+    });
+  }
+
+  function resetTimer() {
+    clearInterval(timer);
+    timer = setInterval(function () { goTo(cur + 1); }, 2500);
+  }
+
+  prevBtn && prevBtn.addEventListener('click', function () { goTo(cur - 1); resetTimer(); });
+  nextBtn && nextBtn.addEventListener('click', function () { goTo(cur + 1); resetTimer(); });
+
+  resetTimer();
+
+}());
+</script>
+
 </body>
 </html>
