@@ -8,7 +8,7 @@
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=DM+Serif+Display:ital@0;1&family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
 	<script src="https://cdn.tailwindcss.com"></script>
 	<script>
 	  tailwind.config = {
@@ -31,177 +31,422 @@
 	</script>
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+	<style>
+	/* ── Hero ─────────────────────────────────────────────────── */
+	#prog-hero {
+	  position: sticky;
+	  top: 0;
+	  z-index: 1;
+	  height: 100vh;
+	  display: flex;
+	  flex-direction: column;
+	  overflow: hidden;
+	}
+	#prog-hero-headline { opacity: 0; transform: translateX(-70px); }
+	#prog-hero-sub      { opacity: 0; transform: translateX(70px);  }
+
+	/* ── Programmes tasbih scroll ─────────────────────────────── */
+	#prog-scroll-wrapper { position: relative; z-index: 2; background: #0D0D0D; }
+	#prog-outer          { min-height: 300vh; }
+
+	#prog-sticky {
+	  position: sticky;
+	  top: 0;
+	  height: 100vh;
+	  overflow: hidden;
+	  background: #0D0D0D;
+	  display: flex;
+	  align-items: center;
+	}
+
+	/* ── Tasbih SVG ───────────────────────────────────────────── */
+	#tasbih-svg {
+	  position: absolute;
+	  left: 44px;
+	  top: 50%;
+	  transform: translateY(-50%);
+	  width: 36px;
+	  height: 68vh;
+	  overflow: visible;
+	  pointer-events: none;
+	  z-index: 2;
+	}
+	.tb-line {
+	  stroke: #C9A030;
+	  stroke-width: 1.3;
+	  fill: none;
+	  opacity: 0.5;
+	}
+	.tb-bead-ring { fill: #0D0D0D; stroke: #C9A030; stroke-width: 1.8; }
+	.tb-bead-dot  { fill: #C9A030; }
+	.tb-bead-glow { fill: #C9A030; filter: blur(7px); opacity: 0; }
+
+	/* ── Programme cards ──────────────────────────────────────── */
+	.prog-card {
+	  position: absolute;
+	  inset: 0;
+	  display: flex;
+	  align-items: center;
+	  padding: 0 5vw 0 110px;
+	  opacity: 0;
+	  pointer-events: none;
+	}
+	.prog-content {
+	  flex: 0 0 40%;
+	  padding-right: 3.5rem;
+	}
+	.prog-images {
+	  flex: 1;
+	  position: relative;
+	  height: 68vh;
+	}
+	.prog-num {
+	  font-size: 0.6rem;
+	  font-weight: 700;
+	  letter-spacing: 0.22em;
+	  text-transform: uppercase;
+	  color: rgba(201,160,48,0.5);
+	  display: block;
+	  margin-bottom: 1rem;
+	}
+	.prog-title {
+	  font-family: 'DM Serif Display', Georgia, serif;
+	  font-style: italic;
+	  font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+	  color: #fff;
+	  line-height: 1.18;
+	  margin-bottom: 1.1rem;
+	}
+	.prog-desc {
+	  font-size: 0.875rem;
+	  color: rgba(255,255,255,0.46);
+	  line-height: 1.8;
+	  max-width: 360px;
+	}
+	.prog-tags { margin-top: 1.5rem; }
+	/* Image A: upper area, right side */
+	.prog-img-a {
+	  position: absolute;
+	  top: 8%;
+	  right: 6%;
+	  width: 54%;
+	  height: 54%;
+	  object-fit: cover;
+	  border: 1px solid rgba(201,160,48,0.16);
+	}
+	/* Image B: lower-right, overlapping */
+	.prog-img-b {
+	  position: absolute;
+	  bottom: 5%;
+	  right: 0;
+	  width: 38%;
+	  height: 36%;
+	  object-fit: cover;
+	  border: 1px solid rgba(201,160,48,0.16);
+	}
+
+	/* ── Seminars section ─────────────────────────────────────── */
+	#seminars { position: relative; z-index: 3; background: #faf7f2; }
+
+	/* ── Seminar image wrappers ───────────────────────────────── */
+	.sem-wrap {
+	  position: relative;
+	  overflow: visible; /* labels bleed outside */
+	  cursor: default;
+	}
+	.sem-wrap img {
+	  display: block;
+	  width: 100%;
+	  height: 200px;
+	  object-fit: cover;
+	}
+
+	/* ── Hover labels (outside the image corners) ─────────────── */
+	.sem-label {
+	  position: absolute;
+	  display: flex;
+	  align-items: center;
+	  gap: 6px;
+	  white-space: nowrap;
+	  pointer-events: none;
+	  opacity: 0;
+	  transition: opacity 0.18s ease;
+	  z-index: 20;
+	}
+	.sem-wrap:hover .sem-label { opacity: 1; }
+
+	.sem-label-text {
+	  font-family: 'Caveat', cursive;
+	  font-size: 1.25rem;
+	  font-weight: 700;
+	  letter-spacing: 0.02em;
+	  color: #C9A030;
+	}
+	.sem-arrow {
+	  width: 28px;
+	  height: 28px;
+	  overflow: visible;
+	  flex-shrink: 0;
+	}
+	.sem-arrow-path {
+	  stroke: #C9A030;
+	  stroke-width: 2;
+	  fill: none;
+	  stroke-linecap: round;
+	  stroke-linejoin: round;
+	  stroke-dasharray: 80;
+	  stroke-dashoffset: 80;
+	  transition: none;
+	}
+	.sem-wrap:hover .sem-arrow-path {
+	  stroke-dashoffset: 0;
+	  transition: stroke-dashoffset 0.42s cubic-bezier(0.4,0,0.2,1);
+	}
+
+	/* Each label sits outside its corner of the image */
+	/* TL: appears above-left */
+	.sem-tl .sem-label {
+	  top: -6px; left: -6px;
+	  transform: translate(-100%, -100%);
+	  flex-direction: row-reverse; /* text | arrow→SE */
+	}
+	/* TR: appears above-right */
+	.sem-tr .sem-label {
+	  top: -6px; right: -6px;
+	  transform: translate(100%, -100%);
+	  flex-direction: row; /* ←SW arrow | text */
+	}
+	/* BL: appears below-left */
+	.sem-bl .sem-label {
+	  bottom: -6px; left: -6px;
+	  transform: translate(-100%, 100%);
+	  flex-direction: row-reverse; /* text | arrow→NE */
+	}
+	/* BR: appears below-right */
+	.sem-br .sem-label {
+	  bottom: -6px; right: -6px;
+	  transform: translate(100%, 100%);
+	  flex-direction: row; /* ←NW arrow | text */
+	}
+
+	/* Seminar grid needs room for outside labels */
+	#sem-grid { padding: 52px 52px 52px 12px; overflow: visible; }
+	</style>
 </head>
+
 <!-- These 3 programmes are combined on ONE page deliberately —
      see CLAUDE.md "fallback priority" before splitting into separate pages. -->
-<body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="community-programmes.html">
+<body class="flex min-h-screen flex-col bg-ihsaanah-black text-ihsaanah-black font-body"
+      data-active-nav="community-programmes.html"
+      data-transparent-header="true">
 <div id="site-header"></div>
 <main class="flex-1">
 
+
 	<!-- ═══════════════════════════════════════════════════════
 	     SECTION 1 — HERO
-	     Community-forward editorial tone
+	     Headline top-left (from left), sub-headline bottom-right (from right)
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="relative overflow-hidden bg-ihsaanah-black">
-		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.18]"></div>
+	<section id="prog-hero">
+
+		<img src="https://images.pexels.com/photos/27397439/pexels-photo-27397439.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1"
+		     alt=""
+		     class="absolute inset-0 w-full h-full object-cover pointer-events-none"
+		     style="opacity:0.42; object-position:center 40%;">
+
+		<!-- Vertical gradient: dark base, lighter top -->
 		<div class="pointer-events-none absolute inset-0"
-		     style="background: radial-gradient(ellipse 60% 55% at 20% 60%, rgba(201,160,48,0.13) 0%, transparent 68%);"></div>
+		     style="background:linear-gradient(to top,rgba(13,13,13,0.97) 0%,rgba(13,13,13,0.58) 42%,rgba(13,13,13,0.18) 75%,rgba(13,13,13,0.04) 100%);"></div>
 
-		<div class="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
-			<div class="max-w-2xl">
+		<!-- Side gradient: dark left -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background:linear-gradient(to right,rgba(13,13,13,0.55) 0%,rgba(13,13,13,0.12) 55%,transparent 100%);"></div>
 
-				<span class="section-label block mb-5 animate-fade-up">Community Programmes</span>
+		<!-- Islamic lattice, masked to bottom half -->
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0"
+		     style="opacity:0.08;
+		            -webkit-mask-image:linear-gradient(to top,black 0%,black 30%,transparent 62%);
+		            mask-image:linear-gradient(to top,black 0%,black 30%,transparent 62%);"></div>
 
-				<h1 class="font-display italic text-4xl text-white leading-tight sm:text-6xl animate-fade-up"
-				    style="animation-delay:0.08s">
-					Beyond the<br>classroom.
+		<!-- Gold glow bottom-left -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background:radial-gradient(ellipse 48% 36% at 8% 100%,rgba(201,160,48,0.13) 0%,transparent 60%);"></div>
+
+		<!-- Bottom blend into the dark programmes section -->
+		<div class="pointer-events-none absolute bottom-0 left-0 right-0"
+		     style="height:220px; background:linear-gradient(to bottom, transparent, #0D0D0D);"></div>
+
+		<div class="relative flex flex-col h-full px-8 sm:px-14 pt-28 pb-14 mx-auto w-full"
+		     style="max-width:1340px;">
+
+			<!-- Headline — TOP LEFT, GSAP slides from left -->
+			<div id="prog-hero-headline">
+				<h1 class="font-display italic text-white leading-[1.12]"
+				    style="font-size:clamp(2.8rem,5.5vw,5rem);">
+					Beyond the<br>Classroom.
 				</h1>
-
-				<p class="mt-6 text-base text-white/50 leading-relaxed max-w-md animate-fade-up"
-				   style="animation-delay:0.18s">
-					Ihsaanah's impact extends beyond courses — into events, initiatives,
-					and programmes that serve families and strengthen the wider Ummah.
-				</p>
-
-				<div class="mt-9 flex flex-wrap gap-5 animate-fade-up" style="animation-delay:0.28s">
-					<div>
-						<p class="font-display italic text-3xl text-ihsaanah-gold">3+</p>
-						<p class="text-xs tracking-widest uppercase text-white/35 mt-0.5">Active Programmes</p>
-					</div>
-					<div>
-						<p class="font-display italic text-3xl text-ihsaanah-gold">Weekly</p>
-						<p class="text-xs tracking-widest uppercase text-white/35 mt-0.5">Community Seminars</p>
-					</div>
-				</div>
-
 			</div>
-		</div>
-	</section>
 
+			<div class="flex-1"></div>
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 2 — KIDPRENEURS (full-bleed photo)
-	     Real event photo — our best visual asset here
-	     ═══════════════════════════════════════════════════════ -->
-	<div class="full-bleed-photo" data-aos="fade-up">
-		<img src="img/kidpreneur_content.jpeg"
-		     alt="Little Mumin KidPreneur market day event with children and balloon arch"
-		     class="w-full object-cover object-center"
-		     style="max-height: 580px;">
-		<div class="photo-overlay-bottom"></div>
-		<div class="photo-content">
-			<div class="max-w-3xl mx-auto w-full">
-				<span class="section-label block mb-3">Programme 01</span>
-				<h2 class="font-display italic text-3xl text-white leading-snug sm:text-5xl">
-					Little Mumin Kidpreneurs
-				</h2>
-				<div class="mt-4 flex flex-wrap gap-2">
-					<span class="trust-badge">Discover</span>
-					<span class="trust-badge">Create</span>
-					<span class="trust-badge">Serve</span>
-					<span class="trust-badge">Lead</span>
-				</div>
-			</div>
-		</div>
-	</div>
+			<!-- Thin horizontal rule -->
+			<div style="height:1px; background:rgba(255,255,255,0.14); margin-bottom:1.75rem;"></div>
 
-	<!-- Kidpreneurs description — immediately below the photo -->
-	<section class="bg-ihsaanah-cream py-14">
-		<div class="mx-auto max-w-3xl px-6">
-			<div class="grid gap-10 sm:grid-cols-5 items-start" data-aos="fade-up">
-
-				<div class="sm:col-span-3">
-					<p class="text-ihsaanah-black/70 text-sm leading-relaxed">
-						An entrepreneurship and leadership programme for young Muslims — encouraging children
-						to discover their talents, create with purpose, serve their community, and grow into
-						confident leaders grounded in Islamic values.
-					</p>
-					<p class="mt-4 text-ihsaanah-black/70 text-sm leading-relaxed">
-						Events include market days where young participants set up stalls, sell their creations,
-						visit and encourage one another, and practise generosity and enterprise as acts of worship.
+			<!-- Sub-headline — BOTTOM RIGHT, GSAP slides from right -->
+			<div class="flex justify-end">
+				<div id="prog-hero-sub" style="max-width:300px; text-align:right;">
+					<p class="text-white/70 leading-relaxed"
+					   style="font-size:clamp(0.82rem,1.25vw,0.94rem); font-weight:400;">
+						Ihsaanah's impact extends beyond courses —<br>
+						into events, initiatives, and programmes<br>
+						that serve families and strengthen the Ummah.
 					</p>
 				</div>
+			</div>
 
-				<div class="sm:col-span-2">
-					<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5">
-						<p class="text-xs font-semibold uppercase tracking-widest text-ihsaanah-gold mb-3">Programme Pillars</p>
-						<ol class="space-y-2">
-							<li class="flex items-center gap-3 text-sm text-ihsaanah-black/70">
-								<span class="font-display italic text-ihsaanah-gold/50 text-lg leading-none">01</span>
-								<span>Discover your gifts</span>
-							</li>
-							<li class="flex items-center gap-3 text-sm text-ihsaanah-black/70">
-								<span class="font-display italic text-ihsaanah-gold/50 text-lg leading-none">02</span>
-								<span>Create with purpose</span>
-							</li>
-							<li class="flex items-center gap-3 text-sm text-ihsaanah-black/70">
-								<span class="font-display italic text-ihsaanah-gold/50 text-lg leading-none">03</span>
-								<span>Serve the community</span>
-							</li>
-							<li class="flex items-center gap-3 text-sm text-ihsaanah-black/70">
-								<span class="font-display italic text-ihsaanah-gold/50 text-lg leading-none">04</span>
-								<span>Lead with integrity</span>
-							</li>
-						</ol>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 2 — THREE PROGRAMMES (TASBIH SCROLL)
+	     300vh outer container, sticky inner viewport.
+	     A wavy SVG tasbih line draws downward as the user scrolls;
+	     each of the 3 bead-stops reveals one programme card.
+	     ═══════════════════════════════════════════════════════ -->
+	<div id="prog-scroll-wrapper">
+		<div id="prog-outer">
+			<div id="prog-sticky">
+
+				<!-- Tasbih SVG — wavy vertical line + 3 bead stops -->
+				<svg id="tasbih-svg" viewBox="0 0 36 500" preserveAspectRatio="none">
+					<!-- Gently wavy path simulating hanging prayer beads -->
+					<path id="tb-path"
+					      d="M18 8 C27 50,9 95,18 145 C27 195,9 238,18 285 C27 332,9 375,18 422 C27 458,18 490,18 490"
+					      class="tb-line"
+					      stroke-dasharray="1000" stroke-dashoffset="1000"/>
+
+					<!-- Bead 1 (~y 145) -->
+					<circle id="tb-glow-1" cx="18" cy="145" r="15" class="tb-bead-glow"/>
+					<circle id="tb-ring-1" cx="18" cy="145" r="9"  class="tb-bead-ring" opacity="0"/>
+					<circle id="tb-dot-1"  cx="18" cy="145" r="4"  class="tb-bead-dot"  opacity="0"/>
+
+					<!-- Bead 2 (~y 285) -->
+					<circle id="tb-glow-2" cx="18" cy="285" r="15" class="tb-bead-glow"/>
+					<circle id="tb-ring-2" cx="18" cy="285" r="9"  class="tb-bead-ring" opacity="0"/>
+					<circle id="tb-dot-2"  cx="18" cy="285" r="4"  class="tb-bead-dot"  opacity="0"/>
+
+					<!-- Bead 3 (~y 422) -->
+					<circle id="tb-glow-3" cx="18" cy="422" r="15" class="tb-bead-glow"/>
+					<circle id="tb-ring-3" cx="18" cy="422" r="9"  class="tb-bead-ring" opacity="0"/>
+					<circle id="tb-dot-3"  cx="18" cy="422" r="4"  class="tb-bead-dot"  opacity="0"/>
+				</svg>
+
+				<!-- Programme 1: Little Mumin Kidpreneurs -->
+				<div id="pc1" class="prog-card">
+					<div class="prog-content">
+						<span class="prog-num">Programme 01</span>
+						<h2 class="prog-title">Little Mumin<br>Kidpreneurs</h2>
+						<p class="prog-desc">
+							An entrepreneurship and leadership programme for young Muslims —
+							encouraging children to discover their talents, create with purpose,
+							serve their community, and grow into confident leaders grounded in
+							Islamic values.
+						</p>
+						<div class="prog-tags flex flex-wrap gap-2">
+							<span class="trust-badge">Discover</span>
+							<span class="trust-badge">Create</span>
+							<span class="trust-badge">Lead</span>
+						</div>
+					</div>
+					<div class="prog-images">
+						<img class="prog-img-a"
+						     src="img/kidpreneur_content.jpeg"
+						     alt="Little Mumin Kidpreneurs market day">
+						<img class="prog-img-b"
+						     src="https://images.pexels.com/photos/35105943/pexels-photo-35105943.jpeg?auto=compress&cs=tinysrgb&w=500&h=400&dpr=1"
+						     alt="Young Muslim children in a learning session">
 					</div>
 				</div>
 
-			</div>
-		</div>
-	</section>
+				<!-- Programme 2: Genius Awlad -->
+				<div id="pc2" class="prog-card">
+					<div class="prog-content">
+						<span class="prog-num">Programme 02</span>
+						<h2 class="prog-title">Genius Awlad</h2>
+						<p class="prog-desc">
+							A holistic enrichment programme developing the minds, character, and
+							potential of Muslim children — nurturing academic excellence alongside
+							strong Islamic foundations and life skills.
+						</p>
+						<div class="prog-tags flex flex-wrap gap-2">
+							<span class="trust-badge">Enrich</span>
+							<span class="trust-badge">Excel</span>
+							<span class="trust-badge">Grow</span>
+						</div>
+					</div>
+					<div class="prog-images">
+						<img class="prog-img-a"
+						     src="https://images.pexels.com/photos/35105938/pexels-photo-35105938.jpeg?auto=compress&cs=tinysrgb&w=600&h=700&dpr=1"
+						     alt="Muslim children studying">
+						<img class="prog-img-b"
+						     src="https://images.pexels.com/photos/37350652/pexels-photo-37350652.jpeg?auto=compress&cs=tinysrgb&w=500&h=400&dpr=1"
+						     alt="Young student reading Quran in class">
+					</div>
+				</div>
+
+				<!-- Programme 3: Project Mihrab -->
+				<div id="pc3" class="prog-card">
+					<div class="prog-content">
+						<span class="prog-num">Programme 03</span>
+						<h2 class="prog-title">Project Mihrab</h2>
+						<p class="prog-desc">
+							A community-driven initiative connecting Muslim families in worship,
+							service, and mutual support — strengthening the bonds of the Ummah
+							through purpose-led gatherings and shared projects.
+						</p>
+						<div class="prog-tags flex flex-wrap gap-2">
+							<span class="trust-badge">Connect</span>
+							<span class="trust-badge">Serve</span>
+							<span class="trust-badge">Worship</span>
+						</div>
+					</div>
+					<div class="prog-images">
+						<img class="prog-img-a"
+						     src="https://images.pexels.com/photos/36280167/pexels-photo-36280167.jpeg?auto=compress&cs=tinysrgb&w=600&h=700&dpr=1"
+						     alt="Reading the Quran">
+						<img class="prog-img-b"
+						     src="https://images.pexels.com/photos/35105927/pexels-photo-35105927.jpeg?auto=compress&cs=tinysrgb&w=500&h=400&dpr=1"
+						     alt="Community gathering">
+					</div>
+				</div>
+
+			</div><!-- /prog-sticky -->
+		</div><!-- /prog-outer -->
+	</div><!-- /prog-scroll-wrapper -->
 
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 3 — GENIUS AWLAD + PROJECT MIHRAB
-	     Coming-soon panels — aspirational, not empty
+	     SECTION 3 — WEEKLY COMMUNITY SEMINARS
+	     Left: text (fade-right AOS)
+	     Right: 2×2 image grid, each image flies in from its
+	            diagonal corner. On hover, a topic label + drawn
+	            arrow appears outside the matching corner.
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
+	<section id="seminars" class="py-24 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto max-w-5xl px-6">
+			<div class="grid gap-16 lg:grid-cols-2 items-center">
 
-			<span class="section-label block mb-3 text-center" data-aos="fade-up">More Programmes</span>
-			<h2 class="font-display italic text-3xl text-white text-center mb-10" data-aos="fade-up" data-aos-delay="40">
-				Watch this space
-			</h2>
-
-			<div class="grid gap-5 sm:grid-cols-2">
-
-				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="0">
-					<span class="panel-eyebrow">Programme 02</span>
-					<p class="panel-title">Genius Awlad</p>
-					<p class="panel-sub">Full programme details coming soon — stay connected for the announcement.</p>
-				</div>
-
-				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="100">
-					<span class="panel-eyebrow">Programme 03</span>
-					<p class="panel-title">Project Mihrab</p>
-					<p class="panel-sub">Full programme details coming soon — stay connected for the announcement.</p>
-				</div>
-
-			</div>
-
-			<p class="mt-8 text-center text-xs text-white/25" data-aos="fade-up" data-aos-delay="160">
-				Follow Al-Ihsaanah on Facebook for updates on upcoming programmes.
-			</p>
-
-		</div>
-	</section>
-
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 4 — WEEKLY SEMINARS
-	     Two-column: description + topic pills
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
-
-			<div class="grid gap-10 sm:grid-cols-2 items-start">
-
-				<div data-aos="fade-up">
-					<span class="section-label block mb-3">Every Week</span>
-					<h2 class="font-display italic text-3xl text-ihsaanah-black leading-snug">
-						Weekly Community Seminars
+				<!-- Left: text -->
+				<div data-aos="fade-right">
+					<span class="section-label block mb-4">Every Week</span>
+					<h2 class="font-display italic text-3xl text-ihsaanah-black leading-snug sm:text-4xl">
+						Weekly Community<br>Seminars
 					</h2>
-					<p class="mt-5 text-sm text-ihsaanah-black/60 leading-relaxed">
+					<p class="mt-5 text-sm text-ihsaanah-black/60 leading-relaxed max-w-sm">
 						Every week, Ihsaanah hosts community seminars on topics that matter to
 						Muslim families, parents, and individuals — rooted in Islamic guidance
 						and relevant to everyday life.
@@ -212,63 +457,280 @@
 					</a>
 				</div>
 
-				<div data-aos="fade-up" data-aos-delay="80">
-					<p class="text-xs font-semibold uppercase tracking-widest text-ihsaanah-black/35 mb-4">
-						Recent Topics
-					</p>
-					<div class="flex flex-wrap gap-2">
-						<span class="trust-badge">Islamic Parenting</span>
-						<span class="trust-badge">ADHD Awareness</span>
-						<span class="trust-badge">Mental Health</span>
-						<span class="trust-badge">Art &amp; Crafts for Juniors</span>
+				<!-- Right: 2×2 image grid -->
+				<div id="sem-grid" class="grid grid-cols-2 gap-4">
+
+					<!-- Image 1 — top-left corner, label appears top-left -->
+					<div class="sem-wrap sem-tl" id="si1">
+						<div class="sem-label">
+							<span class="sem-label-text">Islamic Parenting</span>
+							<!-- Curved arrow draws SE toward image corner -->
+							<svg class="sem-arrow" viewBox="0 0 26 26">
+								<path class="sem-arrow-path" d="M 4 4 C 6 12, 15 18, 22 22 M 14 23 L 22 22 L 23 15"/>
+							</svg>
+						</div>
+						<img src="https://images.pexels.com/photos/35105927/pexels-photo-35105927.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=1"
+						     alt="Islamic Parenting seminar">
 					</div>
-					<p class="mt-4 text-xs text-ihsaanah-black/35 italic">
-						Topics vary each week — many more to come.
-					</p>
 
-					<!-- Decorative large quote on the side -->
-					<blockquote class="mt-8 border-l-2 border-ihsaanah-gold/30 pl-5">
-						<p class="font-display italic text-lg text-ihsaanah-black/50 leading-relaxed">
-							"Knowledge shared in community is knowledge that takes root."
-						</p>
-					</blockquote>
-				</div>
+					<!-- Image 2 — top-right corner, label appears top-right -->
+					<div class="sem-wrap sem-tr" id="si2">
+						<div class="sem-label">
+							<!-- Curved arrow draws SW toward image corner -->
+							<svg class="sem-arrow" viewBox="0 0 26 26">
+								<path class="sem-arrow-path" d="M 22 4 C 20 12, 11 18, 4 22 M 12 23 L 4 22 L 3 15"/>
+							</svg>
+							<span class="sem-label-text">ADHD Awareness</span>
+						</div>
+						<img src="https://images.pexels.com/photos/35105938/pexels-photo-35105938.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=1"
+						     alt="ADHD Awareness seminar">
+					</div>
+
+					<!-- Image 3 — bottom-left corner, label appears bottom-left -->
+					<div class="sem-wrap sem-bl" id="si3">
+						<div class="sem-label">
+							<span class="sem-label-text">Mental Health</span>
+							<!-- Curved arrow draws NE toward image corner -->
+							<svg class="sem-arrow" viewBox="0 0 26 26">
+								<path class="sem-arrow-path" d="M 4 22 C 6 14, 15 8, 22 4 M 14 3 L 22 4 L 23 11"/>
+							</svg>
+						</div>
+						<img src="https://images.pexels.com/photos/35105943/pexels-photo-35105943.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=1"
+						     alt="Mental Health seminar">
+					</div>
+
+					<!-- Image 4 — bottom-right corner, label appears bottom-right -->
+					<div class="sem-wrap sem-br" id="si4">
+						<div class="sem-label">
+							<!-- Curved arrow draws NW toward image corner -->
+							<svg class="sem-arrow" viewBox="0 0 26 26">
+								<path class="sem-arrow-path" d="M 22 22 C 20 14, 11 8, 4 4 M 12 3 L 4 4 L 3 11"/>
+							</svg>
+							<span class="sem-label-text">Art &amp; Crafts for Juniors</span>
+						</div>
+						<img src="https://images.pexels.com/photos/35105927/pexels-photo-35105927.jpeg?auto=compress&cs=tinysrgb&w=400&h=400&dpr=1"
+						     alt="Art and Crafts for Juniors seminar">
+					</div>
+
+				</div><!-- /sem-grid -->
 
 			</div>
 		</div>
 	</section>
 
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 5 — CTA STRIP
-	     Dark closing strip — contact + Facebook
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black py-16 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6 text-center" data-aos="fade-up">
-			<span class="section-label block mb-4">Get Involved</span>
-			<h2 class="font-display italic text-2xl text-white mb-3">
-				Be part of the community
-			</h2>
-			<p class="text-white/40 text-sm max-w-sm mx-auto mb-8">
-				Whether you want to enrol, volunteer, or simply stay informed — we'd love to hear from you.
-			</p>
-			<div class="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-				<a href="contact.html"
-				   class="rounded-md bg-ihsaanah-gold px-7 py-3 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
-					Contact Us
-				</a>
-				<a href="donate.html"
-				   class="rounded-md border border-ihsaanah-gold/40 px-7 py-3 text-sm font-semibold text-ihsaanah-gold
-				          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
-					Support Our Work
-				</a>
-			</div>
-		</div>
-	</section>
 
 </main>
 <div id="site-footer"></div>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+
+  /* ══════════════════════════════════════════════════════════════
+     1. HERO ENTRANCE ANIMATIONS
+     ══════════════════════════════════════════════════════════════ */
+  gsap.to('#prog-hero-headline', {
+    opacity: 1, x: 0, duration: 1.05, delay: 0.3, ease: 'power3.out'
+  });
+  gsap.to('#prog-hero-sub', {
+    opacity: 1, x: 0, duration: 1.05, delay: 0.55, ease: 'power3.out'
+  });
+
+
+  /* ══════════════════════════════════════════════════════════════
+     2. TASBIH SCROLL — three programmes revealed sequentially
+     ══════════════════════════════════════════════════════════════ */
+  var path = document.getElementById('tb-path');
+  var len  = path ? path.getTotalLength() : 850;
+
+  if (path) {
+    path.style.strokeDasharray  = len;
+    path.style.strokeDashoffset = len;
+  }
+
+  /* Cache all elements upfront */
+  function $q(sel, ctx) { return (ctx || document).querySelector(sel); }
+
+  var cards = [
+    {
+      el:   document.getElementById('pc1'),
+      ring: document.getElementById('tb-ring-1'),
+      dot:  document.getElementById('tb-dot-1'),
+      glow: document.getElementById('tb-glow-1'),
+      lineFrac: 0.29, /* bead 1 is ~29% down the path */
+    },
+    {
+      el:   document.getElementById('pc2'),
+      ring: document.getElementById('tb-ring-2'),
+      dot:  document.getElementById('tb-dot-2'),
+      glow: document.getElementById('tb-glow-2'),
+      lineFrac: 0.57,
+    },
+    {
+      el:   document.getElementById('pc3'),
+      ring: document.getElementById('tb-ring-3'),
+      dot:  document.getElementById('tb-dot-3'),
+      glow: document.getElementById('tb-glow-3'),
+      lineFrac: 0.86,
+    },
+  ];
+
+  /* Set all cards & their children to their starting (hidden) states */
+  cards.forEach(function (c) {
+    if (!c.el) return;
+    gsap.set(c.el, { opacity: 0, pointerEvents: 'none' });
+    var num  = $q('.prog-num',   c.el);
+    var tit  = $q('.prog-title', c.el);
+    var dsc  = $q('.prog-desc',  c.el);
+    var tags = $q('.prog-tags',  c.el);
+    var imgs = c.el.querySelectorAll('img');
+    if (num)  gsap.set(num,  { x: -44, opacity: 0 });
+    if (tit)  gsap.set(tit,  { x: -70, opacity: 0 });
+    if (dsc)  gsap.set(dsc,  { x: -52, opacity: 0 });
+    if (tags) gsap.set(tags, { x: -36, opacity: 0 });
+    if (imgs[0]) gsap.set(imgs[0], { x: 115, opacity: 0 });
+    if (imgs[1]) gsap.set(imgs[1], { x:  85, opacity: 0 });
+    gsap.set([c.ring, c.dot], { opacity: 0, scale: 0, transformOrigin: '50% 50%' });
+    gsap.set(c.glow, { opacity: 0 });
+  });
+
+  /* Build master scrub timeline.
+     Position labels are in seconds; GSAP maps the full timeline
+     proportionally across the scroll distance of #prog-outer. */
+  var tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: '#prog-outer',
+      start:   'top top',
+      end:     'bottom bottom',
+      scrub:   1.3,
+    },
+  });
+
+  /* Timeline structure per phase (3 phases × ~0.33 each = total ~1.0):
+       0.00 – 0.12: line draws to bead 1
+       0.10 – 0.26: card 1 reveals
+       0.27 – 0.31: card 1 exits
+       0.33 – 0.45: line draws to bead 2
+       0.43 – 0.59: card 2 reveals
+       0.60 – 0.64: card 2 exits
+       0.66 – 0.80: line draws to bead 3
+       0.76 – 0.92: card 3 reveals (stays)
+  */
+
+  /* Phase 1 ─────────────────────────────────────────────── */
+  tl.to(path,
+    { strokeDashoffset: len * (1 - cards[0].lineFrac), ease: 'none', duration: 0.12 }, 0.00);
+
+  tl.to([cards[0].ring, cards[0].dot],
+    { opacity: 1, scale: 1, duration: 0.03 }, 0.09);
+  tl.to(cards[0].glow,
+    { opacity: 0.5, duration: 0.03 }, 0.09);
+  tl.to(cards[0].el,
+    { opacity: 1, pointerEvents: 'auto', duration: 0.04 }, 0.10);
+
+  (function (c) {
+    var num  = $q('.prog-num',   c.el);
+    var tit  = $q('.prog-title', c.el);
+    var dsc  = $q('.prog-desc',  c.el);
+    var tags = $q('.prog-tags',  c.el);
+    var imgs = c.el.querySelectorAll('img');
+    if (num)     tl.to(num,     { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.10);
+    if (tit)     tl.to(tit,     { x: 0, opacity: 1, duration: 0.08, ease: 'power2.out' }, 0.12);
+    if (dsc)     tl.to(dsc,     { x: 0, opacity: 1, duration: 0.08, ease: 'power2.out' }, 0.13);
+    if (tags)    tl.to(tags,    { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.14);
+    if (imgs[0]) tl.to(imgs[0], { x: 0, opacity: 1, duration: 0.09, ease: 'power2.out' }, 0.10);
+    if (imgs[1]) tl.to(imgs[1], { x: 0, opacity: 1, duration: 0.09, ease: 'power2.out' }, 0.12);
+  }(cards[0]));
+
+  tl.to(cards[0].el,   { opacity: 0, pointerEvents: 'none', duration: 0.04 }, 0.27);
+  tl.to(cards[0].glow, { opacity: 0, duration: 0.04 }, 0.27);
+
+  /* Phase 2 ─────────────────────────────────────────────── */
+  tl.to(path,
+    { strokeDashoffset: len * (1 - cards[1].lineFrac), ease: 'none', duration: 0.12 }, 0.33);
+
+  tl.to([cards[1].ring, cards[1].dot],
+    { opacity: 1, scale: 1, duration: 0.03 }, 0.42);
+  tl.to(cards[1].glow,
+    { opacity: 0.5, duration: 0.03 }, 0.42);
+  tl.to(cards[1].el,
+    { opacity: 1, pointerEvents: 'auto', duration: 0.04 }, 0.43);
+
+  (function (c) {
+    var num  = $q('.prog-num',   c.el);
+    var tit  = $q('.prog-title', c.el);
+    var dsc  = $q('.prog-desc',  c.el);
+    var tags = $q('.prog-tags',  c.el);
+    var imgs = c.el.querySelectorAll('img');
+    if (num)     tl.to(num,     { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.43);
+    if (tit)     tl.to(tit,     { x: 0, opacity: 1, duration: 0.08, ease: 'power2.out' }, 0.45);
+    if (dsc)     tl.to(dsc,     { x: 0, opacity: 1, duration: 0.08, ease: 'power2.out' }, 0.46);
+    if (tags)    tl.to(tags,    { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.47);
+    if (imgs[0]) tl.to(imgs[0], { x: 0, opacity: 1, duration: 0.09, ease: 'power2.out' }, 0.43);
+    if (imgs[1]) tl.to(imgs[1], { x: 0, opacity: 1, duration: 0.09, ease: 'power2.out' }, 0.45);
+  }(cards[1]));
+
+  tl.to(cards[1].el,   { opacity: 0, pointerEvents: 'none', duration: 0.04 }, 0.60);
+  tl.to(cards[1].glow, { opacity: 0, duration: 0.04 }, 0.60);
+
+  /* Phase 3 ─────────────────────────────────────────────── */
+  tl.to(path,
+    { strokeDashoffset: len * (1 - cards[2].lineFrac), ease: 'none', duration: 0.14 }, 0.66);
+
+  tl.to([cards[2].ring, cards[2].dot],
+    { opacity: 1, scale: 1, duration: 0.03 }, 0.75);
+  tl.to(cards[2].glow,
+    { opacity: 0.5, duration: 0.03 }, 0.75);
+  tl.to(cards[2].el,
+    { opacity: 1, pointerEvents: 'auto', duration: 0.04 }, 0.76);
+
+  (function (c) {
+    var num  = $q('.prog-num',   c.el);
+    var tit  = $q('.prog-title', c.el);
+    var dsc  = $q('.prog-desc',  c.el);
+    var tags = $q('.prog-tags',  c.el);
+    var imgs = c.el.querySelectorAll('img');
+    if (num)     tl.to(num,     { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.76);
+    if (tit)     tl.to(tit,     { x: 0, opacity: 1, duration: 0.08, ease: 'power2.out' }, 0.78);
+    if (dsc)     tl.to(dsc,     { x: 0, opacity: 1, duration: 0.08, ease: 'power2.out' }, 0.79);
+    if (tags)    tl.to(tags,    { x: 0, opacity: 1, duration: 0.07, ease: 'power2.out' }, 0.80);
+    if (imgs[0]) tl.to(imgs[0], { x: 0, opacity: 1, duration: 0.09, ease: 'power2.out' }, 0.76);
+    if (imgs[1]) tl.to(imgs[1], { x: 0, opacity: 1, duration: 0.09, ease: 'power2.out' }, 0.78);
+  }(cards[2]));
+  /* Card 3 stays — no exit tween */
+
+
+  /* ══════════════════════════════════════════════════════════════
+     3. SEMINAR IMAGES — DIAGONAL FLY-IN
+     All four images burst in from their respective corner direction.
+     ══════════════════════════════════════════════════════════════ */
+  gsap.set('#si1', { x: -88, y: -88, opacity: 0 });
+  gsap.set('#si2', { x:  88, y: -88, opacity: 0 });
+  gsap.set('#si3', { x: -88, y:  88, opacity: 0 });
+  gsap.set('#si4', { x:  88, y:  88, opacity: 0 });
+
+  ScrollTrigger.create({
+    trigger: '#sem-grid',
+    start:   'top 76%',
+    once:    true,
+    onEnter: function () {
+      /* si1 (TL) and si4 (BR) are diagonal opposites — same delay */
+      gsap.to('#si1', { x: 0, y: 0, opacity: 1, duration: 0.68, ease: 'power3.out', delay: 0    });
+      gsap.to('#si4', { x: 0, y: 0, opacity: 1, duration: 0.68, ease: 'power3.out', delay: 0    });
+      /* si2 (TR) and si3 (BL) — slight offset so they don't all land at once */
+      gsap.to('#si2', { x: 0, y: 0, opacity: 1, duration: 0.68, ease: 'power3.out', delay: 0.07 });
+      gsap.to('#si3', { x: 0, y: 0, opacity: 1, duration: 0.68, ease: 'power3.out', delay: 0.07 });
+    },
+  });
+
+}());
+</script>
+
 </body>
 </html>
