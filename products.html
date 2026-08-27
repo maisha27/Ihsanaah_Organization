@@ -4,7 +4,7 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta name="description" content="Al-Ihsaanah courses and programmes — Tajweed, Hifz, Quranic Language, Abacus, Islamic Art, Martial Art, and more." />
-	<title>Courses & Programmes | Al-Ihsaanah</title>
+	<title>Our Programmes | Al-Ihsaanah</title>
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,62 +31,631 @@
 	</script>
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+	<style>
+
+	/* ══════════════════════════════════════════════════════════
+	   STICKY LAYER ARCHITECTURE
+	   Every section is position:sticky + z-index directly.
+	   Each section's height > 100vh provides the "pin duration".
+	   Higher-z sections slide up and paint over lower-z ones.
+	   (Same pattern as #about-hero in about-ihsaanah.html)
+	   ══════════════════════════════════════════════════════════ */
+
+	body { background: #0D0D0D; }
+
+	/* ── 1. HERO  z=1, 100vh ─────────────────────────────────── */
+	#prod-hero {
+	  position: sticky;
+	  top: 0;
+	  z-index: 1;
+	  height: 100vh;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: flex-end;
+	  overflow: hidden;
+	}
+
+	/* ── 2. OVERVIEW  z=2, 300vh, cream ─────────────────────── */
+	#overview-section {
+	  position: sticky;
+	  top: 0;
+	  z-index: 2;
+	  height: 300vh;
+	  overflow: hidden;
+	  background: #faf7f2;
+	}
+	.overview-inner {
+	  height: 100vh;
+	  position: relative;
+	  overflow: hidden;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	}
+	.overview-content {
+	  width: min(680px, 90vw);
+	}
+	.overview-sup {
+	  font-size: 0.62rem;
+	  font-weight: 700;
+	  letter-spacing: 0.22em;
+	  text-transform: uppercase;
+	  color: #C9A030;
+	  display: block;
+	  margin-bottom: 2.5rem;
+	}
+	.overview-row {
+	  display: flex;
+	  align-items: baseline;
+	  gap: 1.25rem;
+	  padding: 1.25rem 0;
+	  border-top: 1px solid rgba(13,13,13,0.09);
+	}
+	.overview-row:last-child { border-bottom: 1px solid rgba(13,13,13,0.09); }
+	.overview-num {
+	  font-family: 'DM Serif Display', Georgia, serif;
+	  font-style: italic;
+	  font-size: clamp(2.4rem, 5vw, 4rem);
+	  color: rgba(201,160,48,0.3);
+	  line-height: 1;
+	  flex-shrink: 0;
+	  width: 3.5rem;
+	}
+	.overview-name {
+	  font-family: 'DM Serif Display', Georgia, serif;
+	  font-style: italic;
+	  font-size: clamp(1.6rem, 3.2vw, 2.6rem);
+	  color: rgba(13,13,13,0.85);    /* BLACK */
+	  line-height: 1.15;
+	}
+
+	/* ── 3. QURANIC SCIENCES  z=3, 500vh, cream ─────────────── */
+	#quranic-section {
+	  position: sticky;
+	  top: 0;
+	  z-index: 3;
+	  height: 500vh;
+	  overflow: hidden;
+	  background: #faf7f2;
+	}
+	.quranic-inner {
+	  height: 100vh;
+	  position: relative;
+	  overflow: hidden;
+	}
+	.quranic-label-bar {
+	  position: absolute;
+	  top: 0; left: 0; right: 0;
+	  z-index: 10;
+	  padding: 4.5rem 5vw 0;
+	  text-align: center;
+	}
+	.quranic-label-text {
+	  font-family: 'DM Serif Display', Georgia, serif;
+	  font-style: italic;
+	  font-size: clamp(0.9rem, 1.6vw, 1.2rem);
+	  color: rgba(13,13,13,0.38);
+	  letter-spacing: 0.04em;
+	}
+	.quranic-dots {
+	  position: absolute;
+	  bottom: 2.25rem;
+	  left: 50%;
+	  transform: translateX(-50%);
+	  display: flex;
+	  gap: 0.55rem;
+	  z-index: 10;
+	}
+	.qdot {
+	  width: 5px; height: 5px;
+	  border-radius: 50%;
+	  background: rgba(13,13,13,0.18);
+	  transition: background 0.35s ease, transform 0.35s ease;
+	}
+	.qdot.active { background: #C9A030; transform: scale(1.4); }
+
+	/* product panels */
+	.quranic-panel {
+	  position: absolute;
+	  inset: 0;
+	  display: flex;
+	  align-items: center;
+	  padding: 8rem min(5vw, 4rem) 4rem;
+	  gap: min(5vw, 4rem);
+	}
+	.qpanel-img {
+	  flex: 0 0 52%;      /* wider image */
+	  height: 68vh;
+	  overflow: hidden;
+	  flex-shrink: 0;
+	}
+	.qpanel-img img {
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  display: block;
+	}
+	.qpanel-info { flex: 1; min-width: 0; }
+	.qpanel-eyebrow {
+	  font-size: 0.6rem;
+	  font-weight: 700;
+	  letter-spacing: 0.18em;
+	  text-transform: uppercase;
+	  color: #C9A030;
+	  margin-bottom: 1rem;
+	  display: block;
+	}
+	.qpanel-title {
+	  font-family: 'DM Serif Display', Georgia, serif;
+	  font-style: italic;
+	  font-size: clamp(1.75rem, 2.8vw, 2.5rem);
+	  color: #0D0D0D;
+	  line-height: 1.2;
+	  margin-bottom: 1.25rem;
+	}
+	.qpanel-rule {
+	  width: 44px; height: 2px;
+	  background: #C9A030;
+	  margin-bottom: 1.5rem;
+	  border-radius: 1px;
+	}
+	.qpanel-meta {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 0.5rem;
+	  margin-bottom: 1.75rem;
+	}
+	.qpanel-meta-row {
+	  display: flex;
+	  align-items: flex-start;
+	  gap: 0.5rem;
+	  font-size: 0.84rem;
+	  color: rgba(13,13,13,0.6);
+	  line-height: 1.5;
+	}
+	.qpanel-meta-row svg { flex-shrink: 0; margin-top: 2px; color: #C9A030; }
+	.qpanel-fees {
+	  display: flex;
+	  gap: 2.5rem;
+	  padding-top: 1.25rem;
+	  border-top: 1px solid #f5ede0;
+	  margin-bottom: 2rem;
+	}
+	.qpanel-fee-label {
+	  font-size: 0.58rem;
+	  letter-spacing: 0.1em;
+	  text-transform: uppercase;
+	  color: rgba(13,13,13,0.35);
+	  display: block;
+	  margin-bottom: 0.2rem;
+	}
+	.qpanel-fee-value {
+	  font-family: 'Poppins', sans-serif;
+	  font-weight: 700;
+	  font-size: 1rem;
+	  color: #0D0D0D;
+	}
+	.qpanel-btn {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 0.5rem;
+	  padding: 0.75rem 1.75rem;
+	  background: #0D0D0D;
+	  color: white;
+	  font-size: 0.78rem;
+	  font-weight: 600;
+	  text-decoration: none;
+	  letter-spacing: 0.04em;
+	  transition: background 0.2s ease;
+	}
+	.qpanel-btn:hover { background: #C9A030; }
+
+	/* ── 4. SKILLS & ENRICHMENT  z=4, 200vh, dark ───────────── */
+	#skills-section {
+	  position: sticky;
+	  top: 0;
+	  z-index: 4;
+	  height: 200vh;
+	  overflow: hidden;
+	  background: #0D0D0D;
+	}
+	.skills-inner {
+	  height: 100vh;
+	  position: relative;
+	  overflow: hidden;
+	  display: flex;
+	  flex-direction: column;
+	  padding: 4.5rem min(5vw, 4rem) 2.5rem;
+	}
+	.skills-head {
+	  text-align: center;
+	  flex-shrink: 0;
+	  margin-bottom: 2.5rem;
+	}
+	.skills-viewport {
+	  flex: 1;
+	  overflow: hidden;
+	  position: relative;
+	  min-height: 0;
+	}
+	.skills-track {
+	  display: flex;
+	  gap: 1.5rem;
+	  height: 100%;
+	  transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+	}
+	.skills-card {
+	  flex: 0 0 calc(33.333% - 1rem);
+	  height: 100%;
+	  position: relative;
+	  overflow: hidden;
+	  border: 1px solid rgba(201,160,48,0.14);
+	  cursor: pointer;
+	}
+	.skills-img-layer {
+	  position: absolute;
+	  top: 0; left: 0; right: 0;
+	  height: 70%;
+	  overflow: hidden;
+	}
+	.skills-img {
+	  position: absolute;
+	  inset: 0;
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  display: block;
+	  transition: opacity 0.5s ease;
+	}
+	.skills-img-hover { opacity: 0; }
+
+	/* hover reveal: lighter panel so the swapping image shows */
+	.skills-reveal {
+	  position: absolute;
+	  top: 0; left: 0; right: 0;
+	  height: 70%;
+	  background: rgba(13,13,13,0.52);   /* lightened from 0.93 */
+	  transform: translateX(-101%);
+	  transition: transform 0.48s cubic-bezier(0.4,0,0.2,1);
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  padding: 1.75rem;
+	  z-index: 5;
+	  backdrop-filter: blur(0px);
+	}
+	.sr-fee-label {
+	  font-size: 0.57rem;
+	  letter-spacing: 0.13em;
+	  text-transform: uppercase;
+	  color: rgba(255,255,255,0.85);
+	  display: block;
+	  margin-bottom: 0.25rem;
+	}
+	.sr-fee {
+	  font-family: 'Poppins', sans-serif;
+	  font-weight: 700;
+	  font-size: 1.05rem;
+	  color: white;
+	  margin-bottom: 0.2rem;
+	}
+	.sr-fee-monthly {
+	  font-size: 0.72rem;
+	  color: rgba(255,255,255,0.65);
+	  margin-bottom: 1rem;
+	}
+	.sr-schedule {
+	  font-size: 0.77rem;
+	  color: rgba(255,255,255,0.82);
+	  line-height: 1.65;
+	  margin-bottom: 1.25rem;
+	}
+	.sr-link {
+	  display: inline-block;
+	  font-size: 0.74rem;
+	  font-weight: 600;
+	  color: #C9A030;
+	  text-decoration: none;
+	}
+	.sr-link:hover { text-decoration: underline; }
+
+	.skills-card-bottom {
+	  position: absolute;
+	  bottom: 0; left: 0; right: 0;
+	  height: 30%;
+	  background: white;
+	  border-top: 1px solid #f5ede0;
+	  padding: 1.25rem 1.5rem;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	}
+	.skills-card-title {
+	  font-family: 'Poppins', sans-serif;
+	  font-weight: 600;
+	  font-size: 0.92rem;
+	  color: #0D0D0D;
+	  margin-bottom: 0.2rem;
+	}
+	.skills-card-dur {
+	  font-size: 0.71rem;
+	  color: rgba(13,13,13,0.45);
+	}
+
+	@media (hover: hover) {
+	  .skills-card:hover .skills-reveal { transform: translateX(0); }
+	  .skills-card:hover .skills-img:not(.skills-img-hover) { opacity: 0; }
+	  .skills-card:hover .skills-img-hover { opacity: 1; }
+	}
+
+	.skills-arrows {
+	  flex-shrink: 0;
+	  display: flex;
+	  justify-content: center;
+	  gap: 0.875rem;
+	  margin-top: 1.5rem;
+	}
+	.skills-arrow {
+	  width: 42px; height: 42px;
+	  border-radius: 50%;
+	  border: 1px solid rgba(201,160,48,0.3);
+	  background: transparent;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  cursor: pointer;
+	  transition: border-color 0.2s ease, background 0.2s ease;
+	}
+	.skills-arrow:hover { border-color: #C9A030; background: rgba(201,160,48,0.07); }
+
+	/* ── 5. BOOK CLUB  z=5, 200vh, dark ─────────────────────── */
+	#bookclub-section {
+	  position: sticky;
+	  top: 0;
+	  z-index: 5;
+	  height: 200vh;
+	  overflow: hidden;
+	  background: #0D0D0D;
+	}
+	.bookclub-inner {
+	  height: 100vh;
+	  position: relative;
+	  overflow: hidden;
+	}
+	.bookclub-topbar {
+	  position: absolute;
+	  top: 0; left: 0; right: 0;
+	  z-index: 10;
+	  text-align: center;
+	  padding: 4.5rem 2rem 2rem;
+	  background: linear-gradient(to bottom, rgba(13,13,13,0.96) 0%, rgba(13,13,13,0.6) 70%, transparent 100%);
+	}
+	.bookclub-imgwrap {
+	  position: absolute;
+	  bottom: 0; left: 0; right: 0;
+	  height: 72%;
+	  overflow: hidden;
+	}
+	.bookclub-imgwrap img {
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  display: block;
+	  object-position: center 25%;
+	}
+	.bookclub-imgwrap::after {
+	  content: '';
+	  position: absolute;
+	  inset: 0;
+	  background: linear-gradient(to bottom,
+	    rgba(13,13,13,0.85) 0%,
+	    rgba(13,13,13,0.3)  35%,
+	    rgba(13,13,13,0.5)  100%);
+	}
+	.bookclub-content {
+	  position: absolute;
+	  bottom: 0; left: 0; right: 0;
+	  top: 35%;
+	  z-index: 10;
+	  padding: 2rem min(8vw, 6rem);
+	  display: flex;
+	  align-items: flex-end;
+	  justify-content: space-between;
+	  gap: 2.5rem;
+	}
+	.bc-eyebrow {
+	  font-size: 0.6rem;
+	  font-weight: 700;
+	  letter-spacing: 0.2em;
+	  text-transform: uppercase;
+	  color: #C9A030;
+	  display: block;
+	  margin-bottom: 0.75rem;
+	}
+	.bc-title {
+	  font-family: 'DM Serif Display', Georgia, serif;
+	  font-style: italic;
+	  font-size: clamp(1.55rem, 2.6vw, 2.1rem);
+	  color: white;
+	  line-height: 1.22;
+	  max-width: 400px;
+	  margin-bottom: 1rem;
+	}
+	.bc-desc {
+	  font-size: 0.84rem;
+	  color: rgba(255,255,255,0.58);
+	  line-height: 1.65;
+	  max-width: 360px;
+	}
+	.bc-right {
+	  flex-shrink: 0;
+	  text-align: right;
+	  padding-bottom: 0.25rem;
+	}
+	.bc-meta {
+	  font-size: 0.78rem;
+	  color: rgba(255,255,255,0.5);
+	  line-height: 1.75;
+	  margin-bottom: 1.25rem;
+	}
+	.bc-btn {
+	  display: inline-flex;
+	  align-items: center;
+	  gap: 0.5rem;
+	  padding: 0.85rem 2rem;
+	  background: #C9A030;
+	  color: white;
+	  font-size: 0.78rem;
+	  font-weight: 600;
+	  text-decoration: none;
+	  transition: opacity 0.2s ease;
+	}
+	.bc-btn:hover { opacity: 0.88; }
+
+	/* ── 6. HOW TO ENROL  z=6, normal scroll ────────────────── */
+	#enrol-section {
+	  position: relative;
+	  z-index: 6;
+	  background: #0D0D0D;
+	  border-top: 1px solid rgba(201,160,48,0.1);
+	  padding: 7rem 2rem 9rem;
+	}
+	.enrol-title {
+	  font-family: 'DM Serif Display', Georgia, serif;
+	  font-style: italic;
+	  font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+	  color: white;
+	  text-align: center;
+	  margin-bottom: 5rem;
+	}
+	.enrol-steps {
+	  display: flex;
+	  align-items: flex-start;
+	  max-width: 880px;
+	  margin: 0 auto;
+	  position: relative;
+	}
+	.enrol-step {
+	  flex: 1;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  text-align: center;
+	  padding: 0 0.75rem;
+	  position: relative;
+	}
+	.enrol-line {
+	  position: absolute;
+	  top: 1.45rem;
+	  left: calc(50% + 1.65rem);
+	  right: calc(-50% + 1.65rem);
+	  height: 1px;
+	  background: linear-gradient(90deg, rgba(201,160,48,0.55), rgba(201,160,48,0.18));
+	  transform-origin: left center;
+	  transform: scaleX(0);
+	  transition: transform 0.55s ease;
+	  z-index: 0;
+	}
+	.enrol-line.drawn { transform: scaleX(1); }
+	.enrol-circle {
+	  width: 2.9rem; height: 2.9rem;
+	  border-radius: 50%;
+	  border: 1.5px solid #C9A030;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-family: 'Poppins', sans-serif;
+	  font-weight: 700;
+	  font-size: 0.85rem;
+	  color: #C9A030;
+	  background: #0D0D0D;
+	  position: relative;
+	  z-index: 1;
+	  opacity: 0;
+	  transform: scale(0.65);
+	  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+	}
+	.enrol-circle.shown { opacity: 1; transform: scale(1); }
+	.enrol-step-title {
+	  margin-top: 1rem;
+	  font-family: 'Poppins', sans-serif;
+	  font-weight: 600;
+	  font-size: 0.86rem;
+	  color: white;
+	  opacity: 0;
+	  transform: translateY(8px);
+	  transition: opacity 0.38s ease, transform 0.38s ease;
+	}
+	.enrol-step-title.shown { opacity: 1; transform: translateY(0); }
+	.enrol-step-desc {
+	  margin-top: 0.35rem;
+	  font-size: 0.74rem;
+	  color: rgba(255,255,255,0.42);
+	  line-height: 1.55;
+	  opacity: 0;
+	  transform: translateY(8px);
+	  transition: opacity 0.38s ease, transform 0.38s ease;
+	}
+	.enrol-step-desc.shown { opacity: 1; transform: translateY(0); }
+
+	</style>
 </head>
-<body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="products.html" data-transparent-header="true">
+<body class="flex min-h-screen flex-col bg-ihsaanah-black text-ihsaanah-black font-body"
+      data-active-nav="products.html"
+      data-transparent-header="true">
 <div id="site-header"></div>
 <main class="flex-1">
 
+
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 1 — HERO
-	     Editorial headline + category jump bar
+	     SECTION 1 — HERO  (sticky z=1, 100vh)
+	     Lighter gradients so background image shows clearly
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="relative overflow-hidden bg-ihsaanah-black">
-		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.18]"></div>
+	<section id="prod-hero">
+
+		<img src="https://images.pexels.com/photos/1537086/pexels-photo-1537086.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1"
+		     alt=""
+		     class="absolute inset-0 w-full h-full object-cover pointer-events-none"
+		     style="opacity:0.55; object-position: center 40%;">
+
+		<!-- LIGHTER bottom-to-top gradient (was 0.97/0.58/0.18) -->
 		<div class="pointer-events-none absolute inset-0"
-		     style="background: radial-gradient(ellipse 60% 55% at 50% 0%, rgba(201,160,48,0.18) 0%, transparent 65%);"></div>
+		     style="background:linear-gradient(to top,rgba(13,13,13,0.82) 0%,rgba(13,13,13,0.35) 42%,rgba(13,13,13,0.08) 72%,rgba(13,13,13,0.0) 100%);"></div>
 
-		<div class="relative mx-auto max-w-4xl px-6 pt-24 pb-14 text-center">
-			<span class="section-label block mb-5 animate-fade-up">Courses &amp; Programmes</span>
-			<h1 class="font-display italic text-4xl text-white leading-tight sm:text-6xl animate-fade-up"
-			    style="animation-delay:0.08s">
-				Eight pathways.<br>One purpose.
-			</h1>
-			<p class="mt-5 text-white/50 max-w-lg mx-auto text-sm leading-relaxed animate-fade-up"
-			   style="animation-delay:0.18s">
-				From Quranic memorisation to entrepreneurship — each course is designed
-				to develop faith, knowledge, and character in both this life and the Hereafter.
-			</p>
-		</div>
+		<!-- LIGHTER side vignette (was 0.55) -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background:linear-gradient(to right,rgba(13,13,13,0.32) 0%,rgba(13,13,13,0.06) 50%,transparent 100%);"></div>
 
-		<!-- Category jump bar -->
-		<div class="relative border-t border-ihsaanah-gold/10">
-			<div class="mx-auto max-w-5xl px-4">
-				<div class="flex gap-1 overflow-x-auto py-2 scrollbar-none" style="-ms-overflow-style:none; scrollbar-width:none;">
-					<a href="#quranic"
-					   class="shrink-0 rounded-full border border-ihsaanah-gold/30 px-4 py-1.5 text-xs font-semibold text-ihsaanah-gold/80
-					          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
-						Quranic Sciences
-					</a>
-					<a href="#skills"
-					   class="shrink-0 rounded-full border border-ihsaanah-gold/30 px-4 py-1.5 text-xs font-semibold text-ihsaanah-gold/80
-					          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
-						Skills &amp; Enrichment
-					</a>
-					<a href="#bookclub"
-					   class="shrink-0 rounded-full border border-ihsaanah-gold/30 px-4 py-1.5 text-xs font-semibold text-ihsaanah-gold/80
-					          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
-						Book Club
-					</a>
-					<a href="#additional"
-					   class="shrink-0 rounded-full border border-ihsaanah-gold/30 px-4 py-1.5 text-xs font-semibold text-ihsaanah-gold/80
-					          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
-						Additional Programmes
-					</a>
-					<a href="#enrol"
-					   class="shrink-0 rounded-full border border-ihsaanah-gold/30 px-4 py-1.5 text-xs font-semibold text-ihsaanah-gold/80
-					          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
-						How to Enrol
-					</a>
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0"
+		     style="opacity:0.07;
+		            -webkit-mask-image:linear-gradient(to top,black 0%,black 30%,transparent 60%);
+		            mask-image:linear-gradient(to top,black 0%,black 30%,transparent 60%);"></div>
+
+		<div class="pointer-events-none absolute inset-0"
+		     style="background:radial-gradient(ellipse 50% 35% at 12% 100%,rgba(201,160,48,0.12) 0%,transparent 58%);"></div>
+
+		<div class="relative flex flex-col justify-end h-full px-8 pb-14 pt-32 mx-auto w-full"
+		     style="max-width:1300px;">
+
+			<div class="w-full mb-9" style="height:1px;background:rgba(255,255,255,0.16);"></div>
+
+			<div class="flex items-end justify-between gap-10">
+				<div class="flex-shrink-0" data-aos="fade-right" data-aos-delay="100">
+					<h1 class="font-display italic text-white leading-[1.15]"
+					    style="font-size:clamp(2.6rem,5.5vw,4.8rem);">
+						Knowledge.<br>Character.<br>Purpose.
+					</h1>
+				</div>
+				<div class="max-w-xs text-right pb-0.5" data-aos="fade-left" data-aos-delay="200">
+					<p class="text-white/75 leading-relaxed"
+					   style="font-size:clamp(0.82rem,1.3vw,0.95rem);font-weight:400;">
+						Eight pathways designed to develop<br>
+						faith, skill, and character — for every<br>
+						soul that seeks to grow.
+					</p>
 				</div>
 			</div>
 		</div>
@@ -94,356 +663,353 @@
 
 
 	<!-- ═══════════════════════════════════════════════════════
-	     HIFZ FEATURED BANNER
-	     Promotional image as a full-width editorial feature
+	     SECTION 2 — PRODUCTS OVERVIEW  (sticky z=2, 300vh)
+	     Cream background. Items reveal one-by-one via GSAP scrub.
+	     Category names in black.
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black pb-12 pt-10">
-		<div class="mx-auto max-w-5xl px-4" data-aos="fade-up">
-			<div class="overflow-hidden rounded-2xl border border-ihsaanah-gold/25 shadow-2xl"
-			     style="box-shadow: 0 0 50px rgba(201,160,48,0.10);">
-				<img src="img/hifz_course_content.jpeg"
-				     alt="Hifzul Quran — A Roadmap to Ramadan, Living Every Ayah"
-				     class="w-full object-cover object-top"
-				     style="max-height: 380px;">
+	<div id="overview-section">
+		<div class="overview-inner">
+
+			<!-- subtle cream-compatible pattern -->
+			<div class="ihsaanah-pattern pointer-events-none absolute inset-0" style="opacity:0.06;"></div>
+
+			<div class="overview-content">
+				<span class="overview-sup" id="ov-sup">Products</span>
+
+				<div class="overview-row" id="ov-row-1">
+					<span class="overview-num">01</span>
+					<span class="overview-name">Quranic Sciences</span>
+				</div>
+
+				<div class="overview-row" id="ov-row-2">
+					<span class="overview-num">02</span>
+					<span class="overview-name">Skills &amp; Enrichment</span>
+				</div>
+
+				<div class="overview-row" id="ov-row-3">
+					<span class="overview-num">03</span>
+					<span class="overview-name">Book Club</span>
+				</div>
 			</div>
+
 		</div>
-	</section>
+	</div>
 
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 2 — QURANIC SCIENCES
-	     4 courses: Tajweed, Nazeera, Hifz, Quranic Language
+	     SECTION 3 — QURANIC SCIENCES  (sticky z=3, 500vh)
+	     Image wider (52%). Products slide right→left on scroll.
+	     Relevant images: open Quran, Quran reading, Hifz, books.
 	     ═══════════════════════════════════════════════════════ -->
-	<section id="quranic" class="bg-ihsaanah-cream py-16" style="scroll-margin-top:80px">
-		<div class="mx-auto max-w-5xl px-4">
+	<div id="quranic-section">
+		<div class="quranic-inner">
 
-			<div class="mb-8 flex items-end justify-between gap-4" data-aos="fade-up">
+			<div class="quranic-label-bar">
+				<span class="quranic-label-text">Quranic Sciences</span>
+			</div>
+
+			<div class="quranic-dots">
+				<div class="qdot active" id="qdot-0"></div>
+				<div class="qdot" id="qdot-1"></div>
+				<div class="qdot" id="qdot-2"></div>
+				<div class="qdot" id="qdot-3"></div>
+			</div>
+
+			<!-- Panel 1: Basic to Advanced Tajweed -->
+			<div class="quranic-panel" id="qp-0">
+				<div class="qpanel-img">
+					<img src="https://images.pexels.com/photos/3880753/pexels-photo-3880753.jpeg?auto=compress&cs=tinysrgb&w=900"
+					     alt="Open Quran — Tajweed" loading="lazy">
+				</div>
+				<div class="qpanel-info">
+					<span class="qpanel-eyebrow">01 / Quranic Sciences</span>
+					<h3 class="qpanel-title">Basic to Advanced<br>Tajweed</h3>
+					<div class="qpanel-rule"></div>
+					<div class="qpanel-meta">
+						<div class="qpanel-meta-row">
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+							<span>Fri &amp; Sat — 3:30–4:30 pm &nbsp;·&nbsp; 6–8 months</span>
+						</div>
+					</div>
+					<div class="qpanel-fees">
+						<div><span class="qpanel-fee-label">Admission</span><span class="qpanel-fee-value">2,500 BDT</span></div>
+						<div><span class="qpanel-fee-label">Monthly</span><span class="qpanel-fee-value">1,500 BDT</span></div>
+					</div>
+					<a href="contact.html" class="qpanel-btn">Enquire →</a>
+				</div>
+			</div>
+
+			<!-- Panel 2: Nazeratul Quran & Quran Mashq -->
+			<div class="quranic-panel" id="qp-1" style="opacity:0;transform:translateX(100%);">
+				<div class="qpanel-img">
+					<img src="https://images.pexels.com/photos/6238118/pexels-photo-6238118.jpeg?auto=compress&cs=tinysrgb&w=900"
+					     alt="Quran reading — Nazeratul" loading="lazy">
+				</div>
+				<div class="qpanel-info">
+					<span class="qpanel-eyebrow">02 / Quranic Sciences</span>
+					<h3 class="qpanel-title">Nazeratul Quran<br>&amp; Quran Mashq</h3>
+					<div class="qpanel-rule"></div>
+					<div class="qpanel-meta">
+						<div class="qpanel-meta-row">
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+							<span>Mon &amp; Wed — 3:00–4:00 pm &nbsp;·&nbsp; 1 year</span>
+						</div>
+					</div>
+					<div class="qpanel-fees">
+						<div><span class="qpanel-fee-label">Admission</span><span class="qpanel-fee-value">2,500 BDT</span></div>
+						<div><span class="qpanel-fee-label">Monthly</span><span class="qpanel-fee-value">1,500 BDT</span></div>
+					</div>
+					<a href="contact.html" class="qpanel-btn">Enquire →</a>
+				</div>
+			</div>
+
+			<!-- Panel 3: Hifzul Quran — local image, directly relevant -->
+			<div class="quranic-panel" id="qp-2" style="opacity:0;transform:translateX(100%);">
+				<div class="qpanel-img">
+					<img src="img/hifz_course_content.jpeg"
+					     alt="Hifzul Quran memorisation" loading="lazy">
+				</div>
+				<div class="qpanel-info">
+					<span class="qpanel-eyebrow">03 / Quranic Sciences</span>
+					<h3 class="qpanel-title">Hifzul Quran</h3>
+					<div class="qpanel-rule"></div>
+					<div class="qpanel-meta">
+						<div class="qpanel-meta-row">
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+							<span>Thu 9:30 am–12:00 pm (Offline)</span>
+						</div>
+						<div class="qpanel-meta-row">
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+							<span>Sat 10:00 am–12:00 pm (Online) &nbsp;·&nbsp; Need basis</span>
+						</div>
+					</div>
+					<div class="qpanel-fees">
+						<div><span class="qpanel-fee-label">Admission</span><span class="qpanel-fee-value">2,500 BDT</span></div>
+						<div><span class="qpanel-fee-label">Monthly</span><span class="qpanel-fee-value">1,500 BDT</span></div>
+					</div>
+					<a href="contact.html" class="qpanel-btn">Enquire →</a>
+				</div>
+			</div>
+
+			<!-- Panel 4: Quranic Language -->
+			<div class="quranic-panel" id="qp-3" style="opacity:0;transform:translateX(100%);">
+				<div class="qpanel-img">
+					<img src="https://images.pexels.com/photos/590493/pexels-photo-590493.jpeg?auto=compress&cs=tinysrgb&w=900"
+					     alt="Books — Quranic Language study" loading="lazy">
+				</div>
+				<div class="qpanel-info">
+					<span class="qpanel-eyebrow">04 / Quranic Sciences</span>
+					<h3 class="qpanel-title">Quranic Language</h3>
+					<div class="qpanel-rule"></div>
+					<div class="qpanel-meta">
+						<div class="qpanel-meta-row">
+							<svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M7 4v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+							<span>Fri — 5:00–6:00 pm &nbsp;·&nbsp; 1 year</span>
+						</div>
+					</div>
+					<div class="qpanel-fees">
+						<div><span class="qpanel-fee-label">Admission</span><span class="qpanel-fee-value">1,500 BDT</span></div>
+						<div><span class="qpanel-fee-label">Monthly</span><span class="qpanel-fee-value">850 BDT</span></div>
+					</div>
+					<a href="contact.html" class="qpanel-btn">Enquire →</a>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 4 — SKILLS & ENRICHMENT  (sticky z=4, 200vh)
+	     3 tall cards. Hover: image swaps + lighter reveal panel.
+	     ═══════════════════════════════════════════════════════ -->
+	<div id="skills-section">
+		<div class="skills-inner">
+
+			<div class="skills-head">
+				<span class="section-label block mb-1.5" style="color:rgba(201,160,48,0.55);">02</span>
+				<h2 class="font-display italic text-white" style="font-size:clamp(1.5rem,2.8vw,2.2rem);">Skills &amp; Enrichment</h2>
+			</div>
+
+			<div class="skills-viewport">
+				<div class="skills-track" id="skills-track">
+
+					<!-- Card 1: Abacus & Brain Gym -->
+					<div class="skills-card">
+						<div class="skills-img-layer">
+							<img class="skills-img"
+							     src="https://images.pexels.com/photos/5905659/pexels-photo-5905659.jpeg?auto=compress&cs=tinysrgb&w=700"
+							     alt="Abacus & Brain Gym">
+							<img class="skills-img skills-img-hover"
+							     src="https://images.pexels.com/photos/5905441/pexels-photo-5905441.jpeg?auto=compress&cs=tinysrgb&w=700"
+							     alt="Abacus detail">
+						</div>
+						<div class="skills-reveal">
+							<span class="sr-fee-label">Admission fee</span>
+							<p class="sr-fee">2,500 BDT</p>
+							<p class="sr-fee-monthly">2,000 BDT / month</p>
+							<p class="sr-schedule">Fri &amp; Sat — 6:00–7:00 am<br>Duration: 1 year</p>
+							<a href="contact.html" class="sr-link">Enquire →</a>
+						</div>
+						<div class="skills-card-bottom">
+							<p class="skills-card-title">Abacus &amp; Brain Gym</p>
+							<p class="skills-card-dur">1 year</p>
+						</div>
+					</div>
+
+					<!-- Card 2: Islamic Art & Crafts -->
+					<div class="skills-card">
+						<div class="skills-img-layer">
+							<img class="skills-img"
+							     src="https://images.pexels.com/photos/1839919/pexels-photo-1839919.jpeg?auto=compress&cs=tinysrgb&w=700"
+							     alt="Islamic Art & Crafts">
+							<img class="skills-img skills-img-hover"
+							     src="https://images.pexels.com/photos/1145720/pexels-photo-1145720.jpeg?auto=compress&cs=tinysrgb&w=700"
+							     alt="Islamic Art geometric">
+						</div>
+						<div class="skills-reveal">
+							<span class="sr-fee-label">Admission fee</span>
+							<p class="sr-fee">1,000 BDT</p>
+							<p class="sr-fee-monthly">1,000 BDT / month</p>
+							<p class="sr-schedule">Fri &amp; Sat — 3:00–4:00 pm<br>Duration: 6–8 months</p>
+							<a href="contact.html" class="sr-link">Enquire →</a>
+						</div>
+						<div class="skills-card-bottom">
+							<p class="skills-card-title">Islamic Art &amp; Crafts</p>
+							<p class="skills-card-dur">6–8 months</p>
+						</div>
+					</div>
+
+					<!-- Card 3: Martial Art -->
+					<div class="skills-card">
+						<div class="skills-img-layer">
+							<img class="skills-img"
+							     src="https://images.pexels.com/photos/4761671/pexels-photo-4761671.jpeg?auto=compress&cs=tinysrgb&w=700"
+							     alt="Martial Art">
+							<img class="skills-img skills-img-hover"
+							     src="https://images.pexels.com/photos/4761773/pexels-photo-4761773.jpeg?auto=compress&cs=tinysrgb&w=700"
+							     alt="Martial Art training">
+						</div>
+						<div class="skills-reveal">
+							<span class="sr-fee-label">Admission fee</span>
+							<p class="sr-fee">2,500 BDT</p>
+							<p class="sr-fee-monthly">1,500 BDT / month</p>
+							<p class="sr-schedule">Female — Fri &amp; Sat 4:30–5:30 pm<br>Male — Fri &amp; Sat 8:00–9:00 am<br>Duration: 3 years</p>
+							<a href="contact.html" class="sr-link">Enquire →</a>
+						</div>
+						<div class="skills-card-bottom">
+							<p class="skills-card-title">Martial Art</p>
+							<p class="skills-card-dur">3 years</p>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="skills-arrows">
+				<button class="skills-arrow" id="skills-prev" aria-label="Previous">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+						<path d="M10 3L5 8l5 5" stroke="#C9A030" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
+				<button class="skills-arrow" id="skills-next" aria-label="Next">
+					<svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+						<path d="M6 3l5 5-5 5" stroke="#C9A030" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>
+				</button>
+			</div>
+
+		</div>
+	</div>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 5 — BOOK CLUB  (sticky z=5, 200vh)
+	     Slides over Skills & Enrichment. One product full-bleed.
+	     ═══════════════════════════════════════════════════════ -->
+	<div id="bookclub-section">
+		<div class="bookclub-inner">
+
+			<div class="bookclub-topbar">
+				<span class="section-label block mb-1.5" style="color:rgba(201,160,48,0.55);">03</span>
+				<h2 class="font-display italic text-white" style="font-size:clamp(1.5rem,2.8vw,2.2rem);">Book Club</h2>
+			</div>
+
+			<div class="bookclub-imgwrap">
+				<img src="https://images.pexels.com/photos/4143800/pexels-photo-4143800.jpeg?auto=compress&cs=tinysrgb&w=1600"
+				     alt="Book Club reading" loading="lazy">
+			</div>
+
+			<div class="bookclub-content">
 				<div>
-					<span class="section-label block mb-1">01</span>
-					<h2 class="font-display italic text-3xl text-ihsaanah-black">Quranic Sciences</h2>
+					<span class="bc-eyebrow">Verses &amp; Vibes</span>
+					<h3 class="bc-title">A Book Club for<br>Muslimah Teens</h3>
+					<p class="bc-desc">
+						A creative, reflective reading circle for young Muslimahs aged 13–23.
+						Nine books completed — offline and online formats.
+					</p>
 				</div>
-				<span class="text-xs text-ihsaanah-black/35 font-medium shrink-0">4 courses</span>
+				<div class="bc-right">
+					<p class="bc-meta">
+						Wed 3:00–5:00 pm (Offline)<br>
+						Wed 3:00–4:00 pm (Online)<br>
+						Ages 13–23
+					</p>
+					<a href="contact.html" class="bc-btn">
+						Join the Club
+						<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 6.5h10M8 2.5l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					</a>
+				</div>
 			</div>
 
-			<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
-				<!-- Tajweed -->
-				<div class="course-card-v2" data-aos="fade-up" data-aos-delay="0">
-					<div class="card-category-band"></div>
-					<div class="card-body">
-						<span class="card-category-label">Quranic Sciences</span>
-						<h3 class="card-title">Basic to Advanced Tajweed</h3>
-						<span class="card-duration">6–8 months</span>
-						<div class="card-schedule">
-							<svg class="card-schedule-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-								<circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
-								<path d="M6.5 3.5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-							</svg>
-							<span>Fri &amp; Sat — 3:30–4:30 pm</span>
-						</div>
-						<div class="card-fee-row">
-							<div class="card-fee-col">
-								<span class="card-fee-label">Admission</span>
-								<span class="card-fee-value">2,500 BDT</span>
-							</div>
-							<div class="card-fee-col">
-								<span class="card-fee-label">Monthly</span>
-								<span class="card-fee-value">1,500 BDT</span>
-							</div>
-						</div>
-						<a href="contact.html" class="card-link">Enquire →</a>
-					</div>
-				</div>
-
-				<!-- Nazeratul Quran -->
-				<div class="course-card-v2" data-aos="fade-up" data-aos-delay="60">
-					<div class="card-category-band"></div>
-					<div class="card-body">
-						<span class="card-category-label">Quranic Sciences</span>
-						<h3 class="card-title">Nazeratul Quran &amp; Quran Mashq</h3>
-						<span class="card-duration">1 year</span>
-						<div class="card-schedule">
-							<svg class="card-schedule-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-								<circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
-								<path d="M6.5 3.5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-							</svg>
-							<span>Mon &amp; Wed — 3:00–4:00 pm</span>
-						</div>
-						<div class="card-fee-row">
-							<div class="card-fee-col">
-								<span class="card-fee-label">Admission</span>
-								<span class="card-fee-value">2,500 BDT</span>
-							</div>
-							<div class="card-fee-col">
-								<span class="card-fee-label">Monthly</span>
-								<span class="card-fee-value">1,500 BDT</span>
-							</div>
-						</div>
-						<a href="contact.html" class="card-link">Enquire →</a>
-					</div>
-				</div>
-
-				<!-- Hifzul Quran -->
-				<div class="course-card-v2" data-aos="fade-up" data-aos-delay="120">
-					<div class="card-category-band"></div>
-					<div class="card-body">
-						<span class="card-category-label">Quranic Sciences</span>
-						<h3 class="card-title">Hifzul Quran</h3>
-						<span class="card-duration">Need basis</span>
-						<div class="card-schedule">
-							<svg class="card-schedule-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-								<circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
-								<path d="M6.5 3.5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-							</svg>
-							<span>Thu 9:30 am–12:00 pm <em>(Offline)</em><br>
-							Sat 10:00 am–12:00 pm <em>(Online)</em></span>
-						</div>
-						<div class="card-fee-row">
-							<div class="card-fee-col">
-								<span class="card-fee-label">Admission</span>
-								<span class="card-fee-value">2,500 BDT</span>
-							</div>
-							<div class="card-fee-col">
-								<span class="card-fee-label">Monthly</span>
-								<span class="card-fee-value">1,500 BDT</span>
-							</div>
-						</div>
-						<a href="contact.html" class="card-link">Enquire →</a>
-					</div>
-				</div>
-
-				<!-- Quranic Language -->
-				<div class="course-card-v2" data-aos="fade-up" data-aos-delay="180">
-					<div class="card-category-band"></div>
-					<div class="card-body">
-						<span class="card-category-label">Quranic Sciences</span>
-						<h3 class="card-title">Quranic Language</h3>
-						<span class="card-duration">1 year</span>
-						<div class="card-schedule">
-							<svg class="card-schedule-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-								<circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
-								<path d="M6.5 3.5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-							</svg>
-							<span>Fri — 5:00–6:00 pm</span>
-						</div>
-						<div class="card-fee-row">
-							<div class="card-fee-col">
-								<span class="card-fee-label">Admission</span>
-								<span class="card-fee-value">1,500 BDT</span>
-							</div>
-							<div class="card-fee-col">
-								<span class="card-fee-label">Monthly</span>
-								<span class="card-fee-value">850 BDT</span>
-							</div>
-						</div>
-						<a href="contact.html" class="card-link">Enquire →</a>
-					</div>
-				</div>
-
-			</div>
 		</div>
-	</section>
+	</div>
 
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 3 — SKILLS & ENRICHMENT
-	     Abacus, Islamic Art, Martial Art
+	     SECTION 6 — HOW TO ENROL  (normal scroll, z=6)
+	     Steps animate in sequentially with connecting lines.
 	     ═══════════════════════════════════════════════════════ -->
-	<section id="skills" class="bg-ihsaanah-black py-16 border-t border-ihsaanah-gold/10" style="scroll-margin-top:80px">
-		<div class="mx-auto max-w-5xl px-4">
+	<section id="enrol-section">
+		<div style="max-width:960px; margin:0 auto;">
 
-			<div class="mb-8 flex items-end justify-between gap-4" data-aos="fade-up">
-				<div>
-					<span class="section-label block mb-1">02</span>
-					<h2 class="font-display italic text-3xl text-white">Skills &amp; Enrichment</h2>
-				</div>
-				<span class="text-xs text-white/25 font-medium shrink-0">3 courses</span>
-			</div>
+			<h2 class="enrol-title">How to Enrol</h2>
 
-			<div class="grid gap-5 sm:grid-cols-3">
+			<div class="enrol-steps">
 
-				<!-- Abacus -->
-				<div class="course-card-v2" data-aos="fade-up" data-aos-delay="0">
-					<div class="card-category-band"></div>
-					<div class="card-body">
-						<span class="card-category-label">Skills &amp; Enrichment</span>
-						<h3 class="card-title">Abacus &amp; Brain Gym</h3>
-						<span class="card-duration">1 year</span>
-						<div class="card-schedule">
-							<svg class="card-schedule-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-								<circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
-								<path d="M6.5 3.5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-							</svg>
-							<span>Fri &amp; Sat — 6:00–7:00 am</span>
-						</div>
-						<div class="card-fee-row">
-							<div class="card-fee-col">
-								<span class="card-fee-label">Admission</span>
-								<span class="card-fee-value">2,500 BDT</span>
-							</div>
-							<div class="card-fee-col">
-								<span class="card-fee-label">Monthly</span>
-								<span class="card-fee-value">2,000 BDT</span>
-							</div>
-						</div>
-						<a href="contact.html" class="card-link">Enquire →</a>
-					</div>
+				<div class="enrol-step">
+					<div class="enrol-circle" id="ec-0">1</div>
+					<div class="enrol-line" id="el-0"></div>
+					<p class="enrol-step-title" id="et-0">Choose a course</p>
+					<p class="enrol-step-desc" id="ed-0">Browse the programmes and pick what suits your goals and schedule.</p>
 				</div>
 
-				<!-- Islamic Art -->
-				<div class="course-card-v2" data-aos="fade-up" data-aos-delay="80">
-					<div class="card-category-band"></div>
-					<div class="card-body">
-						<span class="card-category-label">Skills &amp; Enrichment</span>
-						<h3 class="card-title">Islamic Art &amp; Crafts</h3>
-						<span class="card-duration">6–8 months</span>
-						<div class="card-schedule">
-							<svg class="card-schedule-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-								<circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
-								<path d="M6.5 3.5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-							</svg>
-							<span>Fri &amp; Sat — 3:00–4:00 pm</span>
-						</div>
-						<div class="card-fee-row">
-							<div class="card-fee-col">
-								<span class="card-fee-label">Admission</span>
-								<span class="card-fee-value">1,000 BDT</span>
-							</div>
-							<div class="card-fee-col">
-								<span class="card-fee-label">Monthly</span>
-								<span class="card-fee-value">1,000 BDT</span>
-							</div>
-						</div>
-						<a href="contact.html" class="card-link">Enquire →</a>
-					</div>
+				<div class="enrol-step">
+					<div class="enrol-circle" id="ec-1">2</div>
+					<div class="enrol-line" id="el-1"></div>
+					<p class="enrol-step-title" id="et-1">Contact Ihsaanah</p>
+					<p class="enrol-step-desc" id="ed-1">Reach out via our contact page or Facebook page to express your interest.</p>
 				</div>
 
-				<!-- Martial Art -->
-				<div class="course-card-v2" data-aos="fade-up" data-aos-delay="160">
-					<div class="card-category-band"></div>
-					<div class="card-body">
-						<span class="card-category-label">Skills &amp; Enrichment</span>
-						<h3 class="card-title">Martial Art</h3>
-						<span class="card-duration">3 years</span>
-						<div class="card-schedule">
-							<svg class="card-schedule-icon" width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden="true">
-								<circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/>
-								<path d="M6.5 3.5v3l2 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-							</svg>
-							<span>Female — Fri &amp; Sat 4:30–5:30 pm<br>
-							Male — Fri &amp; Sat 8:00–9:00 am</span>
-						</div>
-						<div class="card-fee-row">
-							<div class="card-fee-col">
-								<span class="card-fee-label">Admission</span>
-								<span class="card-fee-value">2,500 BDT</span>
-							</div>
-							<div class="card-fee-col">
-								<span class="card-fee-label">Monthly</span>
-								<span class="card-fee-value">1,500 BDT</span>
-							</div>
-						</div>
-						<a href="contact.html" class="card-link">Enquire →</a>
-					</div>
+				<div class="enrol-step">
+					<div class="enrol-circle" id="ec-2">3</div>
+					<div class="enrol-line" id="el-2"></div>
+					<p class="enrol-step-title" id="et-2">Pay admission fee</p>
+					<p class="enrol-step-desc" id="ed-2">Secure your place with the one-time admission fee.</p>
 				</div>
 
-			</div>
-		</div>
-	</section>
-
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 4 — BOOK CLUB CROSS-LINK
-	     Feature panel on cream — stand-alone programme
-	     ═══════════════════════════════════════════════════════ -->
-	<section id="bookclub" class="bg-ihsaanah-cream py-16 border-t border-ihsaanah-gold/10" style="scroll-margin-top:80px">
-		<div class="mx-auto max-w-5xl px-4">
-
-			<div class="mb-8 flex items-end justify-between gap-4" data-aos="fade-up">
-				<div>
-					<span class="section-label block mb-1">03</span>
-					<h2 class="font-display italic text-3xl text-ihsaanah-black">Book Club</h2>
-				</div>
-			</div>
-
-			<a href="book-club.html"
-			   class="group block rounded-2xl border border-ihsaanah-gold/30 bg-white p-8 shadow-sm
-			          transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_8px_28px_rgba(201,160,48,0.12)]"
-			   data-aos="fade-up" data-aos-delay="60">
-				<div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-					<div class="max-w-lg">
-						<span class="card-category-label" style="display:block; margin-bottom:0.5rem;">Skills &amp; Enrichment</span>
-						<h3 class="font-display italic text-2xl text-ihsaanah-black leading-snug">
-							Verses &amp; Vibes — Book Club for Teens
-						</h3>
-						<p class="mt-3 text-sm text-ihsaanah-black/60 leading-relaxed">
-							A creative, reflective reading circle for Muslimah youth aged 13–23.
-							Two formats — offline Wed 3:00–5:00 pm &amp; online Wed 3:00–4:00 pm.
-							Nine books completed so far.
-						</p>
-						<div class="mt-4 flex flex-wrap gap-2">
-							<span class="trust-badge">Ages 13–23</span>
-							<span class="trust-badge">9 Books Completed</span>
-							<span class="trust-badge">Offline &amp; Online</span>
-						</div>
-					</div>
-					<div class="shrink-0">
-						<span class="inline-flex items-center gap-2 rounded-lg bg-ihsaanah-gold px-5 py-2.5 text-sm font-semibold text-white
-						            transition-opacity group-hover:opacity-85">
-							Learn more
-							<svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-								<path d="M2 7h10M8 3l4 4-4 4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-							</svg>
-						</span>
-					</div>
-				</div>
-			</a>
-		</div>
-	</section>
-
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 5 — HOW TO ENROL (process steps)
-	     ═══════════════════════════════════════════════════════ -->
-	<section id="enrol" class="bg-ihsaanah-black py-16 border-t border-ihsaanah-gold/10" style="scroll-margin-top:80px">
-		<div class="mx-auto max-w-4xl px-4">
-
-			<div class="text-center mb-10" data-aos="fade-up">
-				<span class="section-label block mb-3">Getting Started</span>
-				<h2 class="font-display italic text-3xl text-white">How to Enrol</h2>
-			</div>
-
-			<div class="process-steps dark" data-aos="fade-up" data-aos-delay="60">
-
-				<div class="process-step">
-					<div class="process-step-number">1</div>
-					<p class="process-step-title">Choose a course</p>
-					<p class="process-step-desc">Browse the courses above and pick the one that suits your goals and schedule.</p>
-				</div>
-
-				<div class="process-step">
-					<div class="process-step-number">2</div>
-					<p class="process-step-title">Contact Ihsaanah</p>
-					<p class="process-step-desc">Reach out via our contact page or Facebook page to express your interest.</p>
-				</div>
-
-				<div class="process-step">
-					<div class="process-step-number">3</div>
-					<p class="process-step-title">Pay admission fee</p>
-					<p class="process-step-desc">Secure your place with the one-time admission fee for your chosen course.</p>
-				</div>
-
-				<div class="process-step">
-					<div class="process-step-number">4</div>
-					<p class="process-step-title">Begin learning</p>
-					<p class="process-step-desc">Show up, engage, and grow — bi idhnillah.</p>
+				<div class="enrol-step">
+					<div class="enrol-circle" id="ec-3">4</div>
+					<p class="enrol-step-title" id="et-3">Begin learning</p>
+					<p class="enrol-step-desc" id="ed-3">Show up, engage, and grow — bi idhnillah.</p>
 				</div>
 
 			</div>
 
-			<div class="mt-10 text-center" data-aos="fade-up" data-aos-delay="120">
+			<div class="mt-16 text-center">
 				<a href="contact.html"
-				   class="inline-block rounded-md bg-ihsaanah-gold px-7 py-3 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+				   class="inline-block px-9 py-4 bg-ihsaanah-gold text-white font-semibold hover:opacity-90 transition-opacity"
+				   style="font-size:0.85rem; letter-spacing:0.04em;">
 					Get in Touch
 				</a>
 			</div>
@@ -452,100 +1018,191 @@
 	</section>
 
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 6 — ADDITIONAL PROGRAMMES
-	     Preschool, Exam Centre, Offline Maktab
-	     ═══════════════════════════════════════════════════════ -->
-	<section id="additional" class="bg-ihsaanah-cream py-16 border-t border-ihsaanah-gold/10" style="scroll-margin-top:80px">
-		<div class="mx-auto max-w-5xl px-4">
-
-			<div class="mb-8 flex items-end justify-between gap-4" data-aos="fade-up">
-				<div>
-					<span class="section-label block mb-1">Also at Ihsaanah</span>
-					<h2 class="font-display italic text-3xl text-ihsaanah-black">Additional Programmes</h2>
-				</div>
-			</div>
-
-			<div class="grid gap-5 sm:grid-cols-3">
-
-				<a href="preschool.html"
-				   class="group flex flex-col rounded-xl border border-ihsaanah-gold/20 bg-white p-6 shadow-sm
-				          transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_6px_20px_rgba(201,160,48,0.10)]"
-				   data-aos="fade-up" data-aos-delay="0">
-					<span class="card-category-label" style="display:block; margin-bottom:0.4rem;">Early Childhood</span>
-					<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Little Mumin Islamic Preschool</h3>
-					<p class="mt-2 flex-1 text-sm text-ihsaanah-black/60 leading-relaxed">
-						A nurturing play and pre-play learning environment for our youngest learners.
-					</p>
-					<span class="mt-5 text-sm font-semibold text-ihsaanah-gold group-hover:underline">Learn more →</span>
-				</a>
-
-				<div class="flex flex-col rounded-xl border border-ihsaanah-gold/20 bg-white p-6 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="80">
-					<span class="card-category-label" style="display:block; margin-bottom:0.4rem;">Academic</span>
-					<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Exam Centre</h3>
-					<p class="mt-2 flex-1 text-sm text-ihsaanah-black/60 leading-relaxed">
-						Authorised exam centre for the International Open University.
-					</p>
-					<a href="contact.html"
-					   class="mt-5 text-sm font-semibold text-ihsaanah-gold hover:underline">Contact us →</a>
-				</div>
-
-				<div class="flex flex-col rounded-xl border border-ihsaanah-gold/20 bg-white p-6 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="160">
-					<span class="card-category-label" style="display:block; margin-bottom:0.4rem;">Quranic Foundation</span>
-					<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Offline Maktab for Girls</h3>
-					<p class="mt-2 flex-1 text-sm text-ihsaanah-black/60 leading-relaxed">
-						In-person Maktab education — Hifz, Nazeera, Tajweed, and foundational Islamic learning.
-					</p>
-					<a href="contact.html"
-					   class="mt-5 text-sm font-semibold text-ihsaanah-gold hover:underline">Enquire →</a>
-				</div>
-
-			</div>
-		</div>
-	</section>
-
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 7 — WEEKLY SEMINARS
-	     Dark strip — topic pills
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black py-14 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
-
-			<div class="grid gap-8 sm:grid-cols-2 sm:gap-12 items-center" data-aos="fade-up">
-
-				<div>
-					<span class="section-label block mb-3">Community</span>
-					<h2 class="font-display italic text-2xl text-white leading-snug">Weekly Seminars</h2>
-					<p class="mt-3 text-sm text-white/45 leading-relaxed">
-						In addition to our courses, we host weekly community seminars on topics
-						that matter to Muslim families and individuals.
-					</p>
-					<a href="contact.html"
-					   class="mt-5 inline-block text-sm font-semibold text-ihsaanah-gold hover:underline">
-						Ask about upcoming dates →
-					</a>
-				</div>
-
-				<div class="flex flex-wrap gap-2">
-					<span class="trust-badge">Islamic Parenting</span>
-					<span class="trust-badge">ADHD Awareness</span>
-					<span class="trust-badge">Mental Health</span>
-					<span class="trust-badge">Art &amp; Crafts for Juniors</span>
-					<span class="rounded-full border border-ihsaanah-gold/25 px-3 py-1 text-xs text-ihsaanah-gold/60">
-						&amp; more to come…
-					</span>
-				</div>
-
-			</div>
-		</div>
-	</section>
-
 </main>
 <div id="site-footer"></div>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+
+  /* ══════════════════════════════════════════════════════════
+     OVERVIEW: GSAP timeline scrubbed over the 300vh section.
+     trigger = #overview-section (sticky, starts at page-y=100vh)
+     start: 'top top'    → scrollY ≈ 100vh
+     end:   'bottom bottom' → scrollY ≈ 300vh
+  ══════════════════════════════════════════════════════════ */
+  var ovSup  = document.getElementById('ov-sup');
+  var ovRow1 = document.getElementById('ov-row-1');
+  var ovRow2 = document.getElementById('ov-row-2');
+  var ovRow3 = document.getElementById('ov-row-3');
+
+  if (ovSup) {
+    gsap.set([ovSup, ovRow1, ovRow2, ovRow3], { opacity: 0, y: 50 });
+
+    var ovTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: '#overview-section',
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 1,
+      }
+    });
+
+    ovTl
+      .to(ovSup,  { opacity: 1, y: 0, duration: 0.4, ease: 'power2.out' }, 0.05)
+      .to(ovRow1, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.25)
+      .to(ovRow2, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.50)
+      .to(ovRow3, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0.75);
+  }
+
+
+  /* ══════════════════════════════════════════════════════════
+     QURANIC SCIENCES: products replace each other on scroll.
+     trigger = #quranic-section (sticky z=3, starts at 400vh)
+     start: 'top top'    → scrollY ≈ 400vh
+     end:   'bottom bottom' → scrollY ≈ 800vh
+  ══════════════════════════════════════════════════════════ */
+  var qPanels = [
+    document.getElementById('qp-0'),
+    document.getElementById('qp-1'),
+    document.getElementById('qp-2'),
+    document.getElementById('qp-3'),
+  ];
+  var qDots = [
+    document.getElementById('qdot-0'),
+    document.getElementById('qdot-1'),
+    document.getElementById('qdot-2'),
+    document.getElementById('qdot-3'),
+  ];
+
+  if (qPanels[0]) {
+    var qCurrent = 0;
+
+    function switchQuranic(toIdx, forward) {
+      if (toIdx === qCurrent || !qPanels[toIdx]) return;
+
+      var leaving  = qPanels[qCurrent];
+      var entering = qPanels[toIdx];
+
+      gsap.set(entering, { x: forward ? '100%' : '-100%', opacity: 0 });
+
+      gsap.to(leaving, {
+        x: forward ? '-100%' : '100%',
+        opacity: 0,
+        duration: 0.7,
+        ease: 'power3.inOut',
+      });
+      gsap.to(entering, {
+        x: '0%',
+        opacity: 1,
+        duration: 0.7,
+        ease: 'power3.inOut',
+      });
+
+      qDots.forEach(function (d, i) {
+        if (d) d.classList.toggle('active', i === toIdx);
+      });
+
+      qCurrent = toIdx;
+    }
+
+    ScrollTrigger.create({
+      trigger: '#quranic-section',
+      start: 'top top',
+      end: 'bottom bottom',
+      onUpdate: function (self) {
+        var p   = self.progress;
+        var dir = self.direction;
+        var target;
+        if      (p < 0.25) target = 0;
+        else if (p < 0.5)  target = 1;
+        else if (p < 0.75) target = 2;
+        else               target = 3;
+        switchQuranic(target, dir === 1);
+      }
+    });
+  }
+
+
+  /* ══════════════════════════════════════════════════════════
+     SKILLS SLIDER: arrow-driven only
+  ══════════════════════════════════════════════════════════ */
+  var skillsTrack = document.getElementById('skills-track');
+  var skillsPrev  = document.getElementById('skills-prev');
+  var skillsNext  = document.getElementById('skills-next');
+
+  if (skillsTrack) {
+    var sCards  = skillsTrack.querySelectorAll('.skills-card');
+    var sCount  = sCards.length;
+    var sVisible = 3;
+    var sIndex  = 0;
+    var sMax    = Math.max(0, sCount - sVisible);
+
+    function updateSkillsPos() {
+      if (!sCards[0]) return;
+      var w   = sCards[0].offsetWidth;
+      var gap = 24;
+      skillsTrack.style.transform = 'translateX(-' + (sIndex * (w + gap)) + 'px)';
+    }
+
+    skillsNext && skillsNext.addEventListener('click', function () {
+      if (sIndex < sMax) { sIndex++; updateSkillsPos(); }
+    });
+    skillsPrev && skillsPrev.addEventListener('click', function () {
+      if (sIndex > 0)    { sIndex--; updateSkillsPos(); }
+    });
+    window.addEventListener('resize', updateSkillsPos, { passive: true });
+  }
+
+
+  /* ══════════════════════════════════════════════════════════
+     HOW TO ENROL: sequential reveal + connector lines
+  ══════════════════════════════════════════════════════════ */
+  var enrolSection = document.getElementById('enrol-section');
+  if (enrolSection) {
+    var enrolDone = false;
+
+    ScrollTrigger.create({
+      trigger: enrolSection,
+      start: 'top 65%',
+      once: true,
+      onEnter: function () {
+        if (enrolDone) return;
+        enrolDone = true;
+
+        for (var s = 0; s < 4; s++) {
+          (function (idx) {
+            var base = idx * 420;
+            setTimeout(function () {
+              var c = document.getElementById('ec-' + idx);
+              if (c) c.classList.add('shown');
+            }, base);
+            setTimeout(function () {
+              var t = document.getElementById('et-' + idx);
+              var d = document.getElementById('ed-' + idx);
+              if (t) t.classList.add('shown');
+              if (d) d.classList.add('shown');
+            }, base + 140);
+            if (idx < 3) {
+              setTimeout(function () {
+                var l = document.getElementById('el-' + idx);
+                if (l) l.classList.add('drawn');
+              }, base + 200);
+            }
+          })(s);
+        }
+      }
+    });
+  }
+
+}());
+</script>
+
 </body>
 </html>
