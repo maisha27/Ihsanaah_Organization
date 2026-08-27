@@ -31,279 +31,890 @@
 	</script>
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+	<style>
+	/* ══════════════════════════════════════════════════════════
+	   HERO — dark, matches brand, 3D blocks + drifting clouds
+	   ══════════════════════════════════════════════════════════ */
+	#ps-hero {
+	  position: relative;
+	  overflow: hidden;
+	  background: #0D0D0D;
+	  min-height: 100vh;
+	  display: flex;
+	  align-items: flex-end;  /* pin text to the bottom like About page */
+	}
+
+	/* ── DRIFTING CLOUDS ────────────────────────────────────── */
+	.ps-cloud {
+	  position: absolute;
+	  pointer-events: none;
+	  color: rgba(255, 248, 225, 0.052);
+	  animation: cloudDrift linear infinite;
+	  will-change: transform;
+	}
+	/* each cloud drifts right-to-left at different heights/speeds */
+	.ps-cloud--1 { top: 8%;  animation-duration: 55s; animation-delay:   0s; width: 380px; }
+	.ps-cloud--2 { top: 26%; animation-duration: 72s; animation-delay: -20s; width: 260px; opacity: 0.75; }
+	.ps-cloud--3 { top: 44%; animation-duration: 48s; animation-delay: -38s; width: 440px; opacity: 0.65; }
+	.ps-cloud--4 { top: 63%; animation-duration: 65s; animation-delay: -10s; width: 200px; }
+	.ps-cloud--5 { top: 79%; animation-duration: 80s; animation-delay: -50s; width: 320px; opacity: 0.5; }
+	/* one cloud goes left-to-right for variety */
+	.ps-cloud--6 { top: 18%; animation-duration: 90s; animation-delay: -60s; width: 500px; animation-name: cloudDriftR; opacity: 0.4; }
+
+	@keyframes cloudDrift {
+	  from { transform: translateX(115vw); }
+	  to   { transform: translateX(-40vw); }
+	}
+	@keyframes cloudDriftR {
+	  from { transform: translateX(-40vw); }
+	  to   { transform: translateX(115vw); }
+	}
+
+	/* ── CSS 3D BUILDING BLOCKS ────────────────────────────── */
+	.blocks-scene {
+	  position: absolute;
+	  right: 4%;
+	  top: 50%;
+	  transform: translateY(-50%);
+	  width: 340px;
+	  height: 440px;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	}
+	@media (max-width: 900px) { .blocks-scene { display: none; } }
+
+	.block-wrap { position: absolute; perspective: 600px; }
+	.block-wrap--a { top: 22px;  left: 110px; }
+	.block-wrap--b { top: 168px; left: 22px;  }
+	.block-wrap--c { top: 250px; left: 175px; }
+
+	.block-3d {
+	  transform-style: preserve-3d;
+	  transform: rotateX(-20deg) rotateY(30deg);
+	  position: relative;
+	}
+	.block-3d--large  { width: 110px; height: 110px; animation: blockSpin1 6s ease-in-out infinite; }
+	.block-3d--medium { width: 80px;  height: 80px;  animation: blockSpin2 8s ease-in-out infinite; animation-delay: -2s; }
+	.block-3d--small  { width: 65px;  height: 65px;  animation: blockSpin3 7s ease-in-out infinite; animation-delay: -4s; }
+
+	@keyframes blockSpin1 {
+	  0%, 100% { transform: rotateX(-20deg) rotateY(30deg) translateY(0); }
+	  50%       { transform: rotateX(-20deg) rotateY(50deg) translateY(-16px); }
+	}
+	@keyframes blockSpin2 {
+	  0%, 100% { transform: rotateX(-20deg) rotateY(30deg) translateY(0); }
+	  50%       { transform: rotateX(-15deg) rotateY(15deg) translateY(-20px); }
+	}
+	@keyframes blockSpin3 {
+	  0%, 100% { transform: rotateX(-20deg) rotateY(30deg) translateY(0); }
+	  50%       { transform: rotateX(-25deg) rotateY(48deg) translateY(-12px); }
+	}
+
+	.block-face {
+	  position: absolute;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  font-family: 'Poppins', sans-serif;
+	  font-weight: 700;
+	  border: 2px solid rgba(255,255,255,0.35);
+	  box-shadow: inset 0 0 18px rgba(0,0,0,0.12);
+	}
+
+	.block-3d--large .block-face  { width:110px; height:110px; font-size:2.3rem; color:white; text-shadow:0 2px 6px rgba(0,0,0,0.2); }
+	.block-3d--large .face-front  { background:#FF8A65; transform:translateZ(55px); }
+	.block-3d--large .face-back   { background:#E06040; transform:rotateY(180deg) translateZ(55px); }
+	.block-3d--large .face-right  { background:#D4552C; transform:rotateY(90deg) translateZ(55px); }
+	.block-3d--large .face-left   { background:#D4552C; transform:rotateY(-90deg) translateZ(55px); }
+	.block-3d--large .face-top    { background:#FFB74D; transform:rotateX(90deg) translateZ(55px); }
+	.block-3d--large .face-bottom { background:#C0431A; transform:rotateX(-90deg) translateZ(55px); }
+
+	.block-3d--medium .block-face  { width:80px; height:80px; font-size:1.6rem; color:white; text-shadow:0 2px 5px rgba(0,0,0,0.15); }
+	.block-3d--medium .face-front  { background:#4ECDC4; transform:translateZ(40px); }
+	.block-3d--medium .face-back   { background:#38B2AA; transform:rotateY(180deg) translateZ(40px); }
+	.block-3d--medium .face-right  { background:#2C9E96; transform:rotateY(90deg) translateZ(40px); }
+	.block-3d--medium .face-left   { background:#2C9E96; transform:rotateY(-90deg) translateZ(40px); }
+	.block-3d--medium .face-top    { background:#80E5DF; transform:rotateX(90deg) translateZ(40px); }
+	.block-3d--medium .face-bottom { background:#1E8880; transform:rotateX(-90deg) translateZ(40px); }
+
+	.block-3d--small .block-face  { width:65px; height:65px; font-size:1.15rem; color:white; text-shadow:0 2px 4px rgba(0,0,0,0.15); }
+	.block-3d--small .face-front  { background:#A78BFA; transform:translateZ(32.5px); }
+	.block-3d--small .face-back   { background:#8B6EE0; transform:rotateY(180deg) translateZ(32.5px); }
+	.block-3d--small .face-right  { background:#7C5FC8; transform:rotateY(90deg) translateZ(32.5px); }
+	.block-3d--small .face-left   { background:#7C5FC8; transform:rotateY(-90deg) translateZ(32.5px); }
+	.block-3d--small .face-top    { background:#C4B5FD; transform:rotateX(90deg) translateZ(32.5px); }
+	.block-3d--small .face-bottom { background:#6548B8; transform:rotateX(-90deg) translateZ(32.5px); }
+
+	.block-shadow {
+	  position: absolute;
+	  bottom: -14px; left: 50%;
+	  transform: translateX(-50%);
+	  border-radius: 50%;
+	  background: rgba(0,0,0,0.22);
+	  filter: blur(6px);
+	}
+	.block-3d--large  ~ .block-shadow { width:88px;  height:17px; }
+	.block-3d--medium ~ .block-shadow { width:64px;  height:13px; }
+	.block-3d--small  ~ .block-shadow { width:50px;  height:10px; }
+
+	/* hero text pre-hidden for GSAP */
+	#ps-h1, #ps-body, #ps-scroll-hint { opacity: 0; }
+
+	/* ── PHILOSOPHY SECTION ────────────────────────────────── */
+	#ps-philosophy { position: relative; background: #0D0D0D; overflow: hidden; }
+
+	.ph-dot {
+	  position: absolute;
+	  border-radius: 50%;
+	  pointer-events: none;
+	  animation: bFloat 10s ease-in-out infinite;
+	}
+	.ph-dot--1 { width:280px; height:280px; background:radial-gradient(ellipse,rgba(255,127,92,0.08) 0%,transparent 70%); top:-60px; left:20%; animation-delay:0s; }
+	.ph-dot--2 { width:200px; height:200px; background:radial-gradient(ellipse,rgba(78,205,196,0.09) 0%,transparent 70%); bottom:20px; right:15%; animation-delay:-4s; }
+	.ph-dot--3 { width:140px; height:140px; background:radial-gradient(ellipse,rgba(167,139,250,0.08) 0%,transparent 70%); top:40%; left:8%; animation-delay:-7s; }
+
+	@keyframes bFloat {
+	  0%, 100% { transform: translateY(0) scale(1); }
+	  40%       { transform: translateY(-22px) scale(1.04); }
+	  70%       { transform: translateY(-10px) scale(0.97); }
+	}
+
+	.wave-top { position:absolute; top:-1px; left:0; right:0; overflow:hidden; line-height:0; }
+	.wave-top svg { display:block; width:100%; height:48px; }
+
+	/* ── CURRICULUM — magazine numbered rows ───────────────── */
+	.curr-item {
+	  display: flex;
+	  align-items: flex-start;
+	  padding: 2.25rem 0;
+	  border-bottom: 1px solid rgba(201,160,48,0.12);
+	  gap: 0;
+	  position: relative;
+	  transition: background 0.32s ease, padding 0.32s ease;
+	  cursor: default;
+	}
+	.curr-item:first-child { border-top: 1px solid rgba(201,160,48,0.12); }
+	.curr-item:hover {
+	  background: rgba(255,255,255,0.6);
+	  padding-left: 1.5rem;
+	  padding-right: 1.5rem;
+	  margin: 0 -1.5rem;
+	}
+
+	.curr-item-num {
+	  font-family: 'DM Serif Display', Georgia, serif;
+	  font-style: italic;
+	  font-size: clamp(4.5rem, 7vw, 6.5rem);
+	  line-height: 0.82;
+	  min-width: 100px;
+	  flex-shrink: 0;
+	  transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
+	}
+	.curr-item:hover .curr-item-num { transform: scale(1.1) translateY(-4px); }
+
+	.curr-item-bar {
+	  width: 2px;
+	  align-self: stretch;
+	  min-height: 80px;
+	  margin: 0 2rem;
+	  border-radius: 1px;
+	  flex-shrink: 0;
+	  transition: transform 0.32s ease;
+	}
+	.curr-item:hover .curr-item-bar { transform: scaleY(1.06); }
+
+	.curr-item-body { flex: 1; padding-top: 0.45rem; }
+	.curr-item-icon { font-size: 1.5rem; margin-bottom: 0.45rem; display: block; }
+	.curr-item-title {
+	  font-family: 'Poppins', sans-serif;
+	  font-weight: 700;
+	  font-size: 1.05rem;
+	  color: #0D0D0D;
+	  margin-bottom: 0.35rem;
+	}
+	.curr-item-desc {
+	  font-size: 0.83rem;
+	  color: rgba(13,13,13,0.55);
+	  line-height: 1.72;
+	  max-width: 480px;
+	}
+
+	.curr-item-badge {
+	  font-size: 0.6rem;
+	  font-weight: 700;
+	  letter-spacing: 0.12em;
+	  text-transform: uppercase;
+	  padding: 0.35rem 0.9rem;
+	  border-radius: 999px;
+	  white-space: nowrap;
+	  flex-shrink: 0;
+	  align-self: center;
+	  margin-left: 1.5rem;
+	}
+	@media (max-width: 640px) { .curr-item-badge { display: none; } }
+
+	/* ── IMAGES SHOWCASE ───────────────────────────────────── */
+	.blob-img { overflow: hidden; position: relative; }
+	.blob-img img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.6s ease; }
+	.blob-img:hover img { transform: scale(1.05); }
+	.blob-img--a { clip-path: ellipse(52% 50% at 50% 50%); border-radius: 50%; }
+	.blob-img--b { clip-path: polygon(10% 0%,90% 4%,100% 55%,85% 95%,15% 100%,0% 60%,5% 15%); border-radius:18px; }
+	.blob-img--c { clip-path: ellipse(48% 52% at 48% 50%); border-radius: 50%; }
+	.blob-img--d { clip-path: polygon(5% 5%,95% 0%,100% 80%,90% 100%,10% 98%,0% 70%); border-radius:14px; }
+
+	/* ── ACTIVITIES CAROUSEL ───────────────────────────────── */
+	#ps-activity-wrap {
+	  overflow-x: scroll; overflow-y: hidden;
+	  cursor: grab; user-select: none;
+	  -webkit-overflow-scrolling: touch;
+	  scrollbar-width: none; -ms-overflow-style: none;
+	  padding: 1rem 0 2.5rem;
+	}
+	#ps-activity-wrap::-webkit-scrollbar { display: none; }
+	#ps-activity-wrap.is-dragging { cursor: grabbing; }
+	#ps-activity-track { display:flex; gap:1.25rem; width:max-content; padding:0 clamp(1.5rem,5vw,4rem); }
+
+	.act-card {
+	  width: 200px; flex-shrink: 0; border-radius: 20px;
+	  padding: 1.75rem 1.25rem; position: relative; overflow: hidden;
+	  transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s ease;
+	  cursor: default;
+	}
+	.act-card:hover { transform: translateY(-10px) scale(1.03); box-shadow: 0 24px 48px rgba(0,0,0,0.18); }
+	.act-card::before {
+	  content: ''; position: absolute;
+	  top: -40px; right: -40px; width: 130px; height: 130px;
+	  border-radius: 50%; background: rgba(255,255,255,0.1); pointer-events: none;
+	}
+	.act-icon { font-size: 2.4rem; line-height: 1; margin-bottom: 1rem; display: block; }
+	.act-name { font-family:'Poppins',sans-serif; font-weight:700; font-size:0.9rem; color:white; line-height:1.3; margin-bottom:0.5rem; }
+	.act-desc { font-size:0.72rem; color:rgba(255,255,255,0.70); line-height:1.6; }
+
+	.drag-hint { font-size:0.72rem; color:rgba(13,13,13,0.35); margin-top:0.85rem; letter-spacing:0.04em; }
+
+	/* ── VMV PANELS ─────────────────────────────────────────── */
+	.vmv-card {
+	  position: relative; overflow: hidden;
+	  border: 1px solid rgba(201,160,48,0.22); border-radius: 1rem;
+	  padding: 2.5rem 1.75rem; text-align: center; background: #0D0D0D;
+	  transition: border-color 0.3s ease, transform 0.3s ease;
+	}
+	.vmv-card:hover { border-color: rgba(201,160,48,0.55); transform: translateY(-5px); }
+	.vmv-card-dot { width:8px; height:8px; border-radius:50%; margin:0 auto 1.25rem; }
+	.vmv-card::before {
+	  content:''; position:absolute; inset:0;
+	  background-image:url('img/islamic_pattern1.png'); background-repeat:repeat; background-size:90px 90px;
+	  filter:invert(1); mix-blend-mode:screen; opacity:0.03; pointer-events:none;
+	}
+
+	/* ── ENROLL CTA ─────────────────────────────────────────── */
+	#ps-cta { position:relative; overflow:hidden; background:#faf7f2; }
+	.cta-bubble--1 {
+	  position:absolute; pointer-events:none; border-radius:50%;
+	  width:300px; height:300px;
+	  background:radial-gradient(ellipse,rgba(255,127,92,0.10) 0%,transparent 70%);
+	  top:-60px; right:-40px; animation:bFloat 9s ease-in-out infinite;
+	}
+	.cta-bubble--2 {
+	  position:absolute; pointer-events:none; border-radius:50%;
+	  width:200px; height:200px;
+	  background:radial-gradient(ellipse,rgba(78,205,196,0.09) 0%,transparent 70%);
+	  bottom:-30px; left:5%; animation:bFloat 11s ease-in-out infinite reverse;
+	}
+	</style>
 </head>
-<body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="preschool.html" data-transparent-header="true">
+<body class="flex min-h-screen flex-col bg-ihsaanah-black text-ihsaanah-black font-body"
+      data-active-nav="preschool.html"
+      data-transparent-header="true">
 <div id="site-header"></div>
 <main class="flex-1">
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 1 — HERO (cream, not dark)
-	     Warm, family-focused — a deliberate departure from the
-	     dark heroes on all other pages
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="relative overflow-hidden bg-ihsaanah-cream border-b border-ihsaanah-gold/15">
 
-		<!-- Subtle geometric pattern at very low opacity for texture -->
-		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.06]"></div>
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 1 — HERO
+     Dark canvas — Islamic pattern, coloured glows,
+     drifting clouds, 3D blocks, GSAP text bottom-left
+     ═══════════════════════════════════════════════════════ -->
+<section id="ps-hero">
 
-		<!-- Warm gold glow from top-right -->
-		<div class="pointer-events-none absolute inset-0"
-		     style="background: radial-gradient(ellipse 55% 60% at 90% 10%, rgba(201,160,48,0.12) 0%, transparent 70%);"></div>
+	<!-- Islamic lattice pattern -->
+	<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.12]" aria-hidden="true"></div>
 
-		<div class="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
-			<div class="max-w-2xl">
+	<!-- Radial colour glows — coral top-right, teal bottom-left -->
+	<div class="pointer-events-none absolute inset-0" aria-hidden="true"
+	     style="background: radial-gradient(ellipse 62% 55% at 88% 8%, rgba(255,127,92,0.18) 0%, transparent 65%);"></div>
+	<div class="pointer-events-none absolute inset-0" aria-hidden="true"
+	     style="background: radial-gradient(ellipse 50% 48% at 5% 90%, rgba(78,205,196,0.12) 0%, transparent 65%);"></div>
+	<!-- Subtle gold glow centre-top -->
+	<div class="pointer-events-none absolute inset-0" aria-hidden="true"
+	     style="background: radial-gradient(ellipse 70% 40% at 50% 0%, rgba(201,160,48,0.10) 0%, transparent 60%);"></div>
 
-				<span class="section-label block mb-5 animate-fade-up">Early Childhood · Al-Ihsaanah</span>
+	<!-- Bottom vignette — fades hero into page below -->
+	<div class="pointer-events-none absolute inset-0" aria-hidden="true"
+	     style="background: linear-gradient(to top, rgba(13,13,13,0.6) 0%, transparent 38%);"></div>
 
-				<h1 class="animate-fade-up" style="animation-delay:0.08s">
-					<span class="block font-heading text-lg font-semibold text-ihsaanah-gold mb-2 tracking-wide">
+	<!-- ─── Drifting SVG clouds ─────────────────────────────── -->
+	<!-- Cloud 1 — large, slow -->
+	<svg class="ps-cloud ps-cloud--1" viewBox="0 0 400 110" fill="currentColor" aria-hidden="true">
+		<ellipse cx="200" cy="88" rx="175" ry="25"/>
+		<ellipse cx="95"  cy="65" rx="60"  ry="48"/>
+		<ellipse cx="175" cy="52" rx="68"  ry="55"/>
+		<ellipse cx="255" cy="45" rx="63"  ry="58"/>
+		<ellipse cx="325" cy="62" rx="52"  ry="42"/>
+	</svg>
+	<!-- Cloud 2 — medium -->
+	<svg class="ps-cloud ps-cloud--2" viewBox="0 0 300 85" fill="currentColor" aria-hidden="true">
+		<ellipse cx="150" cy="68" rx="130" ry="20"/>
+		<ellipse cx="75"  cy="50" rx="48"  ry="38"/>
+		<ellipse cx="145" cy="40" rx="55"  ry="45"/>
+		<ellipse cx="220" cy="50" rx="46"  ry="36"/>
+	</svg>
+	<!-- Cloud 3 — wide, very slow -->
+	<svg class="ps-cloud ps-cloud--3" viewBox="0 0 480 120" fill="currentColor" aria-hidden="true">
+		<ellipse cx="240" cy="96" rx="210" ry="27"/>
+		<ellipse cx="100" cy="72" rx="72"  ry="55"/>
+		<ellipse cx="195" cy="56" rx="80"  ry="65"/>
+		<ellipse cx="295" cy="48" rx="75"  ry="68"/>
+		<ellipse cx="390" cy="68" rx="62"  ry="50"/>
+	</svg>
+	<!-- Cloud 4 — small -->
+	<svg class="ps-cloud ps-cloud--4" viewBox="0 0 240 75" fill="currentColor" aria-hidden="true">
+		<ellipse cx="120" cy="60" rx="105" ry="18"/>
+		<ellipse cx="62"  cy="44" rx="40"  ry="32"/>
+		<ellipse cx="120" cy="33" rx="50"  ry="38"/>
+		<ellipse cx="182" cy="44" rx="38"  ry="30"/>
+	</svg>
+	<!-- Cloud 5 — medium, very slow -->
+	<svg class="ps-cloud ps-cloud--5" viewBox="0 0 340 95" fill="currentColor" aria-hidden="true">
+		<ellipse cx="170" cy="76" rx="148" ry="22"/>
+		<ellipse cx="82"  cy="56" rx="55"  ry="43"/>
+		<ellipse cx="162" cy="44" rx="62"  ry="50"/>
+		<ellipse cx="248" cy="52" rx="55"  ry="42"/>
+	</svg>
+	<!-- Cloud 6 — goes right-to-left -->
+	<svg class="ps-cloud ps-cloud--6" viewBox="0 0 520 130" fill="currentColor" aria-hidden="true">
+		<ellipse cx="260" cy="104" rx="230" ry="30"/>
+		<ellipse cx="110" cy="78"  rx="82"  ry="62"/>
+		<ellipse cx="215" cy="60"  rx="88"  ry="72"/>
+		<ellipse cx="320" cy="52"  rx="82"  ry="75"/>
+		<ellipse cx="420" cy="75"  rx="70"  ry="56"/>
+	</svg>
+
+	<!-- ─── 3D Building Blocks ──────────────────────────────── -->
+	<div class="blocks-scene" aria-hidden="true">
+
+		<div class="block-wrap block-wrap--a">
+			<div class="block-3d block-3d--large">
+				<div class="block-face face-front">م</div>
+				<div class="block-face face-back">ن</div>
+				<div class="block-face face-right">★</div>
+				<div class="block-face face-left">✦</div>
+				<div class="block-face face-top">ب</div>
+				<div class="block-face face-bottom">ت</div>
+			</div>
+			<div class="block-shadow"></div>
+		</div>
+
+		<div class="block-wrap block-wrap--b">
+			<div class="block-3d block-3d--medium">
+				<div class="block-face face-front">A</div>
+				<div class="block-face face-back">B</div>
+				<div class="block-face face-right">C</div>
+				<div class="block-face face-left">☽</div>
+				<div class="block-face face-top">✦</div>
+				<div class="block-face face-bottom">D</div>
+			</div>
+			<div class="block-shadow"></div>
+		</div>
+
+		<div class="block-wrap block-wrap--c">
+			<div class="block-3d block-3d--small">
+				<div class="block-face face-front">★</div>
+				<div class="block-face face-back">☽</div>
+				<div class="block-face face-right">1</div>
+				<div class="block-face face-left">2</div>
+				<div class="block-face face-top">3</div>
+				<div class="block-face face-bottom">✦</div>
+			</div>
+			<div class="block-shadow"></div>
+		</div>
+
+	</div>
+
+	<!-- ─── Hero text — bottom-left ─────────────────────────── -->
+	<div class="relative w-full mx-auto px-8 pb-14 pt-32"
+	     style="max-width:1300px;">
+
+		<!-- Thin horizontal rule above text — like About page -->
+		<div style="height:1px; background:rgba(255,255,255,0.15); margin-bottom:2.2rem;"></div>
+
+		<div class="flex items-end justify-between gap-10">
+
+			<!-- Left: headline -->
+			<div id="ps-h1" style="flex-shrink:0;">
+				<h1>
+					<span class="block font-heading text-xs font-semibold tracking-widest uppercase text-ihsaanah-gold mb-3"
+					      style="opacity:0.75;">
 						Little Mumin Islamic Preschool
 					</span>
-					<span class="block font-display italic text-ihsaanah-black leading-tight"
-					      style="font-size: clamp(2.4rem, 6vw, 4.5rem);">
+					<span class="block font-display italic text-white"
+					      style="font-size: clamp(2.8rem, 5.5vw, 5rem); line-height: 1.08;">
 						Nurturing little<br>hearts from the<br>very first step.
 					</span>
 				</h1>
-
-				<p class="mt-6 text-ihsaanah-black/55 text-base leading-relaxed max-w-md animate-fade-up"
-				   style="animation-delay:0.18s">
-					A warm, Islamic early-learning environment for children in the
-					play and pre-play stage — where faith, character, and curiosity
-					are grown together.
-				</p>
-
-				<div class="mt-8 flex flex-wrap gap-2 animate-fade-up" style="animation-delay:0.28s">
-					<span class="trust-badge" style="border-color: rgba(201,160,48,0.3); color: rgba(13,13,13,0.6); background: transparent;">
-						Play stage
-					</span>
-					<span class="trust-badge" style="border-color: rgba(201,160,48,0.3); color: rgba(13,13,13,0.6); background: transparent;">
-						Pre-play stage
-					</span>
-					<span class="trust-badge" style="border-color: rgba(201,160,48,0.3); color: rgba(13,13,13,0.6); background: transparent;">
-						In-person · Mirpur-2
-					</span>
-				</div>
-
 			</div>
+
+			<!-- Right: subtext -->
+			<div id="ps-body" class="max-w-xs text-right pb-0.5">
+				<p class="text-white/62 leading-relaxed"
+				   style="font-size:clamp(0.82rem,1.3vw,0.96rem); font-weight:400;">
+					A warm, Islamic early-learning space<br>
+					for children in the play and pre-play<br>
+					stage — where faith and curiosity grow.
+				</p>
+			</div>
+
 		</div>
-	</section>
+	</div>
+
+</section>
 
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 2 — PHILOSOPHY PULL QUOTE
-	     The "why" of the preschool — warm editorial
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-3xl px-8" data-aos="fade-up">
-			<span class="section-label block mb-6">Our Philosophy</span>
-			<blockquote class="editorial-quote-light">
-				Every child carries a fitra — a pure, natural inclination towards
-				goodness and the Divine. Our role is simply to nurture what Allah ﷻ
-				has already placed within them.
-			</blockquote>
-			<p class="mt-8 text-white/45 text-sm leading-relaxed max-w-lg">
-				Little Mumin Islamic Preschool introduces children to faith, character,
-				and learning through age-appropriate activities in a loving and safe space.
-				We believe the earliest years are the most formative — and we take that
-				responsibility with care.
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 2 — PHILOSOPHY
+     Dark bg, floating bubbles, editorial quote
+     ═══════════════════════════════════════════════════════ -->
+<section id="ps-philosophy" class="py-24" style="position:relative; z-index:2;">
+
+	<div class="ph-dot ph-dot--1" aria-hidden="true"></div>
+	<div class="ph-dot ph-dot--2" aria-hidden="true"></div>
+	<div class="ph-dot ph-dot--3" aria-hidden="true"></div>
+
+	<!-- Wave separator (black → black, just a soft curve for visual rhythm) -->
+	<div class="wave-top" aria-hidden="true">
+		<svg viewBox="0 0 1440 48" preserveAspectRatio="none">
+			<path d="M0,48 C360,0 1080,0 1440,48 L1440,0 L0,0 Z" fill="#0D0D0D"/>
+		</svg>
+	</div>
+
+	<div class="relative mx-auto max-w-3xl px-8 pt-6" data-aos="fade-up">
+		<span class="section-label block mb-6">Our Philosophy</span>
+
+		<blockquote class="editorial-quote-light">
+			Every child carries a fitra — a pure, natural inclination towards
+			goodness and the Divine. Our role is simply to nurture what Allah ﷻ
+			has already placed within them.
+		</blockquote>
+
+		<p class="mt-8 text-white/45 text-sm leading-relaxed max-w-lg">
+			Little Mumin Islamic Preschool introduces children to faith, character,
+			and learning through age-appropriate activities in a loving and safe space.
+			We believe the earliest years are the most formative — and we take that
+			responsibility with immense care.
+		</p>
+
+		<div class="mt-12 flex flex-wrap gap-10" data-aos="fade-up" data-aos-delay="100">
+
+			<div class="flex items-center gap-3">
+				<div style="width:9px;height:9px;border-radius:50%;background:#FF8A65;flex-shrink:0;"></div>
+				<div>
+					<p class="font-heading font-semibold text-white text-sm">Play Stage</p>
+					<p class="text-white/40 text-xs">Ages 3–5</p>
+				</div>
+			</div>
+
+			<div class="flex items-center gap-3">
+				<div style="width:9px;height:9px;border-radius:50%;background:#4ECDC4;flex-shrink:0;"></div>
+				<div>
+					<p class="font-heading font-semibold text-white text-sm">Pre-Play Stage</p>
+					<p class="text-white/40 text-xs">Ages 2–3</p>
+				</div>
+			</div>
+
+			<div class="flex items-center gap-3">
+				<div style="width:9px;height:9px;border-radius:50%;background:#C9A030;flex-shrink:0;"></div>
+				<div>
+					<p class="font-heading font-semibold text-white text-sm">Mirpur-2, Dhaka</p>
+					<p class="text-white/40 text-xs">In-person classes</p>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 3 — CURRICULUM
+     Magazine-style numbered rows — each slides on hover
+     ═══════════════════════════════════════════════════════ -->
+<section class="bg-ihsaanah-cream py-24" style="position:relative; z-index:3; box-shadow:0 -20px 60px rgba(13,13,13,0.20);">
+	<div class="mx-auto max-w-4xl px-6">
+
+		<div class="mb-12" data-aos="fade-up">
+			<span class="section-label block mb-2">Kids Offline Maktab</span>
+			<h2 class="font-display italic text-ihsaanah-black leading-snug"
+			    style="font-size: clamp(2rem, 4vw, 3rem);">
+				What children learn
+			</h2>
+			<p class="mt-3 text-ihsaanah-black/55 text-sm max-w-md leading-relaxed">
+				A structured, caring Maktab programme giving children a strong Islamic
+				foundation from their very first years.
 			</p>
 		</div>
-	</section>
 
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 3 — OFFLINE MAKTAB CURRICULUM
-	     4 subjects as numbered curriculum panels on cream
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
-
-			<div class="mb-10" data-aos="fade-up">
-				<span class="section-label block mb-2">Kids Offline Maktab</span>
-				<h2 class="font-display italic text-3xl text-ihsaanah-black leading-snug">
-					What children learn
-				</h2>
-				<p class="mt-3 text-ihsaanah-black/55 text-sm max-w-md leading-relaxed">
-					Our in-person Maktab programme gives children a strong Islamic foundation
-					from a young age — in a structured, caring environment.
+		<!-- Row 1 — Coral -->
+		<div class="curr-item" style="color:#FF8A65;" data-aos="fade-up" data-aos-delay="0">
+			<span class="curr-item-num">01</span>
+			<div class="curr-item-bar" style="background:currentColor;"></div>
+			<div class="curr-item-body">
+				<span class="curr-item-icon">📖</span>
+				<h3 class="curr-item-title">Kids Hifz</h3>
+				<p class="curr-item-desc">
+					Beginning Quran memorisation tailored for young learners — structured
+					progressively so children build confidence with each new portion they learn.
 				</p>
 			</div>
-
-			<div class="grid gap-5 sm:grid-cols-2">
-
-				<!-- 1 — Kids Hifz -->
-				<div class="group rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm
-				            transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_6px_24px_rgba(201,160,48,0.10)]"
-				     data-aos="fade-up" data-aos-delay="0">
-					<div class="flex items-start gap-4">
-						<span class="font-display italic text-ihsaanah-gold/30 text-4xl leading-none shrink-0 select-none">01</span>
-						<div>
-							<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Kids Hifz</h3>
-							<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
-								Beginning Quran memorisation tailored for young learners — structured
-								progressively so children build confidence with each juz.
-							</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- 2 — Nazeera -->
-				<div class="group rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm
-				            transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_6px_24px_rgba(201,160,48,0.10)]"
-				     data-aos="fade-up" data-aos-delay="60">
-					<div class="flex items-start gap-4">
-						<span class="font-display italic text-ihsaanah-gold/30 text-4xl leading-none shrink-0 select-none">02</span>
-						<div>
-							<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Nazeera</h3>
-							<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
-								Correct Quran recitation with proper pronunciation — so children
-								learn to read beautifully and confidently from the very beginning.
-							</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- 3 — Tajweed -->
-				<div class="group rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm
-				            transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_6px_24px_rgba(201,160,48,0.10)]"
-				     data-aos="fade-up" data-aos-delay="120">
-					<div class="flex items-start gap-4">
-						<span class="font-display italic text-ihsaanah-gold/30 text-4xl leading-none shrink-0 select-none">03</span>
-						<div>
-							<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Basic to Advanced Tajweed</h3>
-							<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
-								Age-appropriate Tajweed rules introduced gently, helping children
-								read the Quran with care and beauty at every level.
-							</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- 4 — Basic Islam -->
-				<div class="group rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm
-				            transition-all duration-300 hover:border-ihsaanah-gold hover:shadow-[0_6px_24px_rgba(201,160,48,0.10)]"
-				     data-aos="fade-up" data-aos-delay="180">
-					<div class="flex items-start gap-4">
-						<span class="font-display italic text-ihsaanah-gold/30 text-4xl leading-none shrink-0 select-none">04</span>
-						<div>
-							<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Basic Islam Learning</h3>
-							<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
-								Foundational Islamic education — pillars of faith, everyday duas,
-								Islamic character, and the etiquettes of a Muslim life.
-							</p>
-						</div>
-					</div>
-				</div>
-
-			</div>
+			<span class="curr-item-badge"
+			      style="background:rgba(255,138,101,0.12); color:#C05530;">
+				Memorisation
+			</span>
 		</div>
-	</section>
+
+		<!-- Row 2 — Teal -->
+		<div class="curr-item" style="color:#4ECDC4;" data-aos="fade-up" data-aos-delay="60">
+			<span class="curr-item-num">02</span>
+			<div class="curr-item-bar" style="background:currentColor;"></div>
+			<div class="curr-item-body">
+				<span class="curr-item-icon">🗣️</span>
+				<h3 class="curr-item-title">Nazeera</h3>
+				<p class="curr-item-desc">
+					Correct Quran recitation with proper pronunciation — so children
+					learn to read beautifully and confidently from the very beginning.
+				</p>
+			</div>
+			<span class="curr-item-badge"
+			      style="background:rgba(78,205,196,0.12); color:#1E8880;">
+				Recitation
+			</span>
+		</div>
+
+		<!-- Row 3 — Purple -->
+		<div class="curr-item" style="color:#A78BFA;" data-aos="fade-up" data-aos-delay="120">
+			<span class="curr-item-num">03</span>
+			<div class="curr-item-bar" style="background:currentColor;"></div>
+			<div class="curr-item-body">
+				<span class="curr-item-icon">🎵</span>
+				<h3 class="curr-item-title">Basic to Advanced Tajweed</h3>
+				<p class="curr-item-desc">
+					Age-appropriate Tajweed rules introduced gently, helping children
+					read the Quran with care and beauty at every level.
+				</p>
+			</div>
+			<span class="curr-item-badge"
+			      style="background:rgba(167,139,250,0.12); color:#6548B8;">
+				Tajweed Rules
+			</span>
+		</div>
+
+		<!-- Row 4 — Gold -->
+		<div class="curr-item" style="color:#C9A030;" data-aos="fade-up" data-aos-delay="180">
+			<span class="curr-item-num">04</span>
+			<div class="curr-item-bar" style="background:currentColor;"></div>
+			<div class="curr-item-body">
+				<span class="curr-item-icon">🌙</span>
+				<h3 class="curr-item-title">Basic Islam Learning</h3>
+				<p class="curr-item-desc">
+					Pillars of faith, everyday duas, Islamic character, and the
+					etiquettes of a Muslim life — planted early, growing forever.
+				</p>
+			</div>
+			<span class="curr-item-badge"
+			      style="background:rgba(201,160,48,0.12); color:#8a6a10;">
+				Foundation
+			</span>
+		</div>
+
+	</div>
+</section>
 
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 4 — PREMISES SNAPSHOT
-	     A look at the learning space — service_content.jpeg
-	     ═══════════════════════════════════════════════════════ -->
-	<div class="full-bleed-photo" data-aos="fade-up">
-		<img src="img/service_content.jpeg"
-		     alt="Al-Ihsaanah classroom and children's play area — Mirpur-2, Dhaka"
-		     class="w-full object-cover"
-		     style="max-height: 460px; object-position: center;">
-		<div class="photo-overlay-bottom"></div>
-		<div class="photo-content">
-			<div class="max-w-4xl mx-auto w-full">
-				<span class="section-label block mb-2">Our Space</span>
-				<p class="font-display italic text-xl text-white leading-snug sm:text-2xl">
-					A classroom built for little ones — colourful, safe, and full of learning.
-				</p>
-				<p class="mt-2 text-xs text-white/50">
-					274 Pashchim Monipur, 60 Ft Road, Mirpur-2, Dhaka
-				</p>
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 4 — STICKY PARALLAX SPACE
+     Photo is sticky; next section slides over it
+     ═══════════════════════════════════════════════════════ -->
+<div style="position:sticky; top:0; z-index:1; height:100vh; overflow:hidden; background:#0D0D0D;">
+	<img src="https://images.pexels.com/photos/35105943/pexels-photo-35105943.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1"
+	     alt="Children in an Islamic learning environment"
+	     style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.52;object-position:center 35%;"
+	     loading="lazy">
+	<div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(13,13,13,0.92) 0%,rgba(13,13,13,0.3) 50%,rgba(13,13,13,0.08) 100%);"></div>
+	<div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:3rem 2.5rem;">
+		<div style="max-width:700px;">
+			<span class="section-label block mb-3">Our Space</span>
+			<p class="font-display italic text-white leading-snug" style="font-size:clamp(1.8rem,4vw,3rem);">
+				A classroom built for little ones —<br>colourful, safe, full of learning.
+			</p>
+			<p class="mt-3 text-white/45 text-xs tracking-wide">
+				274 Pashchim Monipur, 60 Ft Road, Mirpur-2, Dhaka
+			</p>
+		</div>
+	</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 5 — BLOB IMAGE SHOWCASE
+     Organic-shaped images in an asymmetric grid
+     ═══════════════════════════════════════════════════════ -->
+<section class="bg-ihsaanah-cream py-24" style="position:relative; z-index:4; box-shadow:0 -24px 70px rgba(13,13,13,0.22);">
+	<div class="mx-auto max-w-5xl px-6">
+
+		<div class="mb-14 text-center" data-aos="fade-up">
+			<span class="section-label block mb-3">A Glimpse In</span>
+			<h2 class="font-display italic text-ihsaanah-black"
+			    style="font-size: clamp(2rem, 4vw, 2.8rem);">
+				Learning through joy
+			</h2>
+		</div>
+
+		<div style="display:grid; grid-template-columns:1fr 1fr 1fr; grid-template-rows:auto auto; gap:2rem; align-items:center;">
+
+			<div class="blob-img blob-img--a"
+			     style="grid-column:2; grid-row:1/3; width:100%; height:380px;"
+			     data-aos="zoom-in" data-aos-delay="0">
+				<img src="https://images.pexels.com/photos/35105938/pexels-photo-35105938.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&dpr=1"
+				     alt="Children reading the Quran" loading="lazy">
+			</div>
+
+			<div class="blob-img blob-img--b"
+			     style="grid-column:1; grid-row:1; width:100%; height:220px;"
+			     data-aos="fade-right" data-aos-delay="100">
+				<img src="https://images.pexels.com/photos/37350652/pexels-photo-37350652.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=1"
+				     alt="Young student at learning session" loading="lazy">
+			</div>
+
+			<div class="blob-img blob-img--c"
+			     style="grid-column:3; grid-row:1/3; width:100%; height:320px;"
+			     data-aos="fade-left" data-aos-delay="140">
+				<img src="https://images.pexels.com/photos/36280167/pexels-photo-36280167.jpeg?auto=compress&cs=tinysrgb&w=600&h=900&dpr=1"
+				     alt="A student reading near a window" loading="lazy">
+			</div>
+
+			<div class="blob-img blob-img--d"
+			     style="grid-column:1; grid-row:2; width:100%; height:200px;"
+			     data-aos="fade-right" data-aos-delay="180">
+				<img src="https://images.pexels.com/photos/35105927/pexels-photo-35105927.jpeg?auto=compress&cs=tinysrgb&w=600&h=500&dpr=1"
+				     alt="Community learning space" loading="lazy">
+			</div>
+
+		</div>
+
+		<div class="flex justify-center gap-8 mt-10 flex-wrap" data-aos="fade-up" data-aos-delay="80">
+			<span class="flex items-center gap-2 text-xs text-ihsaanah-black/50">
+				<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#FF8A65;"></span>
+				Quran &amp; Hifz
+			</span>
+			<span class="flex items-center gap-2 text-xs text-ihsaanah-black/50">
+				<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#4ECDC4;"></span>
+				Play-Based Learning
+			</span>
+			<span class="flex items-center gap-2 text-xs text-ihsaanah-black/50">
+				<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#A78BFA;"></span>
+				Character &amp; Adab
+			</span>
+			<span class="flex items-center gap-2 text-xs text-ihsaanah-black/50">
+				<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#C9A030;"></span>
+				Islamic Foundation
+			</span>
+		</div>
+
+	</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 6 — ACTIVITIES CAROUSEL
+     Draggable horizontal scroll of coloured activity cards
+     ═══════════════════════════════════════════════════════ -->
+<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
+
+	<div class="mx-auto max-w-5xl px-6 mb-2">
+		<div data-aos="fade-up">
+			<span class="section-label block mb-2">What We Do</span>
+			<h2 class="font-display italic text-white"
+			    style="font-size: clamp(2rem, 4vw, 2.8rem);">
+				Every day, something wonderful
+			</h2>
+		</div>
+		<p class="drag-hint font-body mt-2">Drag to explore &nbsp;←→</p>
+	</div>
+
+	<div id="ps-activity-wrap">
+		<div id="ps-activity-track">
+			<div class="act-card" style="background:linear-gradient(145deg,#1a0e04,#3a2008);">
+				<span class="act-icon">📖</span>
+				<p class="act-name">Quran Recitation</p>
+				<p class="act-desc">Daily Quran reading with gentle Tajweed guidance — building love for the Book of Allah.</p>
+			</div>
+			<div class="act-card" style="background:linear-gradient(145deg,#0a1a17,#103a30);">
+				<span class="act-icon">🎨</span>
+				<p class="act-name">Islamic Arts &amp; Crafts</p>
+				<p class="act-desc">Hands-on creativity — Islamic patterns, calligraphy colouring, and craft activities.</p>
+			</div>
+			<div class="act-card" style="background:linear-gradient(145deg,#0e0a1a,#221540);">
+				<span class="act-icon">🌙</span>
+				<p class="act-name">Duas &amp; Adhkar</p>
+				<p class="act-desc">Learning the daily duas through song, repetition, and joyful play-based practice.</p>
+			</div>
+			<div class="act-card" style="background:linear-gradient(145deg,#1a1204,#3a2c00);">
+				<span class="act-icon">🧩</span>
+				<p class="act-name">Educational Play</p>
+				<p class="act-desc">Structured play activities that build cognitive, social, and motor skills together.</p>
+			</div>
+			<div class="act-card" style="background:linear-gradient(145deg,#100418,#280832);">
+				<span class="act-icon">📚</span>
+				<p class="act-name">Story Time</p>
+				<p class="act-desc">Stories of the Prophets and righteous companions, told in an age-appropriate, engaging way.</p>
+			</div>
+			<div class="act-card" style="background:linear-gradient(145deg,#04100a,#082818);">
+				<span class="act-icon">🌺</span>
+				<p class="act-name">Character Building</p>
+				<p class="act-desc">Kindness, sharing, respect, and adab — practiced daily through real interactions.</p>
+			</div>
+			<div class="act-card" style="background:linear-gradient(145deg,#141004,#2a2008);">
+				<span class="act-icon">⭐</span>
+				<p class="act-name">Memorisation Games</p>
+				<p class="act-desc">Fun games that reinforce surahs, names of Allah, and foundational Islamic knowledge.</p>
 			</div>
 		</div>
 	</div>
 
+</section>
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 5 — VISION / MISSION / VALUES
-	     Graceful placeholders awaiting Ihsaanah's content
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
 
-			<div class="text-center mb-10" data-aos="fade-up">
-				<span class="section-label block mb-3">Little Mumin Preschool</span>
-				<h2 class="font-display italic text-3xl text-white">
-					Vision, Mission &amp; Values
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 7 — VISION / MISSION / VALUES
+     ═══════════════════════════════════════════════════════ -->
+<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
+	<div class="mx-auto max-w-4xl px-6">
+
+		<div class="text-center mb-10" data-aos="fade-up">
+			<span class="section-label block mb-3">Little Mumin Preschool</span>
+			<h2 class="font-display italic text-white"
+			    style="font-size: clamp(1.8rem, 3.5vw, 2.6rem);">
+				Vision, Mission &amp; Values
+			</h2>
+		</div>
+
+		<div class="grid gap-5 sm:grid-cols-3">
+			<div class="vmv-card" data-aos="fade-up" data-aos-delay="0">
+				<div class="vmv-card-dot" style="background:#FF8A65;"></div>
+				<span class="panel-eyebrow">Vision</span>
+				<p class="panel-title" style="font-size:1.05rem;">Little Mumin Vision</p>
+				<p class="panel-sub">To be provided by Ihsaanah.</p>
+			</div>
+			<div class="vmv-card" data-aos="fade-up" data-aos-delay="80">
+				<div class="vmv-card-dot" style="background:#4ECDC4;"></div>
+				<span class="panel-eyebrow">Mission</span>
+				<p class="panel-title" style="font-size:1.05rem;">Little Mumin Mission</p>
+				<p class="panel-sub">To be provided by Ihsaanah.</p>
+			</div>
+			<div class="vmv-card" data-aos="fade-up" data-aos-delay="160">
+				<div class="vmv-card-dot" style="background:#A78BFA;"></div>
+				<span class="panel-eyebrow">Values</span>
+				<p class="panel-title" style="font-size:1.05rem;">Little Mumin Values</p>
+				<p class="panel-sub">To be provided by Ihsaanah.</p>
+			</div>
+		</div>
+
+	</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 8 — ENROL CTA
+     ═══════════════════════════════════════════════════════ -->
+<section id="ps-cta" class="py-24" style="position:relative; z-index:5; box-shadow:0 -20px 60px rgba(13,13,13,0.14);">
+
+	<div class="cta-bubble--1" aria-hidden="true"></div>
+	<div class="cta-bubble--2" aria-hidden="true"></div>
+
+	<div class="relative mx-auto max-w-4xl px-6">
+		<div class="grid gap-12 sm:grid-cols-2 items-center" data-aos="fade-up">
+
+			<div>
+				<span class="section-label block mb-4">Enrol Your Child</span>
+				<h2 class="font-display italic text-ihsaanah-black leading-snug"
+				    style="font-size: clamp(2rem, 4vw, 2.8rem);">
+					Give your child<br>the gift of a<br>
+					<span style="color:#FF8A65;">strong beginning</span>.
 				</h2>
+				<p class="mt-5 text-sm text-ihsaanah-black/55 leading-relaxed max-w-sm">
+					Places are limited. Get in touch to find out about availability,
+					age requirements, and start dates — we'd love to welcome your little one.
+				</p>
 			</div>
 
-			<div class="grid gap-5 sm:grid-cols-3">
-
-				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="0">
-					<span class="panel-eyebrow">Vision</span>
-					<p class="panel-title" style="font-size:1.1rem;">Little Mumin Vision</p>
-					<p class="panel-sub">To be provided by Ihsaanah.</p>
-				</div>
-
-				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="80">
-					<span class="panel-eyebrow">Mission</span>
-					<p class="panel-title" style="font-size:1.1rem;">Little Mumin Mission</p>
-					<p class="panel-sub">To be provided by Ihsaanah.</p>
-				</div>
-
-				<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="160">
-					<span class="panel-eyebrow">Values</span>
-					<p class="panel-title" style="font-size:1.1rem;">Little Mumin Values</p>
-					<p class="panel-sub">To be provided by Ihsaanah.</p>
-				</div>
-
+			<div class="flex flex-col gap-3">
+				<a href="contact.html"
+				   class="btn-shimmer block text-center rounded-xl bg-ihsaanah-gold px-7 py-4 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+					Enquire Now →
+				</a>
+				<a href="about-ihsaanah.html"
+				   class="block text-center rounded-xl border border-ihsaanah-gold/40 px-7 py-4 text-sm font-semibold text-ihsaanah-gold
+				          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
+					Learn About Ihsaanah
+				</a>
+				<p class="text-center text-xs text-ihsaanah-black/35 mt-1">In-person · Mirpur-2, Dhaka</p>
 			</div>
 
 		</div>
-	</section>
+	</div>
+</section>
 
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 6 — ENROL CTA
-	     Warm cream closing — speaking directly to parents
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/15">
-		<div class="mx-auto max-w-3xl px-6">
-
-			<div class="grid gap-10 sm:grid-cols-2 items-center" data-aos="fade-up">
-
-				<div>
-					<span class="section-label block mb-3">Enrol Your Child</span>
-					<h2 class="font-display italic text-3xl text-ihsaanah-black leading-snug">
-						Give your child the gift of a strong beginning.
-					</h2>
-					<p class="mt-4 text-sm text-ihsaanah-black/55 leading-relaxed">
-						Places are limited. Get in touch to find out about availability,
-						age requirements, and start dates.
-					</p>
-				</div>
-
-				<div class="flex flex-col gap-3">
-					<a href="contact.html"
-					   class="block text-center rounded-md bg-ihsaanah-gold px-7 py-3.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
-						Enquire Now
-					</a>
-					<a href="about-ihsaanah.html"
-					   class="block text-center rounded-md border border-ihsaanah-gold/40 px-7 py-3.5 text-sm font-semibold text-ihsaanah-gold
-					          hover:bg-ihsaanah-gold hover:text-white hover:border-ihsaanah-gold transition-all duration-200">
-						Learn About Ihsaanah
-					</a>
-				</div>
-
-			</div>
-
-		</div>
-	</section>
 
 </main>
 <div id="site-footer"></div>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  /* GSAP hero — h1 from left-bottom, body from right-top */
+  if (typeof gsap !== 'undefined') {
+    gsap.fromTo('#ps-h1',
+      { opacity: 0, x: -55, y: 30 },
+      { opacity: 1, x: 0, y: 0, duration: 1, delay: 0.25, ease: 'power3.out' }
+    );
+    gsap.fromTo('#ps-body',
+      { opacity: 0, x: 50, y: -25 },
+      { opacity: 1, x: 0, y: 0, duration: 0.9, delay: 0.55, ease: 'power3.out' }
+    );
+  }
+
+  /* Draggable activity carousel */
+  var wrap  = document.getElementById('ps-activity-wrap');
+  var track = document.getElementById('ps-activity-track');
+  if (!wrap || !track) return;
+
+  var isDown = false, startX, scrollLeft;
+  wrap.addEventListener('mousedown', function (e) { isDown = true; wrap.classList.add('is-dragging'); startX = e.pageX - wrap.offsetLeft; scrollLeft = wrap.scrollLeft; });
+  wrap.addEventListener('mouseleave', function () { isDown = false; wrap.classList.remove('is-dragging'); });
+  wrap.addEventListener('mouseup',    function () { isDown = false; wrap.classList.remove('is-dragging'); });
+  wrap.addEventListener('mousemove',  function (e) {
+    if (!isDown) return;
+    e.preventDefault();
+    wrap.scrollLeft = scrollLeft - (e.pageX - wrap.offsetLeft - startX) * 1.4;
+  });
+}());
+</script>
+
 </body>
 </html>

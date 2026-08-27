@@ -32,267 +32,910 @@
 	</script>
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+	<style>
+	/* ══════════════════════════════════════════════════════════
+	   HERO — background image + warm tint + Islamic pattern
+	   Gold bubbles, centered ayah, diagonal GSAP headline
+	   ══════════════════════════════════════════════════════════ */
+	#dn-hero {
+	  position: relative;
+	  min-height: 100vh;
+	  overflow: hidden;
+	  background: #0D0D0D;
+	  display: flex;
+	  flex-direction: column;
+	}
+
+	/* Floating gold particle bubbles */
+	.gp {
+	  position: absolute;
+	  border-radius: 50%;
+	  pointer-events: none;
+	  background: radial-gradient(ellipse, rgba(201,160,48,0.22) 0%, transparent 65%);
+	  animation: gpFloat linear infinite;
+	}
+	.gp--1  { width:180px; height:180px; left:8%;   top:12%;   animation-duration:14s; animation-delay:0s;   }
+	.gp--2  { width:100px; height:100px; left:25%;  top:65%;   animation-duration:18s; animation-delay:-6s;  }
+	.gp--3  { width:240px; height:240px; right:10%; top:5%;    animation-duration:20s; animation-delay:-10s; }
+	.gp--4  { width: 70px; height: 70px; right:28%; top:70%;   animation-duration:12s; animation-delay:-4s;  }
+	.gp--5  { width:130px; height:130px; left:55%;  top:40%;   animation-duration:16s; animation-delay:-8s;  }
+	.gp--6  { width: 50px; height: 50px; left:42%;  top:80%;   animation-duration:11s; animation-delay:-2s;  }
+	.gp--7  { width:160px; height:160px; right:5%;  bottom:8%; animation-duration:19s; animation-delay:-14s; }
+
+	@keyframes gpFloat {
+	  0%   { transform: translateY(0) translateX(0) scale(1);    opacity:0.5; }
+	  25%  { transform: translateY(-28px) translateX(12px) scale(1.06); opacity:0.8; }
+	  50%  { transform: translateY(-18px) translateX(-8px) scale(0.96); opacity:0.45; }
+	  75%  { transform: translateY(-35px) translateX(6px) scale(1.04);  opacity:0.7; }
+	  100% { transform: translateY(0) translateX(0) scale(1);    opacity:0.5; }
+	}
+
+	/* Hero text pre-hidden for GSAP */
+	#dn-h1, #dn-body, #dn-cta { opacity: 0; }
+
+	/* ── AYAH above headline ─────────────────────────────────── */
+	.dn-ayah-block {
+	  text-align: center;
+	  max-width: 1300px;
+	  margin: 0 auto;
+	  padding: 0 1.5rem 1.5rem;
+	}
+
+	/* ── Bottom headline / subtext bar ──────────────────────── */
+	.dn-hero-bottom {
+	  position: absolute;
+	  bottom: 0; left: 0; right: 0;
+	  padding: 0 clamp(1.5rem, 5vw, 4rem) 3.5rem;
+	}
+	.dn-hero-bottom-inner {
+	  max-width: 1300px;
+	  margin: 0 auto;
+	  display: flex;
+	  align-items: flex-end;
+	  justify-content: space-between;
+	  gap: 2rem;
+	}
+	@media (max-width: 700px) {
+	  .dn-hero-bottom-inner { flex-direction: column; align-items: flex-start; gap: 1rem; }
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   IMPACT NUMBERS — 3D extruded text-shadow effect
+	   ══════════════════════════════════════════════════════════ */
+	.dn-stat-grid {
+	  display: grid;
+	  grid-template-columns: 1fr 1px 1fr 1px 1fr;
+	  align-items: stretch;
+	}
+	@media (max-width: 640px) {
+	  .dn-stat-grid { grid-template-columns: 1fr; gap: 0; }
+	  .dn-stat-sep  { display: none !important; }
+	}
+	.dn-stat-sep {
+	  background: rgba(201,160,48,0.15);
+	  width: 1px;
+	  align-self: stretch;
+	}
+
+	/* 3D number extrusion — stacked offset text-shadows */
+	.stat-3d {
+	  text-shadow:
+	    1px 1px 0 rgba(160, 110, 10, 0.90),
+	    2px 2px 0 rgba(148, 98,  5,  0.80),
+	    3px 3px 0 rgba(136, 88,  0,  0.68),
+	    4px 4px 0 rgba(124, 78,  0,  0.56),
+	    5px 5px 0 rgba(112, 68,  0,  0.44),
+	    6px 6px 0 rgba(100, 58,  0,  0.32),
+	    7px 7px 0 rgba(88,  48,  0,  0.22),
+	    8px 8px 18px rgba(0,  0,  0,  0.62);
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   WHAT YOUR DONATION BUILDS — 3 visual cards
+	   ══════════════════════════════════════════════════════════ */
+	.builds-card {
+	  position: relative;
+	  border: 1px solid rgba(201,160,48,0.22);
+	  border-radius: 1.25rem;
+	  padding: 2.5rem 2rem;
+	  overflow: hidden;
+	  background: #0D0D0D;
+	  transition: border-color 0.3s ease, transform 0.3s ease;
+	}
+	.builds-card:hover {
+	  border-color: rgba(201,160,48,0.55);
+	  transform: translateY(-6px);
+	}
+	.builds-card::before {
+	  content: '';
+	  position: absolute;
+	  inset: 0;
+	  background-image: url('img/islamic_pattern1.png');
+	  background-repeat: repeat;
+	  background-size: 90px 90px;
+	  filter: invert(1);
+	  mix-blend-mode: screen;
+	  opacity: 0.03;
+	  pointer-events: none;
+	}
+	.builds-card-glow {
+	  position: absolute;
+	  top: -60px;
+	  right: -60px;
+	  width: 200px;
+	  height: 200px;
+	  border-radius: 50%;
+	  pointer-events: none;
+	  background: radial-gradient(ellipse, rgba(201,160,48,0.12) 0%, transparent 70%);
+	}
+	.builds-num {
+	  font-family: 'DM Serif Display', Georgia, serif;
+	  font-style: italic;
+	  font-size: 4.5rem;
+	  line-height: 0.88;
+	  color: rgba(201,160,48,0.12);
+	  position: absolute;
+	  top: 1.25rem;
+	  right: 1.5rem;
+	  pointer-events: none;
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   STICKY PARALLAX — image pinned; next section scrolls over
+	   ══════════════════════════════════════════════════════════ */
+	#dn-sticky-photo {
+	  position: sticky;
+	  top: 0;
+	  z-index: 1;
+	  height: 100vh;
+	  overflow: hidden;
+	  background: #0D0D0D;
+	}
+	#dn-sticky-photo img {
+	  position: absolute;
+	  inset: 0;
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  opacity: 0.52;
+	  object-position: center 35%;
+	}
+	.dn-photo-overlay { position: absolute; inset: 0; }
+	.dn-photo-caption { position: absolute; bottom: 0; left: 0; right: 0; padding: 3rem 2.5rem; }
+
+	/* ══════════════════════════════════════════════════════════
+	   GIVING TYPES — image cards with overlay
+	   ══════════════════════════════════════════════════════════ */
+	.give-card {
+	  position: relative;
+	  overflow: hidden;
+	  height: 400px;
+	  border: 1px solid rgba(201,160,48,0.2);
+	}
+	.give-card img {
+	  position: absolute;
+	  inset: 0;
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  filter: grayscale(40%) brightness(0.6);
+	  transition: transform 0.7s ease, filter 0.6s ease;
+	}
+	.give-card:hover img {
+	  transform: scale(1.06);
+	  filter: grayscale(20%) brightness(0.68);
+	}
+	.give-card-content {
+	  position: absolute;
+	  inset: 0;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: flex-end;
+	  padding: 2rem;
+	  background: linear-gradient(to top,
+	    rgba(13,13,13,0.96) 0%,
+	    rgba(13,13,13,0.6)  45%,
+	    rgba(13,13,13,0.1)  80%,
+	    transparent 100%
+	  );
+	}
+	.give-card-arabic {
+	  font-family: 'Amiri', serif;
+	  font-size: 1.8rem;
+	  color: rgba(201,160,48,0.9);
+	  line-height: 1.3;
+	  direction: rtl;
+	  margin-bottom: 0.5rem;
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   CAUSES — split-panel
+	   ══════════════════════════════════════════════════════════ */
+	.cause-panel {
+	  position: relative;
+	  overflow: hidden;
+	  display: grid;
+	  grid-template-columns: 1fr 1fr;
+	  min-height: 500px;
+	  border-bottom: 1px solid rgba(201,160,48,0.1);
+	}
+	@media (max-width: 768px) {
+	  .cause-panel { grid-template-columns: 1fr; min-height: auto; }
+	}
+	.cause-panel-img { position: relative; overflow: hidden; }
+	.cause-panel-img img {
+	  position: absolute;
+	  inset: 0;
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  transition: transform 0.8s ease;
+	}
+	.cause-panel-img:hover img { transform: scale(1.04); }
+	.cause-panel-body {
+	  background: #0D0D0D;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  padding: 3.5rem;
+	  position: relative;
+	  overflow: hidden;
+	}
+	.cause-panel-body::before {
+	  content: '';
+	  position: absolute;
+	  inset: 0;
+	  background-image: url('img/islamic_pattern1.png');
+	  background-repeat: repeat;
+	  background-size: 90px 90px;
+	  filter: invert(1);
+	  mix-blend-mode: screen;
+	  opacity: 0.03;
+	  pointer-events: none;
+	}
+	.cause-panel-glow {
+	  position: absolute;
+	  width: 280px; height: 280px;
+	  border-radius: 50%;
+	  pointer-events: none;
+	  background: radial-gradient(ellipse, rgba(201,160,48,0.10) 0%, transparent 70%);
+	}
+	.cause-info-box {
+	  margin-top: 1.75rem;
+	  border: 1px solid rgba(201,160,48,0.22);
+	  border-radius: 0.75rem;
+	  background: rgba(201,160,48,0.04);
+	  padding: 1.25rem 1.5rem;
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   IMAGE MOSAIC STRIP
+	   ══════════════════════════════════════════════════════════ */
+	.img-mosaic { display: flex; height: 280px; overflow: hidden; gap: 3px; }
+	.img-mosaic-item { flex: 1; overflow: hidden; position: relative; }
+	.img-mosaic-item img {
+	  width: 100%; height: 100%; object-fit: cover;
+	  filter: grayscale(30%) brightness(0.65);
+	  transition: transform 0.65s ease, filter 0.5s ease;
+	  display: block;
+	}
+	.img-mosaic-item:hover img { transform: scale(1.08); filter: grayscale(10%) brightness(0.78); }
+	.img-mosaic-item--wide { flex: 2; }
+
+	/* ══════════════════════════════════════════════════════════
+	   CLOSING HADITH
+	   ══════════════════════════════════════════════════════════ */
+	#dn-hadith { position: relative; background: #0D0D0D; overflow: hidden; }
+	.hadith-glow {
+	  position: absolute; top: 50%; left: 50%;
+	  transform: translate(-50%, -50%);
+	  width: 600px; height: 400px; border-radius: 50%;
+	  background: radial-gradient(ellipse, rgba(201,160,48,0.09) 0%, transparent 65%);
+	  pointer-events: none;
+	  animation: gpFloat 16s ease-in-out infinite;
+	}
+	</style>
 </head>
-<body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="donate.html" data-transparent-header="true">
+<body class="flex min-h-screen flex-col bg-ihsaanah-black text-ihsaanah-black font-body"
+      data-active-nav="donate.html"
+      data-transparent-header="true">
 <div id="site-header"></div>
 <main class="flex-1">
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 1 — EMOTIONAL HERO
-	     Ayah + display headline — make the reader feel the why
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="relative overflow-hidden bg-ihsaanah-black">
-		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.18]"></div>
-		<div class="pointer-events-none absolute inset-0"
-		     style="background: radial-gradient(ellipse 65% 55% at 15% 55%, rgba(201,160,48,0.15) 0%, transparent 70%);"></div>
 
-		<div class="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
-			<div class="max-w-2xl">
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 1 — HERO
+     Background image + warm amber tint + Islamic pattern
+     Arabic ayah centred · headline from bottom-left
+     subtext from top-right (GSAP diagonal composition)
+     ═══════════════════════════════════════════════════════ -->
+<section id="dn-hero">
 
-				<!-- Quranic anchor -->
-				<p class="font-arabic text-xl text-ihsaanah-gold/70 mb-2 animate-fade-up leading-loose"
-				   dir="rtl" lang="ar">
-					مَّن ذَا ٱلَّذِى يُقۡرِضُ ٱللَّهَ قَرۡضًا حَسَنٗا فَيُضَٰعِفَهُۥ لَهُۥٓ أَضۡعَافٗا كَثِيرَةٗ
-				</p>
-				<p class="text-xs text-ihsaanah-gold/40 mb-8 animate-fade-up" style="animation-delay:0.05s">
-					Al-Baqarah 2:245
-				</p>
+	<!-- Background image — warm, community feel (not mosque) -->
+	<img src="https://images.pexels.com/photos/6281896/pexels-photo-6281896.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1"
+	     alt=""
+	     style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 45%;opacity:0.38;pointer-events:none;"
+	     aria-hidden="true" loading="eager">
 
-				<span class="section-label block mb-4 animate-fade-up" style="animation-delay:0.1s">
-					Sadaqah &amp; Support
-				</span>
+	<!-- Warm amber tint overlay — gives a generous, golden warmth -->
+	<div aria-hidden="true"
+	     style="position:absolute;inset:0;background:rgba(110,58,4,0.30);pointer-events:none;"></div>
 
-				<h1 class="font-display italic text-white leading-tight animate-fade-up"
-				    style="font-size: clamp(2.6rem, 6vw, 4.5rem); animation-delay:0.15s">
+	<!-- Bottom gradient — keeps text legible -->
+	<div aria-hidden="true"
+	     style="position:absolute;inset:0;background:linear-gradient(to top, rgba(13,13,13,0.90) 0%, rgba(13,13,13,0.42) 38%, transparent 65%);pointer-events:none;"></div>
+
+	<!-- Top gradient — helps header readability -->
+	<div aria-hidden="true"
+	     style="position:absolute;inset:0;background:linear-gradient(to bottom, rgba(13,13,13,0.55) 0%, transparent 28%);pointer-events:none;"></div>
+
+	<!-- Islamic lattice pattern -->
+	<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.13]" aria-hidden="true"></div>
+
+	<!-- Gold glow — left edge -->
+	<div aria-hidden="true" class="pointer-events-none absolute inset-0"
+	     style="background:radial-gradient(ellipse 50% 55% at 0% 60%, rgba(201,160,48,0.13) 0%, transparent 65%);"></div>
+
+	<!-- Floating gold particle bubbles -->
+	<div class="gp gp--1" aria-hidden="true"></div>
+	<div class="gp gp--2" aria-hidden="true"></div>
+	<div class="gp gp--3" aria-hidden="true"></div>
+	<div class="gp gp--4" aria-hidden="true"></div>
+	<div class="gp gp--5" aria-hidden="true"></div>
+	<div class="gp gp--6" aria-hidden="true"></div>
+	<div class="gp gp--7" aria-hidden="true"></div>
+
+	<!-- ── Bottom bar: ayah → rule → headline left ↔ subtext right ── -->
+	<div class="dn-hero-bottom">
+
+		<!-- Thin rule above headline text, like other page heroes -->
+		<div style="height:1px; background:rgba(255,255,255,0.14); margin-bottom:1.75rem; max-width:1300px; margin-left:auto; margin-right:auto;"></div>
+
+		<div class="dn-hero-bottom-inner">
+
+			<!-- Headline — GSAP will animate from bottom-left -->
+			<div id="dn-h1" style="flex-shrink:0; max-width:500px;">
+				<h1 class="font-display italic text-white leading-tight"
+				    style="font-size: clamp(2.6rem, 5.5vw, 4.5rem);">
 					Every gift plants<br>a seed for<br>the Ummah.
 				</h1>
-
-				<p class="mt-6 text-white/50 text-base leading-relaxed max-w-md animate-fade-up"
-				   style="animation-delay:0.25s">
-					Your generosity sustains Islamic education, empowers families,
-					and helps build something that will outlast us all — in this life
-					and as a sadaqah jariyah in the next.
-				</p>
-
-				<a href="#give"
-				   class="mt-9 inline-block rounded-md bg-ihsaanah-gold px-8 py-3.5 text-sm font-semibold text-white
-				          hover:opacity-90 transition-opacity animate-fade-up"
-				   style="animation-delay:0.32s">
-					See How to Give
+				<a id="dn-cta" href="#causes"
+				   class="btn-shimmer mt-7 inline-block rounded-md bg-ihsaanah-gold px-8 py-3.5 text-sm font-semibold text-white
+				          hover:opacity-90 transition-opacity" style="opacity:0;">
+					See How to Give →
 				</a>
-
 			</div>
-		</div>
-	</section>
 
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 2 — IMPACT NUMBERS
-	     Large-format stats — why your donation matters
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black border-t border-ihsaanah-gold/10 py-16">
-		<div class="mx-auto max-w-5xl px-4">
-
-			<span class="section-label block text-center mb-8" data-aos="fade-up">Ihsaanah in Numbers</span>
-
-			<div class="grid grid-cols-1 gap-px bg-ihsaanah-gold/10 sm:grid-cols-3"
-			     data-aos="fade-up" data-aos-delay="60">
-
-				<div class="flex flex-col items-center justify-center bg-ihsaanah-black px-8 py-12 text-center">
-					<span class="font-display italic text-ihsaanah-gold leading-none"
-					      style="font-size: clamp(3.5rem, 7vw, 5.5rem);">
-						<span data-counter="500">0</span><span class="text-ihsaanah-gold/45"
-						      style="font-size:0.45em; vertical-align:super;">+</span>
-					</span>
-					<p class="mt-3 text-xs tracking-widest uppercase text-white/40">Community Members</p>
-					<p class="mt-1 text-xs text-white/25 leading-relaxed max-w-[140px]">
-						Lives touched by Ihsaanah's work
-					</p>
-				</div>
-
-				<div class="flex flex-col items-center justify-center bg-ihsaanah-black px-8 py-12 text-center">
-					<span class="font-display italic text-ihsaanah-gold leading-none"
-					      style="font-size: clamp(3.5rem, 7vw, 5.5rem);">
-						<span data-counter="5">0</span>
-					</span>
-					<p class="mt-3 text-xs tracking-widest uppercase text-white/40">Years of Service</p>
-					<p class="mt-1 text-xs text-white/25 leading-relaxed max-w-[140px]">
-						Consistently serving the community
-					</p>
-				</div>
-
-				<div class="flex flex-col items-center justify-center bg-ihsaanah-black px-8 py-12 text-center">
-					<span class="font-display italic text-ihsaanah-gold leading-none"
-					      style="font-size: clamp(3.5rem, 7vw, 5.5rem);">
-						<span data-counter="3">0</span><span class="text-ihsaanah-gold/45"
-						      style="font-size:0.45em; vertical-align:super;">+</span>
-					</span>
-					<p class="mt-3 text-xs tracking-widest uppercase text-white/40">Active Programmes</p>
-					<p class="mt-1 text-xs text-white/25 leading-relaxed max-w-[140px]">
-						Growing each year, bi idhnillah
-					</p>
-				</div>
-
-			</div>
-		</div>
-	</section>
-
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 3 — GIVING TYPES
-	     Islamic framing: Sadaqah · Sadaqah Jariyah · Zakat
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
-
-			<div class="mb-10" data-aos="fade-up">
-				<span class="section-label block mb-2">Ways to Give</span>
-				<h2 class="font-display italic text-3xl text-ihsaanah-black">
-					Every form of giving counts
-				</h2>
-				<p class="mt-3 text-ihsaanah-black/55 text-sm max-w-md leading-relaxed">
-					Whether it is a one-off gift or an ongoing commitment,
-					your generosity sustains education and serves the community.
+			<!-- Subtext — GSAP will animate from top-right -->
+			<div id="dn-body" class="max-w-xs text-right pb-1">
+				<p class="text-white/58 leading-relaxed"
+				   style="font-size: clamp(0.82rem, 1.3vw, 0.96rem);">
+					Your generosity sustains Islamic education,<br>
+					empowers families, and helps build something<br>
+					that will outlast us all — a sadaqah jariyah<br>
+					flowing long after we are gone.
 				</p>
 			</div>
 
-			<div class="grid gap-5 sm:grid-cols-3">
+		</div>
+	</div>
 
-				<div class="rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="0">
-					<p class="font-arabic text-2xl text-ihsaanah-gold mb-3" lang="ar" dir="rtl">صدقة</p>
-					<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Sadaqah</h3>
-					<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
-						Voluntary charity given for the sake of Allah ﷻ — no minimum,
-						no conditions. Every amount makes a difference.
-					</p>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 2 — IMPACT NUMBERS
+     3D extruded number counters
+     ═══════════════════════════════════════════════════════ -->
+<section class="bg-ihsaanah-black border-t border-ihsaanah-gold/10 py-20"
+         style="position:relative; z-index:2;">
+	<div class="mx-auto max-w-5xl px-6">
+
+		<div class="text-center mb-14" data-aos="fade-up">
+			<span class="section-label block mb-3">Ihsaanah in Numbers</span>
+			<h2 class="font-display italic text-white"
+			    style="font-size: clamp(1.8rem, 3.5vw, 2.6rem);">
+				Real lives. Real impact.
+			</h2>
+		</div>
+
+		<div class="dn-stat-grid" data-aos="fade-up" data-aos-delay="60">
+
+			<div class="flex flex-col items-center justify-center px-8 py-12 text-center">
+				<span class="font-display italic text-ihsaanah-gold leading-none stat-3d"
+				      style="font-size: clamp(3.5rem, 7vw, 5.5rem);">
+					<span data-counter="500">0</span><span class="text-ihsaanah-gold/45"
+					      style="font-size:0.42em; vertical-align:super;">+</span>
+				</span>
+				<p class="mt-4 text-xs tracking-widest uppercase text-white/40">Community Members</p>
+				<p class="mt-1 text-xs text-white/22 leading-relaxed max-w-[130px]">Lives touched by Ihsaanah's work</p>
+			</div>
+
+			<div class="dn-stat-sep" aria-hidden="true"></div>
+
+			<div class="flex flex-col items-center justify-center px-8 py-12 text-center">
+				<span class="font-display italic text-ihsaanah-gold leading-none stat-3d"
+				      style="font-size: clamp(3.5rem, 7vw, 5.5rem);">
+					<span data-counter="5">0</span>
+				</span>
+				<p class="mt-4 text-xs tracking-widest uppercase text-white/40">Years of Service</p>
+				<p class="mt-1 text-xs text-white/22 leading-relaxed max-w-[130px]">Consistently serving the community</p>
+			</div>
+
+			<div class="dn-stat-sep" aria-hidden="true"></div>
+
+			<div class="flex flex-col items-center justify-center px-8 py-12 text-center">
+				<span class="font-display italic text-ihsaanah-gold leading-none stat-3d"
+				      style="font-size: clamp(3.5rem, 7vw, 5.5rem);">
+					<span data-counter="3">0</span><span class="text-ihsaanah-gold/45"
+					      style="font-size:0.42em; vertical-align:super;">+</span>
+				</span>
+				<p class="mt-4 text-xs tracking-widest uppercase text-white/40">Active Programmes</p>
+				<p class="mt-1 text-xs text-white/22 leading-relaxed max-w-[130px]">Growing each year, bi idhnillah</p>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 3 — WHAT YOUR DONATION BUILDS
+     Three visual cards — Mosque, Scholarship, Preschool
+     Unique to this page; answers the question donors ask
+     ═══════════════════════════════════════════════════════ -->
+<section class="bg-ihsaanah-cream py-24"
+         style="position:relative; z-index:3; box-shadow: 0 -24px 70px rgba(13,13,13,0.22);">
+
+	<div class="mx-auto max-w-5xl px-6">
+
+		<div class="mb-14" data-aos="fade-up">
+			<span class="section-label block mb-2">Your Generosity at Work</span>
+			<h2 class="font-display italic text-ihsaanah-black"
+			    style="font-size: clamp(2rem, 4vw, 3rem);">
+				What your donation builds
+			</h2>
+			<p class="mt-3 text-ihsaanah-black/55 text-sm max-w-md leading-relaxed">
+				Every gift — large or small — flows into one of three living causes
+				that serve the Ummah today and long after.
+			</p>
+		</div>
+
+		<div class="grid gap-5 sm:grid-cols-3">
+
+			<!-- Card 1 — Dream Mosque -->
+			<div class="builds-card" data-aos="fade-up" data-aos-delay="0">
+				<div class="builds-card-glow"></div>
+				<span class="builds-num" aria-hidden="true">01</span>
+
+				<div class="mb-5 relative z-10">
+					<div style="width:52px;height:52px;border-radius:14px;background:rgba(201,160,48,0.10);
+					            border:1px solid rgba(201,160,48,0.28);display:flex;align-items:center;justify-content:center;">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+							<path d="M12 3c-1 0-2 1-2 2v1H4v13h16V6h-6V5c0-1-1-2-2-2Z" stroke="#C9A030" stroke-width="1.4" stroke-linejoin="round"/>
+							<path d="M9 19v-6h6v6" stroke="#C9A030" stroke-width="1.4" stroke-linecap="round"/>
+							<path d="M12 1v2M8 1.5l1 1.7M16 1.5l-1 1.7" stroke="#C9A030" stroke-width="1.2" stroke-linecap="round"/>
+						</svg>
+					</div>
 				</div>
 
-				<div class="rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="70">
-					<p class="font-arabic text-2xl text-ihsaanah-gold mb-3" lang="ar" dir="rtl">صدقة جارية</p>
-					<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Sadaqah Jariyah</h3>
-					<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
+				<div class="relative z-10">
+					<h3 class="font-heading text-base font-semibold text-white mb-2">The Dream Mosque</h3>
+					<p class="text-xs text-white/45 leading-relaxed mb-4">
+						A sadaqah jariyah that will outlast every one of us. A house of Allah ﷻ
+						built from this community's generosity — where generations will pray, learn,
+						and find peace.
+					</p>
+					<div style="height:1px;background:rgba(201,160,48,0.15);margin-bottom:1rem;"></div>
+					<span class="text-[10px] tracking-widest uppercase text-ihsaanah-gold/55 font-semibold">
+						Sadaqah Jariyah
+					</span>
+				</div>
+			</div>
+
+			<!-- Card 2 — Scholarship Fund -->
+			<div class="builds-card" data-aos="fade-up" data-aos-delay="90">
+				<div class="builds-card-glow"></div>
+				<span class="builds-num" aria-hidden="true">02</span>
+
+				<div class="mb-5 relative z-10">
+					<div style="width:52px;height:52px;border-radius:14px;background:rgba(201,160,48,0.10);
+					            border:1px solid rgba(201,160,48,0.28);display:flex;align-items:center;justify-content:center;">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+							<path d="M12 2L2 7l10 5 10-5-10-5Z" stroke="#C9A030" stroke-width="1.4" stroke-linejoin="round"/>
+							<path d="M2 17l10 5 10-5" stroke="#C9A030" stroke-width="1.4" stroke-linecap="round"/>
+							<path d="M2 12l10 5 10-5" stroke="#C9A030" stroke-width="1.4" stroke-linecap="round"/>
+						</svg>
+					</div>
+				</div>
+
+				<div class="relative z-10">
+					<h3 class="font-heading text-base font-semibold text-white mb-2">Scholarship Fund</h3>
+					<p class="text-xs text-white/45 leading-relaxed mb-4">
+						Knowledge is a trust. Your gift ensures financial barriers never prevent a
+						child from accessing Islamic education — empowering families who need it most.
+					</p>
+					<div style="height:1px;background:rgba(201,160,48,0.15);margin-bottom:1rem;"></div>
+					<span class="text-[10px] tracking-widest uppercase text-ihsaanah-gold/55 font-semibold">
+						Beneficial Knowledge
+					</span>
+				</div>
+			</div>
+
+			<!-- Card 3 — Preschool -->
+			<div class="builds-card" data-aos="fade-up" data-aos-delay="180">
+				<div class="builds-card-glow"></div>
+				<span class="builds-num" aria-hidden="true">03</span>
+
+				<div class="mb-5 relative z-10">
+					<div style="width:52px;height:52px;border-radius:14px;background:rgba(201,160,48,0.10);
+					            border:1px solid rgba(201,160,48,0.28);display:flex;align-items:center;justify-content:center;">
+						<svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+							<circle cx="12" cy="8" r="4" stroke="#C9A030" stroke-width="1.4"/>
+							<path d="M5 20c0-3.87 3.13-7 7-7s7 3.13 7 7" stroke="#C9A030" stroke-width="1.4" stroke-linecap="round"/>
+							<path d="M19 8l2-2M5 8l-2-2M12 3V1" stroke="#C9A030" stroke-width="1.2" stroke-linecap="round"/>
+						</svg>
+					</div>
+				</div>
+
+				<div class="relative z-10">
+					<h3 class="font-heading text-base font-semibold text-white mb-2">Little Mumin Preschool</h3>
+					<p class="text-xs text-white/45 leading-relaxed mb-4">
+						Nurturing the youngest hearts from the very first step. Your support keeps
+						our doors open for families who want their children raised with faith and
+						curiosity from day one.
+					</p>
+					<div style="height:1px;background:rgba(201,160,48,0.15);margin-bottom:1rem;"></div>
+					<span class="text-[10px] tracking-widest uppercase text-ihsaanah-gold/55 font-semibold">
+						Righteous Children
+					</span>
+				</div>
+			</div>
+
+		</div>
+
+		<!-- Small note under the cards -->
+		<p class="text-center text-xs text-ihsaanah-black/35 mt-8 leading-relaxed" data-aos="fade-up">
+			Donation bank details will be provided directly by Ihsaanah. &nbsp;
+			<a href="contact.html" class="text-ihsaanah-gold/70 hover:text-ihsaanah-gold underline transition-colors">
+				Contact us to give →
+			</a>
+		</p>
+
+	</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     STICKY PARALLAX — children/learning image (not mosque)
+     Pinned; the next section scrolls over it
+     ═══════════════════════════════════════════════════════ -->
+<div id="dn-sticky-photo" aria-hidden="true">
+	<!-- Changed from mosque to children studying Quran -->
+	<img src="https://images.pexels.com/photos/35105938/pexels-photo-35105938.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1"
+	     alt="Children studying Islamic knowledge"
+	     loading="lazy">
+	<!-- Warm amber tint on this image too -->
+	<div class="dn-photo-overlay"
+	     style="background: rgba(80, 40, 4, 0.25);"></div>
+	<div class="dn-photo-overlay"
+	     style="background: linear-gradient(to top,
+	              rgba(13,13,13,0.94) 0%,
+	              rgba(13,13,13,0.38) 44%,
+	              rgba(13,13,13,0.08) 75%,
+	              transparent 100%);"></div>
+	<div class="dn-photo-overlay"
+	     style="background: linear-gradient(to right,
+	              rgba(13,13,13,0.65) 0%,
+	              rgba(13,13,13,0.12) 55%,
+	              transparent 100%);"></div>
+	<div class="dn-photo-caption">
+		<div style="max-width:600px;">
+			<span class="section-label block mb-3">The Promise</span>
+			<p class="font-display italic text-white leading-snug"
+			   style="font-size: clamp(1.8rem, 4vw, 3rem);">
+				Knowledge lit by faith is<br>a light that never dims.
+			</p>
+		</div>
+	</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 4 — WAYS TO GIVE  (image cards)
+     Scrolls over the sticky photo
+     ═══════════════════════════════════════════════════════ -->
+<section class="bg-ihsaanah-cream py-24"
+         style="position:relative; z-index:3; box-shadow: 0 -28px 80px rgba(13,13,13,0.28);">
+	<div class="mx-auto max-w-5xl px-6">
+
+		<div class="mb-14" data-aos="fade-up">
+			<span class="section-label block mb-2">Ways to Give</span>
+			<h2 class="font-display italic text-ihsaanah-black"
+			    style="font-size: clamp(2rem, 4vw, 3rem);">
+				Every form of giving counts
+			</h2>
+			<p class="mt-3 text-ihsaanah-black/55 text-sm max-w-md leading-relaxed">
+				Whether a one-off gift or an ongoing commitment, your generosity
+				sustains education and serves the Ummah for generations.
+			</p>
+		</div>
+
+		<div class="grid gap-4 sm:grid-cols-3">
+
+			<div class="give-card" data-aos="fade-up" data-aos-delay="0">
+				<img src="https://images.pexels.com/photos/6281896/pexels-photo-6281896.jpeg?auto=compress&cs=tinysrgb&w=800&h=900&dpr=1"
+				     alt="Book and giving" loading="lazy">
+				<div class="give-card-content">
+					<p class="give-card-arabic" lang="ar" dir="rtl">صدقة</p>
+					<h3 class="font-heading text-base font-semibold text-white mb-2">Sadaqah</h3>
+					<p class="text-sm text-white/58 leading-relaxed">
+						Voluntary charity for the sake of Allah ﷻ — no minimum, no conditions.
+						Every amount makes a difference.
+					</p>
+				</div>
+			</div>
+
+			<div class="give-card" data-aos="fade-up" data-aos-delay="100">
+				<img src="https://images.pexels.com/photos/35105927/pexels-photo-35105927.jpeg?auto=compress&cs=tinysrgb&w=800&h=900&dpr=1"
+				     alt="Community learning" loading="lazy">
+				<div class="give-card-content">
+					<p class="give-card-arabic" lang="ar" dir="rtl">صدقة جارية</p>
+					<h3 class="font-heading text-base font-semibold text-white mb-2">Sadaqah Jariyah</h3>
+					<p class="text-sm text-white/58 leading-relaxed">
 						Ongoing charity whose rewards continue after you are gone —
 						building the Dream Mosque is among the greatest of these.
 					</p>
 				</div>
+			</div>
 
-				<div class="rounded-2xl border border-ihsaanah-gold/20 bg-white p-7 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="140">
-					<p class="font-arabic text-2xl text-ihsaanah-gold mb-3" lang="ar" dir="rtl">زكاة</p>
-					<h3 class="font-heading text-base font-semibold text-ihsaanah-black">Zakat</h3>
-					<p class="mt-2 text-sm text-ihsaanah-black/55 leading-relaxed">
-						The obligatory annual giving on eligible wealth — contact Ihsaanah
+			<div class="give-card" data-aos="fade-up" data-aos-delay="200">
+				<img src="https://images.pexels.com/photos/37350652/pexels-photo-37350652.jpeg?auto=compress&cs=tinysrgb&w=800&h=900&dpr=1"
+				     alt="Student learning" loading="lazy">
+				<div class="give-card-content">
+					<p class="give-card-arabic" lang="ar" dir="rtl">زكاة</p>
+					<h3 class="font-heading text-base font-semibold text-white mb-2">Zakat</h3>
+					<p class="text-sm text-white/58 leading-relaxed">
+						Obligatory annual giving on eligible wealth — contact Ihsaanah
 						to confirm Zakat eligibility for specific causes.
 					</p>
 				</div>
+			</div>
 
+		</div>
+	</div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     IMAGE MOSAIC STRIP
+     ═══════════════════════════════════════════════════════ -->
+<div class="img-mosaic" aria-hidden="true" data-aos="fade-up">
+	<div class="img-mosaic-item img-mosaic-item--wide">
+		<img src="https://images.pexels.com/photos/36280167/pexels-photo-36280167.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1"
+		     alt="" loading="lazy">
+	</div>
+	<div class="img-mosaic-item">
+		<img src="https://images.pexels.com/photos/35105938/pexels-photo-35105938.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=1"
+		     alt="" loading="lazy">
+	</div>
+	<div class="img-mosaic-item img-mosaic-item--wide">
+		<img src="https://images.pexels.com/photos/35105943/pexels-photo-35105943.jpeg?auto=compress&cs=tinysrgb&w=900&h=600&dpr=1"
+		     alt="" loading="lazy">
+	</div>
+	<div class="img-mosaic-item">
+		<img src="https://images.pexels.com/photos/35105927/pexels-photo-35105927.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=1"
+		     alt="" loading="lazy">
+	</div>
+	<div class="img-mosaic-item">
+		<img src="https://images.pexels.com/photos/37350652/pexels-photo-37350652.jpeg?auto=compress&cs=tinysrgb&w=600&h=600&dpr=1"
+		     alt="" loading="lazy">
+	</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 5 — CAUSES  (split-panel with images)
+     ═══════════════════════════════════════════════════════ -->
+<section id="causes" style="scroll-margin-top:80px; position:relative; z-index:3; background:#0D0D0D;">
+
+	<div class="mx-auto max-w-5xl px-6 pt-20 pb-12 text-center" data-aos="fade-up">
+		<span class="section-label block mb-3">Our Causes</span>
+		<h2 class="font-display italic text-white"
+		    style="font-size: clamp(2rem, 4vw, 3rem);">
+			Where your gift goes
+		</h2>
+	</div>
+
+	<!-- Cause 01 — Dream Mosque (image left, text right) -->
+	<div class="cause-panel" data-aos="fade-up">
+
+		<div class="cause-panel-img">
+			<img src="https://images.pexels.com/photos/27397439/pexels-photo-27397439.jpeg?auto=compress&cs=tinysrgb&w=900&h=900&dpr=1"
+			     alt="A mosque at dusk — the Dream Mosque vision" loading="lazy">
+			<div style="position:absolute;inset:0;background:linear-gradient(to right, transparent 50%, rgba(13,13,13,0.6) 100%);"></div>
+		</div>
+
+		<div class="cause-panel-body">
+			<div class="cause-panel-glow" style="top:-80px; right:-60px;"></div>
+			<div style="position:relative; z-index:1;">
+				<span class="section-label block mb-3">Cause 01 · Sadaqah Jariyah</span>
+				<h3 class="font-display italic text-white leading-tight"
+				    style="font-size: clamp(2rem, 3.5vw, 2.8rem);">
+					The Dream<br>Mosque
+				</h3>
+				<p class="mt-5 text-sm text-white/52 leading-relaxed max-w-sm">
+					A house of Allah ﷻ built from the generosity of this community —
+					where generations will pray, learn, and find peace. A sadaqah jariyah
+					that will outlast every one of us.
+				</p>
+				<div class="cause-info-box">
+					<p class="text-xs font-semibold text-ihsaanah-gold mb-1">Donation details coming soon</p>
+					<p class="text-xs text-white/35 leading-relaxed">
+						Bank transfer and payment details will be provided by Ihsaanah.
+						<a href="contact.html" class="text-ihsaanah-gold/70 hover:text-ihsaanah-gold underline ml-1">
+							Contact us in the meantime.
+						</a>
+					</p>
+				</div>
 			</div>
 		</div>
-	</section>
 
+	</div>
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 4 — CAUSES (Dream Mosque + Scholarship)
-	     Both are TBD — presented as compelling aspiration panels
-	     ═══════════════════════════════════════════════════════ -->
-	<section id="give" class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10"
-	         style="scroll-margin-top:80px">
-		<div class="mx-auto max-w-4xl px-6">
+	<!-- Cause 02 — Scholarship (text left, image right) -->
+	<div class="cause-panel" data-aos="fade-up">
 
-			<div class="text-center mb-10" data-aos="fade-up">
-				<span class="section-label block mb-3">Our Causes</span>
-				<h2 class="font-display italic text-3xl text-white">Where your gift goes</h2>
-			</div>
-
-			<div class="grid gap-6 sm:grid-cols-2">
-
-				<!-- Dream Mosque -->
-				<div class="relative overflow-hidden rounded-2xl border border-ihsaanah-gold/25 bg-ihsaanah-black p-8"
-				     data-aos="fade-up" data-aos-delay="0"
-				     style="box-shadow: inset 0 0 60px rgba(201,160,48,0.04);">
-					<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.05]"></div>
-					<div class="relative">
-						<span class="section-label block mb-3">Cause 01 · Sadaqah Jariyah</span>
-						<h3 class="font-display italic text-2xl text-white leading-snug">
-							The Dream Mosque
-						</h3>
-						<p class="mt-4 text-sm text-white/50 leading-relaxed">
-							A house of Allah ﷻ built from the generosity of this community —
-							where generations will pray, learn, and find peace. A sadaqah
-							jariyah that will outlast every one of us.
-						</p>
-						<div class="mt-6 rounded-lg border border-ihsaanah-gold/20 bg-ihsaanah-gold/5 px-5 py-4">
-							<p class="text-xs font-semibold text-ihsaanah-gold mb-1">Donation details coming soon</p>
-							<p class="text-xs text-white/35">
-								Bank transfer and payment details will be provided by Ihsaanah.
-								<a href="contact.html" class="text-ihsaanah-gold/70 hover:text-ihsaanah-gold underline ml-1">
-									Contact us in the meantime.
-								</a>
-							</p>
-						</div>
-					</div>
+		<div class="cause-panel-body" style="order: -1;">
+			<div class="cause-panel-glow" style="bottom:-60px; left:-40px;"></div>
+			<div style="position:relative; z-index:1;">
+				<span class="section-label block mb-3">Cause 02 · Sadaqah</span>
+				<h3 class="font-display italic text-white leading-tight"
+				    style="font-size: clamp(2rem, 3.5vw, 2.8rem);">
+					Scholarship<br>Programme
+				</h3>
+				<p class="mt-5 text-sm text-white/52 leading-relaxed max-w-sm">
+					Knowledge is a trust. Your donation ensures that financial
+					barriers never prevent a child from accessing Islamic education —
+					empowering families who need it most.
+				</p>
+				<div class="cause-info-box">
+					<p class="text-xs font-semibold text-ihsaanah-gold mb-1">Donation details coming soon</p>
+					<p class="text-xs text-white/35 leading-relaxed">
+						Bank transfer and payment details will be provided by Ihsaanah.
+						<a href="contact.html" class="text-ihsaanah-gold/70 hover:text-ihsaanah-gold underline ml-1">
+							Contact us in the meantime.
+						</a>
+					</p>
 				</div>
-
-				<!-- Scholarship -->
-				<div class="relative overflow-hidden rounded-2xl border border-ihsaanah-gold/25 bg-ihsaanah-black p-8"
-				     data-aos="fade-up" data-aos-delay="100"
-				     style="box-shadow: inset 0 0 60px rgba(201,160,48,0.04);">
-					<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.05]"></div>
-					<div class="relative">
-						<span class="section-label block mb-3">Cause 02 · Sadaqah</span>
-						<h3 class="font-display italic text-2xl text-white leading-snug">
-							Scholarship Programme
-						</h3>
-						<p class="mt-4 text-sm text-white/50 leading-relaxed">
-							Knowledge is a trust. Your donation ensures that financial
-							barriers never prevent a child from accessing Islamic education,
-							empowering families who need it most.
-						</p>
-						<div class="mt-6 rounded-lg border border-ihsaanah-gold/20 bg-ihsaanah-gold/5 px-5 py-4">
-							<p class="text-xs font-semibold text-ihsaanah-gold mb-1">Donation details coming soon</p>
-							<p class="text-xs text-white/35">
-								Bank transfer and payment details will be provided by Ihsaanah.
-								<a href="contact.html" class="text-ihsaanah-gold/70 hover:text-ihsaanah-gold underline ml-1">
-									Contact us in the meantime.
-								</a>
-							</p>
-						</div>
-					</div>
-				</div>
-
 			</div>
 		</div>
-	</section>
+
+		<div class="cause-panel-img" style="order: 1;">
+			<img src="https://images.pexels.com/photos/35105938/pexels-photo-35105938.jpeg?auto=compress&cs=tinysrgb&w=900&h=900&dpr=1"
+			     alt="Children studying — scholarship programme" loading="lazy">
+			<div style="position:absolute;inset:0;background:linear-gradient(to left, transparent 50%, rgba(13,13,13,0.6) 100%);"></div>
+		</div>
+
+	</div>
+
+</section>
 
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 5 — HADITH PULL QUOTE
-	     Emotional close — reminder of reward
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-3xl px-8" data-aos="fade-up">
-			<span class="section-label block mb-6">The Promise</span>
-			<blockquote class="editorial-quote">
-				"When a person dies, all their deeds end except three: a continuing
-				charity, beneficial knowledge, or a righteous child who prays for them."
-			</blockquote>
-			<span class="editorial-attribution">— The Prophet ﷺ &nbsp;·&nbsp; Sahih Muslim</span>
-			<p class="mt-8 text-ihsaanah-black/55 text-sm leading-relaxed max-w-md">
-				Supporting Ihsaanah is an investment in all three — a charity that runs on,
-				knowledge that benefits the Ummah, and the righteous children that come from it.
-			</p>
+<!-- ═══════════════════════════════════════════════════════
+     SECOND IMAGE MOSAIC
+     ═══════════════════════════════════════════════════════ -->
+<div class="img-mosaic" style="height:220px;" data-aos="fade-up">
+	<div class="img-mosaic-item">
+		<img src="https://images.pexels.com/photos/6281896/pexels-photo-6281896.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1"
+		     alt="" loading="lazy">
+	</div>
+	<div class="img-mosaic-item img-mosaic-item--wide">
+		<img src="https://images.pexels.com/photos/35105943/pexels-photo-35105943.jpeg?auto=compress&cs=tinysrgb&w=900&h=400&dpr=1"
+		     alt="" loading="lazy">
+	</div>
+	<div class="img-mosaic-item">
+		<img src="https://images.pexels.com/photos/37350652/pexels-photo-37350652.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1"
+		     alt="" loading="lazy">
+	</div>
+	<div class="img-mosaic-item img-mosaic-item--wide">
+		<img src="https://images.pexels.com/photos/36280167/pexels-photo-36280167.jpeg?auto=compress&cs=tinysrgb&w=900&h=400&dpr=1"
+		     alt="" loading="lazy">
+	</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SECTION 6 — CLOSING HADITH
+     Centered, glowing gold, calm
+     ═══════════════════════════════════════════════════════ -->
+<section id="dn-hadith" class="py-28">
+
+	<div class="hadith-glow" aria-hidden="true"></div>
+
+	<div class="gp" style="width:90px;height:90px;left:12%;top:20%;animation-duration:13s;" aria-hidden="true"></div>
+	<div class="gp" style="width:60px;height:60px;right:18%;top:55%;animation-duration:17s;animation-delay:-6s;" aria-hidden="true"></div>
+	<div class="gp" style="width:120px;height:120px;right:8%;top:10%;animation-duration:22s;animation-delay:-11s;" aria-hidden="true"></div>
+
+	<div class="relative mx-auto max-w-3xl px-8 text-center" data-aos="fade-up">
+
+		<div class="ornament-divider" style="margin: 0 auto 2.5rem; max-width:200px;">
+			<span></span>
+		</div>
+
+		<span class="section-label block mb-8">The Promise</span>
+
+		<blockquote class="font-display italic text-white/90 leading-relaxed"
+		            style="font-size: clamp(1.2rem, 2.4vw, 1.75rem);">
+			"When a person dies, all their deeds end except three: a continuing
+			charity, beneficial knowledge, or a righteous child who prays for them."
+		</blockquote>
+
+		<span class="editorial-attribution mt-5 block">
+			— The Prophet ﷺ &nbsp;·&nbsp; Sahih Muslim
+		</span>
+
+		<p class="mt-10 text-white/45 text-sm leading-relaxed max-w-lg mx-auto">
+			Supporting Ihsaanah is an investment in all three — a charity that runs on,
+			knowledge that benefits the Ummah, and the righteous children that come from it.
+		</p>
+
+		<div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
 			<a href="contact.html"
-			   class="mt-6 inline-block text-sm font-semibold text-ihsaanah-gold hover:underline">
-				Get in touch to give →
+			   class="btn-shimmer rounded-md bg-ihsaanah-gold px-8 py-3.5 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+				Get in Touch to Give
+			</a>
+			<a href="about-ihsaanah.html"
+			   class="rounded-md border border-ihsaanah-gold/40 px-8 py-3.5 text-sm font-semibold text-ihsaanah-gold
+			          hover:bg-ihsaanah-gold hover:text-white transition-all duration-200">
+				Our Story →
 			</a>
 		</div>
-	</section>
+
+		<div class="ornament-divider" style="margin: 3rem auto 0; max-width:200px;">
+			<span></span>
+		</div>
+
+	</div>
+</section>
+
 
 </main>
 <div id="site-footer"></div>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── GSAP hero entrance — diagonal composition ─────────── */
+  if (typeof gsap !== 'undefined') {
+
+    /* Headline: from bottom-left */
+    gsap.fromTo('#dn-h1',
+      { opacity: 0, x: -60, y: 40 },
+      { opacity: 1, x: 0, y: 0, duration: 1, delay: 0.55, ease: 'power3.out' }
+    );
+
+    /* Subtext: from top-right — creates diagonal cross-composition */
+    gsap.fromTo('#dn-body',
+      { opacity: 0, x: 60, y: -40 },
+      { opacity: 1, x: 0, y: 0, duration: 0.95, delay: 0.72, ease: 'power3.out' }
+    );
+
+    /* CTA button: fades up after headline settles */
+    gsap.fromTo('#dn-cta',
+      { opacity: 0, y: 14 },
+      { opacity: 1, y: 0, duration: 0.7, delay: 1.05, ease: 'power3.out' }
+    );
+  }
+
+}());
+</script>
+
 </body>
 </html>
