@@ -31,195 +31,1564 @@
 	</script>
 	<link rel="stylesheet" href="css/styles.css" />
 	<link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+	<style>
+	/* ══════════════════════════════════════════════════════════
+	   BOOK INTRO OVERLAY — Phase 1
+	   ══════════════════════════════════════════════════════════ */
+
+	#book-intro-overlay {
+	  position: fixed;
+	  inset: 0;
+	  z-index: 9999;
+	  background: #0D0D0D;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  overflow: hidden;
+	}
+
+	/* Radial gold glow behind book */
+	.bio-glow {
+	  position: absolute;
+	  top: 50%;
+	  left: 50%;
+	  transform: translate(-50%, -50%);
+	  width: 600px;
+	  height: 600px;
+	  background: radial-gradient(ellipse, rgba(201,160,48,0.11) 0%, transparent 68%);
+	  pointer-events: none;
+	}
+
+	/* Islamic pattern overlay on the overlay background */
+	.bio-bg-pattern {
+	  position: absolute;
+	  inset: 0;
+	  background-image: url('img/islamic_pattern1.png');
+	  background-repeat: repeat;
+	  background-size: 110px 110px;
+	  filter: invert(1);
+	  mix-blend-mode: screen;
+	  opacity: 0.025;
+	  pointer-events: none;
+	}
+
+	/* Book scene — starts shifted down */
+	#intro-book-scene {
+	  transform: translateY(40%);
+	  opacity: 0;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	}
+
+	/* 3D standing book */
+	.intro-book-3d {
+	  display: flex;
+	  align-items: stretch;
+	  transform: perspective(900px) rotateY(-20deg);
+	  filter: drop-shadow(-28px 24px 60px rgba(0,0,0,0.88));
+	}
+
+	/* Spine */
+	.ib-spine {
+	  width: 26px;
+	  height: 370px;
+	  flex-shrink: 0;
+	  background: linear-gradient(to right, #050402, #110d03);
+	  border-top:    1px solid rgba(201,160,48,0.42);
+	  border-bottom: 1px solid rgba(201,160,48,0.42);
+	  border-left:   1px solid rgba(201,160,48,0.22);
+	  position: relative;
+	}
+	.ib-spine::after {
+	  content: '';
+	  position: absolute;
+	  top: 18px; bottom: 18px;
+	  left: 50%; transform: translateX(-50%);
+	  width: 1px;
+	  background: linear-gradient(to bottom,
+	    transparent 0%,
+	    rgba(201,160,48,0.45) 20%,
+	    rgba(201,160,48,0.45) 80%,
+	    transparent 100%);
+	}
+
+	/* Front cover */
+	.ib-cover {
+	  width: 240px;
+	  height: 370px;
+	  flex-shrink: 0;
+	  background: linear-gradient(160deg, #0f0d07 0%, #1d1809 55%, #0f0d07 100%);
+	  border-top:    1px solid rgba(201,160,48,0.55);
+	  border-right:  1px solid rgba(201,160,48,0.55);
+	  border-bottom: 1px solid rgba(201,160,48,0.55);
+	  position: relative;
+	  overflow: hidden;
+	}
+
+	/* Islamic pattern on cover */
+	.ib-pattern {
+	  position: absolute;
+	  inset: 0;
+	  background-image: url('img/islamic_pattern1.png');
+	  background-repeat: repeat;
+	  background-size: 72px 72px;
+	  filter: invert(1);
+	  mix-blend-mode: screen;
+	  opacity: 0.06;
+	  pointer-events: none;
+	}
+
+	/* Double-line frame */
+	.ib-frame-outer {
+	  position: absolute;
+	  inset: 10px;
+	  border: 1px solid rgba(201,160,48,0.3);
+	  pointer-events: none;
+	}
+	.ib-frame-inner {
+	  position: absolute;
+	  inset: 17px;
+	  border: 1px solid rgba(201,160,48,0.14);
+	  pointer-events: none;
+	}
+
+	/* Corner L-brackets */
+	.ib-corner {
+	  position: absolute;
+	  width: 12px; height: 12px;
+	  border-color: rgba(201,160,48,0.65);
+	  border-style: solid;
+	}
+	.ib-tl { top: 12px;    left: 12px;  border-width: 1.5px 0 0 1.5px; }
+	.ib-tr { top: 12px;    right: 12px; border-width: 1.5px 1.5px 0 0; }
+	.ib-bl { bottom: 12px; left: 12px;  border-width: 0 0 1.5px 1.5px; }
+	.ib-br { bottom: 12px; right: 12px; border-width: 0 1.5px 1.5px 0; }
+
+	/* Content */
+	.ib-content {
+	  position: absolute;
+	  inset: 20px;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  justify-content: center;
+	  gap: 9px;
+	  text-align: center;
+	}
+
+	.ib-ornament {
+	  color: rgba(201,160,48,0.35);
+	  font-size: 0.55rem;
+	  line-height: 1;
+	  letter-spacing: 0.3em;
+	}
+
+	.ib-bismillah {
+	  font-size: 2rem;
+	  color: rgba(255,255,255,0.9);
+	  line-height: 1.1;
+	  margin: 0;
+	}
+
+	.ib-divider {
+	  width: 54%;
+	  height: 1px;
+	  background: linear-gradient(to right, transparent, rgba(201,160,48,0.65), transparent);
+	}
+
+	.ib-arabic {
+	  font-size: 0.9rem;
+	  color: #C9A030;
+	  direction: rtl;
+	  line-height: 1.9;
+	  margin: 0;
+	  letter-spacing: 0.04em;
+	  font-family: 'Georgia', serif;
+	}
+
+	.ib-translation {
+	  font-size: 0.58rem;
+	  color: rgba(201,160,48,0.7);
+	  font-style: italic;
+	  line-height: 1.5;
+	  letter-spacing: 0.03em;
+	  margin: 0;
+	  font-family: 'DM Serif Display', Georgia, serif;
+	}
+
+	.ib-ref {
+	  font-size: 0.48rem;
+	  color: rgba(201,160,48,0.42);
+	  letter-spacing: 0.15em;
+	  text-transform: uppercase;
+	  margin: 0;
+	  font-family: 'Inter', sans-serif;
+	}
+
+	/* Pages edge (right side) */
+	.ib-pages {
+	  width: 9px;
+	  flex-shrink: 0;
+	  align-self: stretch;
+	  margin: 2px 0;
+	  background: repeating-linear-gradient(
+	    to bottom,
+	    #e2d8a8 0px, #e2d8a8 1.2px,
+	    #c4b87a 1.2px, #c4b87a 2.2px
+	  );
+	  border-top:    1px solid rgba(201,160,48,0.22);
+	  border-bottom: 1px solid rgba(201,160,48,0.22);
+	  border-right:  1px solid rgba(180,150,60,0.4);
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   HERO SECTION — Phase 2
+	   ══════════════════════════════════════════════════════════ */
+
+	#bc-hero {
+	  position: sticky;
+	  top: 0;
+	  z-index: 1;
+	  height: 100vh;
+	  display: flex;
+	  align-items: center;
+	  overflow: hidden;
+	  background: #0D0D0D;
+	}
+
+	/* Every sibling after the hero scrolls over it */
+	#bc-hero ~ * {
+	  position: relative;
+	  z-index: 2;
+	}
+
+	/* Hero title — invisible until intro ends (~3.45 s) */
+	#bc-hero-title {
+	  opacity: 0;
+	  animation: fadeUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+	  animation-delay: 3.45s;
+	}
+
+	/* Sub-headline — 0.2 s behind the title */
+	#bc-hero-sub {
+	  opacity: 0;
+	  animation: fadeUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+	  animation-delay: 3.65s;
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   MISSION SECTION 3D BOOKS — Phase 4
+	   Book A tilts ↙  (rotateY -22deg, rotateZ -16deg),
+	   spine on left,  pages on right.
+	   Book B tilts ↗  (rotateY +22deg, rotateZ +16deg),
+	   HTML order reversed so spine appears on right edge.
+	   ══════════════════════════════════════════════════════════ */
+
+	.bc-book3d {
+	  display: flex;
+	  align-items: stretch;
+	  filter: drop-shadow(-18px 22px 48px rgba(0,0,0,0.6));
+	}
+	.bc-book3d--a {
+	  transform: perspective(680px) rotateY(-22deg) rotateZ(-16deg);
+	  transform-origin: bottom center;
+	}
+	.bc-book3d--b {
+	  transform: perspective(680px) rotateY(22deg) rotateZ(16deg);
+	  transform-origin: bottom center;
+	}
+
+	/* Spine */
+	.bc-b-spine {
+	  width: 20px;
+	  height: 250px;
+	  flex-shrink: 0;
+	  position: relative;
+	  border-top:    1px solid rgba(201,160,48,0.42);
+	  border-bottom: 1px solid rgba(201,160,48,0.42);
+	}
+	.bc-b-spine--l {
+	  background: linear-gradient(to right, #060503, #110d02);
+	  border-left: 1px solid rgba(201,160,48,0.2);
+	}
+	.bc-b-spine--r {
+	  background: linear-gradient(to left, #060503, #0b0804);
+	  border-right: 1px solid rgba(201,160,48,0.2);
+	}
+	.bc-b-spine::after {
+	  content: '';
+	  position: absolute;
+	  top: 16px; bottom: 16px;
+	  left: 50%; transform: translateX(-50%);
+	  width: 1px;
+	  background: linear-gradient(to bottom,
+	    transparent 0%, rgba(201,160,48,0.42) 25%,
+	    rgba(201,160,48,0.42) 75%, transparent 100%);
+	}
+
+	/* Cover */
+	.bc-b-cover {
+	  width: 155px;
+	  height: 250px;
+	  flex-shrink: 0;
+	  position: relative;
+	  overflow: hidden;
+	  border-top:    1px solid rgba(201,160,48,0.52);
+	  border-bottom: 1px solid rgba(201,160,48,0.52);
+	}
+	/* Book A — dark forest green */
+	.bc-b-cover--a {
+	  background: linear-gradient(155deg, #090e07 0%, #141c0a 55%, #090e07 100%);
+	  border-right: 1px solid rgba(201,160,48,0.52);
+	}
+	/* Book B — dark maroon/aubergine */
+	.bc-b-cover--b {
+	  background: linear-gradient(155deg, #0d080f 0%, #1a0d1f 55%, #0d080f 100%);
+	  border-left: 1px solid rgba(201,160,48,0.52);
+	}
+
+	/* Islamic pattern texture on cover */
+	.bc-b-cover-pattern {
+	  position: absolute;
+	  inset: 0;
+	  background-image: url('img/islamic_pattern1.png');
+	  background-repeat: repeat;
+	  background-size: 62px 62px;
+	  filter: invert(1);
+	  mix-blend-mode: screen;
+	  opacity: 0.065;
+	  pointer-events: none;
+	}
+
+	/* Inner frame + corner L-brackets */
+	.bc-b-cover-frame {
+	  position: absolute;
+	  inset: 9px;
+	  border: 1px solid rgba(201,160,48,0.28);
+	  pointer-events: none;
+	}
+	.bc-b-cover-frame::before,
+	.bc-b-cover-frame::after {
+	  content: '';
+	  position: absolute;
+	  width: 9px; height: 9px;
+	  border-color: rgba(201,160,48,0.55);
+	  border-style: solid;
+	}
+	.bc-b-cover-frame::before { top: -1px; left: -1px;    border-width: 1.5px 0 0 1.5px; }
+	.bc-b-cover-frame::after  { bottom: -1px; right: -1px; border-width: 0 1.5px 1.5px 0; }
+
+	/* 8-pointed star centred on cover */
+	.bc-b-star {
+	  position: absolute;
+	  top: 50%; left: 50%;
+	  transform: translate(-50%, -50%);
+	  width: 34px; height: 34px;
+	  opacity: 0.38;
+	}
+
+	/* Page edges */
+	.bc-b-pages {
+	  width: 7px;
+	  flex-shrink: 0;
+	  align-self: stretch;
+	  margin: 2px 0;
+	  background: repeating-linear-gradient(
+	    to bottom,
+	    #e0d6a4 0px, #e0d6a4 1.1px,
+	    #c2b672 1.1px, #c2b672 2px
+	  );
+	  border-top:    1px solid rgba(201,160,48,0.2);
+	  border-bottom: 1px solid rgba(201,160,48,0.2);
+	}
+	.bc-b-pages--r { border-right: 1px solid rgba(175,145,55,0.42); }
+	.bc-b-pages--l { border-left:  1px solid rgba(175,145,55,0.42); }
+
+	/* ══════════════════════════════════════════════════════════
+	   HOSTS SECTION — Phase 5 (Magazine grid, slide panels)
+	   Each card: photo grayscale + large initial letter bg.
+	   Hover → bio slides LEFT, role slides RIGHT.
+	   ══════════════════════════════════════════════════════════ */
+
+	.host-card {
+	  position: relative;
+	  width: 280px;
+	  height: 400px;
+	  overflow: hidden;
+	  border: 1px solid rgba(201,160,48,0.22);
+	  background: #0D0D0D;
+	  cursor: pointer;
+	  flex-shrink: 0;
+	}
+
+	/* Large faint initial — sits behind the photo */
+	.host-initial {
+	  position: absolute;
+	  top: -0.08em;
+	  left: -0.03em;
+	  font-size: 11rem;
+	  font-weight: 900;
+	  font-family: 'Poppins', sans-serif;
+	  color: rgba(201,160,48,0.13);
+	  line-height: 1;
+	  z-index: 1;
+	  user-select: none;
+	  pointer-events: none;
+	}
+
+	/* Photo — full cover, grayscale, darkened */
+	.host-photo {
+	  position: absolute;
+	  inset: 0;
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  object-position: center top;
+	  filter: grayscale(100%) brightness(0.58);
+	  z-index: 2;
+	  transition: filter 0.5s ease, transform 0.6s ease;
+	}
+	.host-card:hover .host-photo {
+	  filter: grayscale(72%) brightness(0.68);
+	  transform: scale(1.04);
+	}
+
+	/* Name bar — gradient overlay, always visible at bottom */
+	.host-name-bar {
+	  position: absolute;
+	  bottom: 0; left: 0; right: 0;
+	  padding: 3rem 1.25rem 1.1rem;
+	  background: linear-gradient(to top,
+	    rgba(13,13,13,0.96) 0%,
+	    rgba(13,13,13,0.52) 58%,
+	    transparent 100%
+	  );
+	  z-index: 5;
+	}
+	.host-name-bar h3 {
+	  margin: 0;
+	  font-family: 'Poppins', sans-serif;
+	  font-size: 0.92rem;
+	  font-weight: 600;
+	  color: #fff;
+	  line-height: 1.2;
+	}
+
+	/* Bio panel — slides in from LEFT */
+	.host-bio-panel {
+	  position: absolute;
+	  top: 0; left: 0;
+	  width: 58%;
+	  height: 100%;
+	  background: rgba(13,13,13,0.9);
+	  backdrop-filter: blur(6px);
+	  -webkit-backdrop-filter: blur(6px);
+	  z-index: 4;
+	  transform: translateX(-100%);
+	  transition: transform 0.46s cubic-bezier(0.4, 0, 0.2, 1);
+	  padding: 1.6rem 1.15rem;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  border-right: 1px solid rgba(201,160,48,0.18);
+	}
+	.host-bio-panel p {
+	  margin: 0;
+	  font-size: 0.71rem;
+	  color: rgba(255,255,255,0.62);
+	  line-height: 1.75;
+	  font-family: 'Inter', sans-serif;
+	}
+	.host-card:hover .host-bio-panel {
+	  transform: translateX(0);
+	}
+
+	/* Role panel — slides in from RIGHT */
+	.host-role-panel {
+	  position: absolute;
+	  top: 0; right: 0;
+	  width: 40%;
+	  height: 100%;
+	  background: rgba(10,9,6,0.75);
+	  backdrop-filter: blur(4px);
+	  -webkit-backdrop-filter: blur(4px);
+	  z-index: 4;
+	  transform: translateX(100%);
+	  transition: transform 0.46s cubic-bezier(0.4, 0, 0.2, 1);
+	  padding: 1.6rem 0.95rem;
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: center;
+	  align-items: flex-end;
+	  text-align: right;
+	  border-left: 1px solid rgba(201,160,48,0.22);
+	}
+	.host-role-panel span {
+	  display: block;
+	  font-size: 0.57rem;
+	  font-weight: 700;
+	  letter-spacing: 0.17em;
+	  text-transform: uppercase;
+	  color: rgba(201,160,48,0.9);
+	  font-family: 'Poppins', sans-serif;
+	  line-height: 1.9;
+	}
+	.host-card:hover .host-role-panel {
+	  transform: translateX(0);
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   WHAT WE PROVIDE — Phase 6
+	   Centered italic feature names. Two global book elements
+	   slide in from screen edges, tracking the hovered row.
+	   ══════════════════════════════════════════════════════════ */
+
+	/* Section needs position:relative + overflow:hidden to clip
+	   the books while they're parked off-screen */
+	.wwp-section {
+	  position: relative;
+	  overflow: hidden;
+	}
+
+	/* Global sliding books — JS sets `top` inline, CSS handles
+	   the translateY centering + horizontal slide */
+	.wwp-book-global {
+	  position: absolute;
+	  top: 50%;                  /* overridden by JS */
+	  z-index: 3;
+	  pointer-events: none;
+	  transition:
+	    transform 0.52s cubic-bezier(0.4, 0, 0.2, 1),
+	    top        0.28s ease;    /* smooth vertical tracking between rows */
+	}
+	.wwp-book-global--l {
+	  left: 0;
+	  transform: translateY(-50%) translateX(-110%);
+	}
+	.wwp-book-global--r {
+	  right: 0;
+	  transform: translateY(-50%) translateX(110%);
+	}
+	.wwp-book-global--l.wwp-book-in {
+	  transform: translateY(-50%) translateX(0);
+	}
+	.wwp-book-global--r.wwp-book-in {
+	  transform: translateY(-50%) translateX(0);
+	}
+	/* Hide books on touch devices — hover doesn't fire there */
+	@media (max-width: 767px) {
+	  .wwp-book-global { display: none; }
+	}
+
+	/* Mini 3D book — same anatomy as mission books, smaller scale */
+	.wwp-mini-book {
+	  display: flex;
+	  align-items: stretch;
+	  filter: drop-shadow(-10px 14px 28px rgba(0,0,0,0.45));
+	}
+	.wwp-mini-book--l { transform: perspective(360px) rotateY(-20deg); }
+	.wwp-mini-book--r { transform: perspective(360px) rotateY(20deg);  }
+
+	/* Spine */
+	.wwp-ms {
+	  width: 13px;
+	  height: 100px;
+	  flex-shrink: 0;
+	  border-top:    1px solid rgba(201,160,48,0.4);
+	  border-bottom: 1px solid rgba(201,160,48,0.4);
+	}
+	.wwp-ms--l {
+	  background: linear-gradient(to right, #060503, #110d02);
+	  border-left: 1px solid rgba(201,160,48,0.2);
+	}
+	.wwp-ms--r {
+	  background: linear-gradient(to left, #060503, #110d02);
+	  border-right: 1px solid rgba(201,160,48,0.2);
+	}
+
+	/* Cover */
+	.wwp-mc {
+	  width: 70px;
+	  height: 100px;
+	  flex-shrink: 0;
+	  position: relative;
+	  overflow: hidden;
+	  border-top:    1px solid rgba(201,160,48,0.5);
+	  border-bottom: 1px solid rgba(201,160,48,0.5);
+	}
+	.wwp-mc::before {          /* inner frame line */
+	  content: '';
+	  position: absolute;
+	  inset: 6px;
+	  border: 1px solid rgba(201,160,48,0.22);
+	  pointer-events: none;
+	}
+	.wwp-mc--a {               /* dark forest green — left book */
+	  background: linear-gradient(155deg, #090e07 0%, #141c0a 55%, #090e07 100%);
+	  border-right: 1px solid rgba(201,160,48,0.5);
+	}
+	.wwp-mc--b {               /* dark maroon — right book */
+	  background: linear-gradient(155deg, #0d080f 0%, #1a0d1f 55%, #0d080f 100%);
+	  border-left: 1px solid rgba(201,160,48,0.5);
+	}
+
+	/* Page edges */
+	.wwp-mp {
+	  width: 6px;
+	  flex-shrink: 0;
+	  align-self: stretch;
+	  margin: 1.5px 0;
+	  background: repeating-linear-gradient(
+	    to bottom,
+	    #e0d6a4 0px, #e0d6a4 1.1px,
+	    #c2b672 1.1px, #c2b672 2px
+	  );
+	  border-top:    1px solid rgba(201,160,48,0.18);
+	  border-bottom: 1px solid rgba(201,160,48,0.18);
+	}
+	.wwp-mp--r { border-right: 1px solid rgba(175,145,55,0.38); }
+	.wwp-mp--l { border-left:  1px solid rgba(175,145,55,0.38); }
+
+	/* Feature name list */
+	.wwp-list {
+	  display: flex;
+	  flex-direction: column;
+	}
+	.wwp-item {
+	  padding: 1.05rem 0;
+	  border-bottom: 1px solid rgba(201,160,48,0.13);
+	  cursor: default;
+	}
+	.wwp-item:first-child { border-top: 1px solid rgba(201,160,48,0.13); }
+
+	.wwp-name {
+	  display: block;
+	  font-family: 'DM Serif Display', serif;
+	  font-style: italic;
+	  font-size: clamp(1.35rem, 2.6vw, 2.1rem);
+	  color: #0D0D0D;
+	  line-height: 1;
+	  transition: color 0.3s ease, letter-spacing 0.35s ease;
+	}
+
+	/* Spotlight effect: dim all names when any row is hovered,
+	   leave the hovered name at full strength */
+	.wwp-list:has(.wwp-item:hover) .wwp-item:not(:hover) .wwp-name {
+	  color: rgba(13,13,13,0.25);
+	}
+	.wwp-item:hover .wwp-name {
+	  letter-spacing: 0.025em;
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   SESSION STRUCTURE — Phase 7
+	   Tilted step cards with Islamic SVG art.
+	   Hover one card → other cards blur out (CSS :has).
+	   ══════════════════════════════════════════════════════════ */
+
+	.ss-grid {
+	  display: flex;
+	  gap: 2rem;
+	  flex-wrap: wrap;
+	  justify-content: center;
+	  align-items: stretch;
+	}
+
+	.ss-card {
+	  position: relative;
+	  overflow: hidden;
+	  max-width: 340px;
+	  width: 100%;
+	  padding: 2.25rem;
+	  border: 1px solid rgba(201,160,48,0.28);
+	  cursor: default;
+	  flex-shrink: 0;
+	  transition: filter 0.45s ease, transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+	/* Card 01 — warm amber-tinted dark gold */
+	.ss-card--a {
+	  background: linear-gradient(145deg, #0c0a03 0%, #1a1404 62%, #0a0803 100%);
+	  transform: rotate(-1.8deg);
+	}
+	/* Card 02 — cool navy-tinted dark */
+	.ss-card--b {
+	  background: linear-gradient(145deg, #030a0d 0%, #061220 62%, #020709 100%);
+	  transform: rotate(1.5deg);
+	}
+
+	/* Islamic pattern PNG texture (same trick as book covers) */
+	.ss-pattern {
+	  position: absolute;
+	  inset: 0;
+	  background-image: url('img/islamic_pattern1.png');
+	  background-repeat: repeat;
+	  background-size: 56px 56px;
+	  filter: invert(1);
+	  mix-blend-mode: screen;
+	  opacity: 0.04;
+	  pointer-events: none;
+	}
+
+	/* Large SVG ornament anchored top-left, clipped by card overflow */
+	.ss-art {
+	  position: absolute;
+	  top: -28px;
+	  left: -28px;
+	  width: 168px;
+	  height: 168px;
+	  opacity: 0.28;
+	  pointer-events: none;
+	}
+
+	/* Step number */
+	.ss-step {
+	  display: block;
+	  font-family: 'DM Serif Display', serif;
+	  font-style: italic;
+	  font-size: 3.8rem;
+	  color: rgba(201,160,48,0.62);
+	  line-height: 1;
+	  margin-bottom: 1rem;
+	}
+
+	/* Card title */
+	.ss-title {
+	  font-family: 'Poppins', sans-serif;
+	  font-size: 1rem;
+	  font-weight: 700;
+	  color: #ffffff;
+	  margin: 0 0 1.1rem;
+	  line-height: 1.3;
+	}
+
+	/* Content list */
+	.ss-list {
+	  list-style: none;
+	  padding: 0;
+	  margin: 0;
+	  display: flex;
+	  flex-direction: column;
+	  gap: 0.85rem;
+	}
+	.ss-list li {
+	  font-size: 0.77rem;
+	  color: rgba(255,255,255,0.85);
+	  line-height: 1.7;
+	  padding-left: 1.15rem;
+	  position: relative;
+	}
+	.ss-list li::before {
+	  content: '—';
+	  position: absolute;
+	  left: 0;
+	  color: rgba(201,160,48,0.5);
+	}
+	.ss-list strong {
+	  display: block;
+	  color: rgba(255,255,255,0.95);
+	  font-weight: 600;
+	  margin-bottom: 0.15rem;
+	}
+
+	/* Blur-others on hover — same :has() pattern as wwp section */
+	.ss-grid:has(.ss-card:hover) .ss-card:not(:hover) {
+	  filter: blur(3.5px) brightness(0.45);
+	}
+	/* Scale hovered card while preserving its own rotation */
+	.ss-card--a:hover { transform: rotate(-1.8deg) scale(1.05); }
+	.ss-card--b:hover { transform: rotate(1.5deg)  scale(1.05); }
+
+	/* Mobile: remove tilt to avoid overflow/clipping issues */
+	@media (max-width: 640px) {
+	  .ss-card--a, .ss-card--b  { transform: none; }
+	  .ss-card--a:hover          { transform: scale(1.02); }
+	  .ss-card--b:hover          { transform: scale(1.02); }
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   BOOKS CAROUSEL — Phase 8
+	   Draggable horizontal track. JS clones items for infinite
+	   loop. Auto-scrolls at reading-gallery pace (~44 px/s).
+	   No border-radius, no arrows — per Phase 8 spec.
+	   ══════════════════════════════════════════════════════════ */
+
+	/* Wrapper — scrolls horizontally, hides scrollbar */
+	#bc-carousel-wrap {
+	  overflow-x: scroll;
+	  overflow-y: hidden;
+	  cursor: grab;
+	  user-select: none;
+	  -webkit-overflow-scrolling: touch;
+	  scrollbar-width: none;
+	  -ms-overflow-style: none;
+	  padding: 1.25rem 0 3rem;
+	}
+	#bc-carousel-wrap::-webkit-scrollbar { display: none; }
+	#bc-carousel-wrap.is-dragging        { cursor: grabbing; }
+
+	/* Inner track — flex row, never wraps */
+	#bc-carousel {
+	  display: flex;
+	  gap: 1.2rem;
+	  width: max-content;
+	  padding: 0 clamp(1.5rem, 5vw, 4rem);
+	}
+
+	/* Book cover card — portrait, no border-radius */
+	.bc-cover {
+	  position: relative;
+	  width: 155px;
+	  height: 230px;
+	  flex-shrink: 0;
+	  border: 1px solid rgba(201,160,48,0.38);
+	  overflow: hidden;
+	  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1),
+	              box-shadow 0.38s ease;
+	}
+	.bc-cover:hover {
+	  transform: translateY(-10px) scale(1.04);
+	  box-shadow: 0 24px 48px rgba(0,0,0,0.55);
+	  z-index: 2;
+	}
+
+	/* Islamic pattern texture — same treatment as book covers */
+	.bc-cv-pat {
+	  position: absolute;
+	  inset: 0;
+	  background-image: url('img/islamic_pattern1.png');
+	  background-repeat: repeat;
+	  background-size: 52px 52px;
+	  filter: invert(1);
+	  mix-blend-mode: screen;
+	  opacity: 0.055;
+	  pointer-events: none;
+	}
+
+	/* Inner gold frame */
+	.bc-cv-frame {
+	  position: absolute;
+	  inset: 7px;
+	  border: 1px solid rgba(201,160,48,0.24);
+	  pointer-events: none;
+	}
+	/* Corner L-brackets — same construction as mission & intro books */
+	.bc-cv-frame::before, .bc-cv-frame::after {
+	  content: '';
+	  position: absolute;
+	  width: 8px; height: 8px;
+	  border-color: rgba(201,160,48,0.5);
+	  border-style: solid;
+	}
+	.bc-cv-frame::before { top: -1px; left: -1px;    border-width: 1.5px 0 0 1.5px; }
+	.bc-cv-frame::after  { bottom: -1px; right: -1px; border-width: 0 1.5px 1.5px 0; }
+
+	/* Status dot — top-right */
+	.bc-cv-status {
+	  position: absolute;
+	  top: 13px; right: 14px;
+	  width: 7px; height: 7px;
+	  border-radius: 50%;
+	  z-index: 2;
+	}
+	.bc-cover--completed .bc-cv-status { background: rgba(201,160,48,0.85); }
+	.bc-cover--ongoing   .bc-cv-status {
+	  background: #4ade80;
+	  box-shadow: 0 0 7px rgba(74,222,128,0.65);
+	}
+	.bc-cover--upcoming  .bc-cv-status { background: rgba(255,255,255,0.28); }
+
+	/* Cover text — centered column */
+	.bc-cv-content {
+	  position: absolute;
+	  inset: 0;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  justify-content: center;
+	  padding: 1.2rem 0.85rem;
+	  text-align: center;
+	}
+	.bc-cv-orn {
+	  font-size: 0.52rem;
+	  letter-spacing: 0.3em;
+	  color: rgba(201,160,48,0.55);
+	  margin-bottom: 0.7rem;
+	}
+	.bc-cv-title {
+	  font-family: 'DM Serif Display', serif;
+	  font-style: italic;
+	  font-size: 0.88rem;
+	  color: rgba(255,255,255,0.92);
+	  line-height: 1.38;
+	  margin: 0 0 0.45rem;
+	}
+	.bc-cv-rule {
+	  width: 26px; height: 1px;
+	  background: rgba(201,160,48,0.45);
+	  margin: 0.4rem auto;
+	  flex-shrink: 0;
+	}
+	.bc-cv-author {
+	  font-family: 'Poppins', sans-serif;
+	  font-size: 0.57rem;
+	  font-weight: 500;
+	  color: rgba(201,160,48,0.6);
+	  letter-spacing: 0.03em;
+	  line-height: 1.45;
+	  margin: 0;
+	}
+
+	/* Join CTA button — shimmer sweep + lift on hover */
+	.join-btn {
+	  position: relative;
+	  overflow: hidden;
+	  background: rgb(201,160,48);
+	  transition: background 0.3s ease, transform 0.22s ease, box-shadow 0.3s ease;
+	}
+	.join-btn::after {
+	  content: '';
+	  position: absolute;
+	  top: 0; left: -100%;
+	  width: 55%;
+	  height: 100%;
+	  background: linear-gradient(to right, transparent, rgba(255,255,255,0.22), transparent);
+	  transform: skewX(-18deg);
+	  transition: left 0.55s ease;
+	  pointer-events: none;
+	}
+	.join-btn:hover {
+	  background: rgb(183,143,32);
+	  transform: translateY(-3px);
+	  box-shadow: 0 10px 28px rgba(201,160,48,0.38);
+	}
+	.join-btn:hover::after { left: 160%; }
+	.join-btn:active       { transform: translateY(-1px); }
+
+	/* Drag hint */
+	.bc-drag-hint {
+	  font-size: 0.72rem;
+	  color: rgba(13,13,13,0.35);
+	  margin-top: 0.85rem;
+	  letter-spacing: 0.04em;
+	}
+
+	/* ══════════════════════════════════════════════════════════
+	   JOIN THE CLUB — Phase 9
+	   Text column left, large 3D CSS book right.
+	   Little Mumin panel removed per Phase 9 scope.
+	   ══════════════════════════════════════════════════════════ */
+
+	.join-section-inner {
+	  display: flex;
+	  align-items: center;
+	  gap: clamp(3rem, 8vw, 7rem);
+	  flex-wrap: wrap;
+	}
+
+	/* Text column */
+	.join-text { flex: 1; min-width: 260px; }
+
+	/* Book column */
+	.join-book-wrap {
+	  flex-shrink: 0;
+	  display: flex;
+	  justify-content: center;
+	}
+
+	/* 3D book assembly */
+	.join-book3d {
+	  display: flex;
+	  align-items: stretch;
+	  filter: drop-shadow(-30px 36px 70px rgba(0,0,0,0.82));
+	  transform: perspective(900px) rotateY(-22deg);
+	  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1),
+	              filter 0.65s ease;
+	  cursor: pointer;
+	}
+	/* Hover: book rotates to face the reader — "come join us" */
+	.join-book3d:hover {
+	  transform: perspective(900px) rotateY(-10deg);
+	  filter: drop-shadow(-18px 26px 55px rgba(0,0,0,0.65));
+	}
+
+	/* Spine */
+	.jb-spine {
+	  width: 32px;
+	  height: 360px;
+	  flex-shrink: 0;
+	  background: linear-gradient(to right, #060503, #1d1604, #110d02);
+	  border-top:    1px solid rgba(201,160,48,0.45);
+	  border-bottom: 1px solid rgba(201,160,48,0.45);
+	  border-left:   1px solid rgba(201,160,48,0.2);
+	  position: relative;
+	}
+	.jb-spine::after {
+	  content: '';
+	  position: absolute;
+	  top: 22px; bottom: 22px;
+	  left: 50%; transform: translateX(-50%);
+	  width: 1px;
+	  background: linear-gradient(to bottom,
+	    transparent 0%, rgba(201,160,48,0.5) 25%,
+	    rgba(201,160,48,0.5) 75%, transparent 100%
+	  );
+	}
+
+	/* Cover */
+	.jb-cover {
+	  width: 260px;
+	  height: 360px;
+	  flex-shrink: 0;
+	  background: linear-gradient(160deg, #0c0a04 0%, #211a07 55%, #0c0a04 100%);
+	  border:        1px solid rgba(201,160,48,0.52);
+	  border-left:   none;
+	  position: relative;
+	  overflow: hidden;
+	}
+
+	/* Islamic pattern texture */
+	.jb-pat {
+	  position: absolute;
+	  inset: 0;
+	  background-image: url('img/islamic_pattern1.png');
+	  background-repeat: repeat;
+	  background-size: 68px 68px;
+	  filter: invert(1);
+	  mix-blend-mode: screen;
+	  opacity: 0.07;
+	  pointer-events: none;
+	}
+
+	/* Inner frame */
+	.jb-frame {
+	  position: absolute;
+	  inset: 11px;
+	  border: 1px solid rgba(201,160,48,0.28);
+	  pointer-events: none;
+	}
+	.jb-frame::before, .jb-frame::after {
+	  content: '';
+	  position: absolute;
+	  width: 12px; height: 12px;
+	  border-color: rgba(201,160,48,0.58);
+	  border-style: solid;
+	}
+	.jb-frame::before { top: -1px; left: -1px;    border-width: 2px 0 0 2px; }
+	.jb-frame::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+	/* Cover text — centered column */
+	.jb-content {
+	  position: absolute;
+	  inset: 0;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
+	  justify-content: center;
+	  padding: 1.5rem 1.75rem;
+	  text-align: center;
+	}
+	.jb-orn {
+	  font-size: 0.58rem;
+	  letter-spacing: 0.28em;
+	  color: rgba(201,160,48,0.55);
+	  margin-bottom: 0.7rem;
+	}
+	.jb-rule {
+	  width: 42px; height: 1px;
+	  background: rgba(201,160,48,0.42);
+	  margin: 0.55rem auto;
+	  flex-shrink: 0;
+	}
+	/* "Verses" — white italic */
+	.jb-title-a {
+	  font-family: 'DM Serif Display', serif;
+	  font-style: italic;
+	  font-size: 2.5rem;
+	  color: rgba(255,255,255,0.94);
+	  line-height: 0.92;
+	  margin: 0;
+	}
+	/* "& Vibes" — gold italic */
+	.jb-title-b {
+	  font-family: 'DM Serif Display', serif;
+	  font-style: italic;
+	  font-size: 2.5rem;
+	  color: rgba(201,160,48,0.92);
+	  line-height: 1.05;
+	  margin: 0 0 0.2rem;
+	}
+	/* 8-pointed star SVG */
+	.jb-star {
+	  width: 40px; height: 40px;
+	  margin: 0.35rem auto 0;
+	  opacity: 0.52;
+	}
+
+	/* Bottom label in spaced caps */
+	.jb-label {
+	  position: absolute;
+	  bottom: 18px;
+	  left: 0; right: 0;
+	  text-align: center;
+	  font-family: 'Poppins', sans-serif;
+	  font-size: 0.42rem;
+	  font-weight: 600;
+	  letter-spacing: 0.22em;
+	  text-transform: uppercase;
+	  color: rgba(201,160,48,0.42);
+	}
+
+	/* Page edges */
+	.jb-pages {
+	  width: 9px;
+	  flex-shrink: 0;
+	  align-self: stretch;
+	  margin: 3px 0;
+	  background: repeating-linear-gradient(
+	    to bottom,
+	    #e2d8a8 0px, #e2d8a8 1.2px,
+	    #c4b87a 1.2px, #c4b87a 2.2px
+	  );
+	  border-top:    1px solid rgba(201,160,48,0.22);
+	  border-bottom: 1px solid rgba(201,160,48,0.22);
+	  border-right:  1px solid rgba(180,150,60,0.42);
+	}
+
+	/* Mobile: stack vertically, reduce book perspective */
+	@media (max-width: 768px) {
+	  .join-section-inner { flex-direction: column; align-items: flex-start; }
+	  .join-book-wrap     { width: 100%; }
+	  .join-book3d        { transform: perspective(700px) rotateY(-15deg); }
+	  .join-book3d:hover  { transform: perspective(700px) rotateY(-8deg);  }
+	}
+
+	</style>
 </head>
 <body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body" data-active-nav="book-club.html" data-transparent-header="true">
+
+<!-- ═══════════════════════════════════════════════════════
+     INTRO OVERLAY — book animation on page load
+     ═══════════════════════════════════════════════════════ -->
+<div id="book-intro-overlay" aria-hidden="true">
+	<div class="bio-bg-pattern"></div>
+	<div class="bio-glow"></div>
+
+	<div id="intro-book-scene">
+		<div class="intro-book-3d">
+
+			<!-- Spine -->
+			<div class="ib-spine"></div>
+
+			<!-- Cover -->
+			<div class="ib-cover">
+				<div class="ib-pattern"></div>
+				<div class="ib-frame-outer"></div>
+				<div class="ib-frame-inner"></div>
+				<div class="ib-corner ib-tl"></div>
+				<div class="ib-corner ib-tr"></div>
+				<div class="ib-corner ib-bl"></div>
+				<div class="ib-corner ib-br"></div>
+
+				<div class="ib-content">
+					<div class="ib-ornament">✦ ✦ ✦</div>
+					<p class="ib-bismillah">﷽</p>
+					<div class="ib-divider"></div>
+					<p class="ib-arabic">اقْرَأْ بِاسْمِ رَبِّكَ الَّذِي خَلَقَ</p>
+					<p class="ib-translation">"Read in the name of your Lord who created"</p>
+					<p class="ib-ref">— Surah Al-ʿAlaq · 96:1</p>
+					<div class="ib-divider"></div>
+					<div class="ib-ornament">✦ ✦ ✦</div>
+				</div>
+			</div>
+
+			<!-- Pages edge -->
+			<div class="ib-pages"></div>
+
+		</div>
+	</div>
+</div>
+
 <div id="site-header"></div>
 <main class="flex-1">
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 1 — LITERARY HERO
-	     Full-page magazine cover feel for the book club
+	     SECTION 1 — STICKY HERO
+	     Stays pinned at z-index 1 while content scrolls over
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="relative overflow-hidden bg-ihsaanah-black">
-		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.16]"></div>
+	<section id="bc-hero">
+
+		<!-- Background photo — books / reading atmosphere -->
+		<img src="https://images.pexels.com/photos/1370295/pexels-photo-1370295.jpeg?auto=compress&cs=tinysrgb&w=1920&h=1080&dpr=1"
+		     alt=""
+		     class="absolute inset-0 w-full h-full object-cover pointer-events-none"
+		     style="opacity:0.38; object-position:center 40%;"
+		     onerror="this.style.display='none'">
+
+		<!-- Dark vignette — bottom-heavy so text stays readable -->
 		<div class="pointer-events-none absolute inset-0"
-		     style="background: radial-gradient(ellipse 55% 65% at 80% 40%, rgba(201,160,48,0.12) 0%, transparent 68%);"></div>
+		     style="background:linear-gradient(to top,rgba(13,13,13,0.97) 0%,rgba(13,13,13,0.62) 40%,rgba(13,13,13,0.22) 72%,rgba(13,13,13,0.08) 100%);"></div>
 
-		<!-- Decorative large numeral -->
-		<span class="pointer-events-none select-none absolute right-8 top-1/2 -translate-y-1/2
-		             font-display italic text-ihsaanah-gold opacity-[0.04]"
-		      style="font-size: clamp(12rem, 25vw, 20rem); line-height:1;" aria-hidden="true">9</span>
+		<!-- Right-side fade so left text area is clean -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background:linear-gradient(to right,rgba(13,13,13,0.55) 0%,rgba(13,13,13,0.18) 50%,transparent 100%);"></div>
 
-		<div class="relative mx-auto max-w-5xl px-6 py-24 sm:py-32">
+		<!-- Islamic pattern overlay -->
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.13]"></div>
 
-			<span class="section-label block mb-6 animate-fade-up">Book Club · Al-Ihsaanah</span>
+		<!-- Primary gold glow — bottom-left -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: radial-gradient(ellipse 65% 60% at 5% 90%, rgba(201,160,48,0.18) 0%, transparent 65%);"></div>
 
-			<h1 class="animate-fade-up" style="animation-delay:0.08s">
-				<span class="block font-display italic text-white leading-none"
-				      style="font-size: clamp(3rem, 9vw, 7rem);">Verses</span>
-				<span class="block font-display italic text-ihsaanah-gold leading-none"
-				      style="font-size: clamp(3rem, 9vw, 7rem);">&amp; Vibes</span>
-			</h1>
+		<!-- Secondary glow — top-right, very subtle -->
+		<div class="pointer-events-none absolute inset-0"
+		     style="background: radial-gradient(ellipse 45% 35% at 88% 12%, rgba(201,160,48,0.055) 0%, transparent 60%);"></div>
 
-			<p class="mt-6 max-w-md text-base text-white/50 leading-relaxed animate-fade-up"
-			   style="animation-delay:0.18s">
+		<!-- Thin horizontal rule at top of text area — editorial accent -->
+		<div class="pointer-events-none absolute"
+		     style="left: 4.5rem; right: 4.5rem; bottom: 50%; margin-bottom: 2.2rem; height: 1px; background: rgba(255,255,255,0.1);"></div>
+
+		<!-- Content: far left, vertically centred -->
+		<div class="relative w-full mx-auto" style="max-width: 1300px; padding: 0 3rem 0 4.5rem;">
+
+			<div id="bc-hero-title">
+				<h1>
+					<span class="block font-display italic text-white"
+					      style="font-size: clamp(4rem, 10.5vw, 9rem); line-height: 0.88;">Verses</span>
+					<span class="block font-display italic text-ihsaanah-gold"
+					      style="font-size: clamp(4rem, 10.5vw, 9rem); line-height: 0.88;">&amp;&nbsp;Vibes</span>
+				</h1>
+			</div>
+
+			<p id="bc-hero-sub"
+			   class="text-white/65 leading-relaxed"
+			   style="margin-top: clamp(1.4rem, 2.8vw, 2.2rem); font-size: clamp(0.95rem, 1.55vw, 1.15rem); max-width: 390px;">
 				A Creative, Reflective Reading Circle for Muslimah Youth
 			</p>
 
-			<div class="mt-7 flex flex-wrap gap-2 animate-fade-up" style="animation-delay:0.28s">
-				<span class="trust-badge">Ages 13–23</span>
-				<span class="trust-badge">Wed sessions</span>
-				<span class="trust-badge">Offline &amp; Online</span>
-				<span class="trust-badge">9 Books &amp; counting</span>
-			</div>
-
 		</div>
 	</section>
 
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 2 — MISSION PULL QUOTE
-	     The purpose of the club in editorial type
+	     SECTION 2 — MISSION
+	     Two 3-D books left · mission text far right
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-3xl px-8" data-aos="fade-up">
-			<span class="section-label block mb-6">What We're About</span>
-			<blockquote class="editorial-quote">
-				A safe, inspiring space to explore books with deep Islamic themes, engage in
-				meaningful discussions, and grow spiritually, intellectually, and creatively.
-			</blockquote>
-			<span class="editorial-attribution">— Verses &amp; Vibes Mission</span>
-			<p class="mt-7 max-w-lg text-sm text-ihsaanah-black/60 leading-relaxed">
-				The club aims to nurture sisterhood, self-expression, and a love for books among
-				young Muslimahs — serving as an educational, faith-centred form of entertainment.
-			</p>
-		</div>
-	</section>
+	<section class="bg-ihsaanah-cream py-28 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto px-10" style="max-width:1200px;">
 
+			<div class="flex flex-col lg:flex-row items-center lg:items-end gap-20 lg:gap-0">
 
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 3 — VISION
-	     One-line editorial statement, cream
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-cream border-t border-ihsaanah-gold/12 py-14">
-		<div class="mx-auto max-w-3xl px-8" data-aos="fade-up">
-			<span class="section-label block mb-5">Our Vision</span>
-			<p class="font-display italic text-2xl text-ihsaanah-black leading-relaxed sm:text-3xl">
-				"A vibrant space where young Muslimahs build positive connections,
-				deepen their understanding of Islam, and express themselves authentically."
-			</p>
-		</div>
-	</section>
+				<!-- LEFT — two 3-D books, aligned to their bottom edges -->
+				<div class="flex items-end gap-10 flex-shrink-0 pb-2">
 
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 4 — HOSTS
-	     Contributor-style profiles with initial avatars
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
-
-			<span class="section-label block mb-10 text-center" data-aos="fade-up">Your Hosts</span>
-
-			<div class="grid gap-8 sm:grid-cols-2" data-aos="fade-up" data-aos-delay="60">
-
-				<!-- Zoomana -->
-				<div class="rounded-2xl border border-ihsaanah-gold/20 bg-ihsaanah-black p-7
-				            transition-colors hover:border-ihsaanah-gold/40">
-					<div class="flex items-center gap-4 mb-5">
-						<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full
-						            border border-ihsaanah-gold/40 bg-ihsaanah-gold/8">
-							<span class="font-display italic text-2xl text-ihsaanah-gold">Z</span>
-						</div>
-						<div>
-							<h3 class="font-heading text-base font-semibold text-white">Zoomana Mehdi</h3>
-							<span class="text-xs text-ihsaanah-gold/60 tracking-wide">Youth Lead &amp; Host</span>
+					<!-- Book A: leans ↙  (spine left, pages right) -->
+					<div data-aos="fade-up" data-aos-delay="80">
+						<div class="bc-book3d bc-book3d--a">
+							<div class="bc-b-spine bc-b-spine--l"></div>
+							<div class="bc-b-cover bc-b-cover--a">
+								<div class="bc-b-cover-pattern"></div>
+								<div class="bc-b-cover-frame"></div>
+								<svg class="bc-b-star" viewBox="0 0 34 34" fill="none">
+									<path d="M17 2 L20.5 13 L32 17 L20.5 21 L17 32 L13.5 21 L2 17 L13.5 13 Z"
+									      stroke="rgba(201,160,48,1)" stroke-width="0.9" fill="none"/>
+									<path d="M17 2 L32 17 L17 32 L2 17 Z"
+									      stroke="rgba(201,160,48,0.5)" stroke-width="0.7" fill="none"/>
+									<circle cx="17" cy="17" r="3.5"
+									        stroke="rgba(201,160,48,0.6)" stroke-width="0.7" fill="none"/>
+								</svg>
+							</div>
+							<div class="bc-b-pages bc-b-pages--r"></div>
 						</div>
 					</div>
-					<p class="text-sm text-white/50 leading-relaxed">
-						An artist, book enthusiast, and advocate of mindful parenting — Zoomana brings
-						creativity and heart to every Verses &amp; Vibes session.
-					</p>
-				</div>
 
-				<!-- Rameesa -->
-				<div class="rounded-2xl border border-ihsaanah-gold/20 bg-ihsaanah-black p-7
-				            transition-colors hover:border-ihsaanah-gold/40">
-					<div class="flex items-center gap-4 mb-5">
-						<div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full
-						            border border-ihsaanah-gold/40 bg-ihsaanah-gold/8">
-							<span class="font-display italic text-2xl text-ihsaanah-gold">R</span>
-						</div>
-						<div>
-							<h3 class="font-heading text-base font-semibold text-white">Rameesa Mehdi</h3>
-							<span class="text-xs text-ihsaanah-gold/60 tracking-wide">Youth Lead &amp; Co-Host</span>
+					<!-- Book B: leans ↗  (pages left, spine right — HTML reversed) -->
+					<div data-aos="fade-up" data-aos-delay="210">
+						<div class="bc-book3d bc-book3d--b">
+							<div class="bc-b-pages bc-b-pages--l"></div>
+							<div class="bc-b-cover bc-b-cover--b">
+								<div class="bc-b-cover-pattern"></div>
+								<div class="bc-b-cover-frame"></div>
+								<svg class="bc-b-star" viewBox="0 0 34 34" fill="none">
+									<path d="M17 2 L20.5 13 L32 17 L20.5 21 L17 32 L13.5 21 L2 17 L13.5 13 Z"
+									      stroke="rgba(201,160,48,1)" stroke-width="0.9" fill="none"/>
+									<path d="M17 2 L32 17 L17 32 L2 17 Z"
+									      stroke="rgba(201,160,48,0.5)" stroke-width="0.7" fill="none"/>
+									<circle cx="17" cy="17" r="3.5"
+									        stroke="rgba(201,160,48,0.6)" stroke-width="0.7" fill="none"/>
+								</svg>
+							</div>
+							<div class="bc-b-spine bc-b-spine--r"></div>
 						</div>
 					</div>
-					<p class="text-sm text-white/50 leading-relaxed">
-						Together with her twin sister Zoomana, Rameesa is passionate about creating meaningful
-						spaces where young Muslimahs can thrive and find their voices.
+
+				</div>
+
+				<!-- RIGHT — mission quote + gold attribution, far right -->
+				<div class="ml-auto text-right" style="padding-right:0.5rem; max-width:480px;"
+				     data-aos="fade-left" data-aos-delay="160">
+
+					<p class="font-display italic text-ihsaanah-black leading-relaxed"
+					   style="font-size: clamp(1.25rem, 2.4vw, 1.85rem);">
+						A safe, inspiring space to explore books with deep Islamic themes,
+						engage in meaningful discussions, and grow spiritually,
+						intellectually, and creatively.
 					</p>
+
+					<!-- Horizontal rule + gold attribution -->
+					<div class="mt-7 flex items-center justify-end gap-4">
+						<div style="flex:1; height:1px; background:linear-gradient(to left, rgba(201,160,48,0.5), transparent);"></div>
+						<span class="font-heading text-xs font-semibold tracking-widest uppercase text-ihsaanah-gold">
+							Verses &amp; Vibes Mission
+						</span>
+					</div>
+
 				</div>
 
 			</div>
-
-			<p class="mt-8 text-center text-xs text-white/25" data-aos="fade-up" data-aos-delay="120">
-				Twin sisters · Artists · Book enthusiasts · Advocates of mindful parenting
-			</p>
-
 		</div>
 	</section>
 
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 5 — WHAT WE PROVIDE
-	     6 features in editorial grid on cream
+	     SECTION 3 — HOSTS  (Phase 5: magazine grid)
+	     Large initial behind grayscale photo.
+	     Hover: bio slides LEFT, role slides RIGHT.
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
+	<section class="bg-ihsaanah-black py-24 border-t border-ihsaanah-gold/10">
+		<div class="mx-auto px-6" style="max-width:900px;">
+
+			<!-- Section label — centered, larger -->
+			<div class="mb-14 text-center" data-aos="fade-up">
+				<span class="section-label block mb-3">Verses &amp; Vibes</span>
+				<h2 class="font-display italic text-white"
+				    style="font-size:clamp(2.2rem,4.5vw,3.4rem); line-height:1.05;">
+					Your Hosts
+				</h2>
+			</div>
+
+			<!-- Cards — flex row, wraps on mobile -->
+			<div class="flex flex-wrap justify-center gap-8">
+
+				<!-- ── Zoomana Mehdi ───────────────────────────── -->
+				<div class="host-card" data-aos="fade-up" data-aos-delay="80">
+					<!-- Large faint initial behind photo -->
+					<div class="host-initial" aria-hidden="true">Z</div>
+					<!-- Placeholder photo: replace with real image.
+					     onerror hides img if URL fails — initial shows through. -->
+					<img
+						class="host-photo"
+						src="https://images.pexels.com/photos/5765822/pexels-photo-5765822.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&dpr=1"
+						alt="Zoomana Mehdi"
+						onerror="this.style.opacity=0"
+					>
+					<!-- Name bar — always visible -->
+					<div class="host-name-bar">
+						<h3>Zoomana Mehdi</h3>
+					</div>
+					<!-- Bio panel — slides from LEFT on hover -->
+					<div class="host-bio-panel" aria-hidden="true">
+						<p>An artist, book enthusiast, and advocate of mindful parenting — bringing creativity and heart to every Verses &amp; Vibes session.</p>
+					</div>
+					<!-- Role panel — slides from RIGHT on hover -->
+					<div class="host-role-panel" aria-hidden="true">
+						<span>Youth Lead</span>
+						<span>&amp; Host</span>
+					</div>
+				</div>
+
+				<!-- ── Rameesa Mehdi ───────────────────────────── -->
+				<div class="host-card" data-aos="fade-up" data-aos-delay="210">
+					<div class="host-initial" aria-hidden="true">R</div>
+					<img
+						class="host-photo"
+						src="https://images.pexels.com/photos/6214368/pexels-photo-6214368.jpeg?auto=compress&cs=tinysrgb&w=600&h=800&dpr=1"
+						alt="Rameesa Mehdi"
+						onerror="this.style.opacity=0"
+					>
+					<div class="host-name-bar">
+						<h3>Rameesa Mehdi</h3>
+					</div>
+					<div class="host-bio-panel" aria-hidden="true">
+						<p>Passionate about creating meaningful spaces where young Muslimahs can thrive, grow, and find their voices through reading.</p>
+					</div>
+					<div class="host-role-panel" aria-hidden="true">
+						<span>Youth Lead</span>
+						<span>&amp; Co-Host</span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 5 — WHAT WE PROVIDE  (Phase 6)
+	     Centered feature names only. Two global CSS books
+	     slide in from screen edges and track the hovered row.
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="wwp-section bg-ihsaanah-cream py-24 border-t border-ihsaanah-gold/10">
+
+		<!-- Left book — parked off-screen, JS moves top + adds .wwp-book-in -->
+		<div class="wwp-book-global wwp-book-global--l" aria-hidden="true">
+			<div class="wwp-mini-book wwp-mini-book--l">
+				<div class="wwp-ms wwp-ms--l"></div>
+				<div class="wwp-mc wwp-mc--a"></div>
+				<div class="wwp-mp wwp-mp--r"></div>
+			</div>
+		</div>
+
+		<!-- Right book — reversed HTML so spine is on the right -->
+		<div class="wwp-book-global wwp-book-global--r" aria-hidden="true">
+			<div class="wwp-mini-book wwp-mini-book--r">
+				<div class="wwp-mp wwp-mp--l"></div>
+				<div class="wwp-mc wwp-mc--b"></div>
+				<div class="wwp-ms wwp-ms--r"></div>
+			</div>
+		</div>
+
+		<div class="mx-auto px-6 text-center" style="max-width:900px;">
+
+			<!-- Title block -->
+			<div class="mb-14" data-aos="fade-up">
+				<span class="section-label block mb-3">Membership Includes</span>
+				<h2 class="font-heading font-bold text-ihsaanah-black"
+				    style="font-size:clamp(1.6rem,3vw,2.4rem); line-height:1.1; letter-spacing:-0.01em;">
+					What We Provide
+				</h2>
+			</div>
+
+			<!-- Feature name list — names only, no descriptions -->
+			<div class="wwp-list">
+
+				<div class="wwp-item" data-aos="fade-up" data-aos-delay="0">
+					<span class="wwp-name">2 Sessions / Month</span>
+				</div>
+
+				<div class="wwp-item" data-aos="fade-up" data-aos-delay="55">
+					<span class="wwp-name">Reflective Reading Sheets</span>
+				</div>
+
+				<div class="wwp-item" data-aos="fade-up" data-aos-delay="110">
+					<span class="wwp-name">Creative Journaling</span>
+				</div>
+
+				<div class="wwp-item" data-aos="fade-up" data-aos-delay="165">
+					<span class="wwp-name">Author Sessions</span>
+				</div>
+
+				<div class="wwp-item" data-aos="fade-up" data-aos-delay="220">
+					<span class="wwp-name">Cosy Space &amp; Snacks</span>
+				</div>
+
+				<div class="wwp-item" data-aos="fade-up" data-aos-delay="275">
+					<span class="wwp-name">Strong Sisterhood</span>
+				</div>
+
+			</div>
+		</div>
+	</section>
+
+
+	<!-- ═══════════════════════════════════════════════════════
+	     SECTION 6 — SESSION STRUCTURE  (Phase 7)
+	     Tilted step cards, Islamic SVG art, blur-others hover.
+	     Special Segment panel removed per Phase 7 scope.
+	     ═══════════════════════════════════════════════════════ -->
+	<section class="bg-ihsaanah-black py-24 border-t border-ihsaanah-gold/10">
 		<div class="mx-auto max-w-4xl px-6">
 
-			<span class="section-label block mb-3" data-aos="fade-up">Membership Includes</span>
-			<h2 class="font-display italic text-3xl text-ihsaanah-black mb-10" data-aos="fade-up" data-aos-delay="40">
-				What We Provide
-			</h2>
+			<div class="text-center mb-16" data-aos="fade-up">
+				<span class="section-label block mb-3">Each Month</span>
+				<h2 class="font-display italic text-white"
+				    style="font-size:clamp(2.2rem,5vw,3.4rem); line-height:1.05;">
+					Session Structure
+				</h2>
+			</div>
 
-			<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+			<div class="ss-grid">
 
-				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="0">
-					<p class="font-heading text-sm font-semibold text-ihsaanah-black">2 Sessions / Month</p>
-					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">Structured, regular gatherings to keep the rhythm of reading alive.</p>
-				</div>
+				<!-- ── Card 01 — Book Discussion ────────────────── -->
+				<article class="ss-card ss-card--a" data-aos="fade-up" data-aos-delay="60">
+					<!-- Islamic pattern texture -->
+					<div class="ss-pattern"></div>
+					<!-- Decorative SVG: rub el hizb (double-square star + circles) -->
+					<svg class="ss-art" viewBox="0 0 160 160" fill="none" aria-hidden="true">
+						<rect x="15" y="15" width="130" height="130"
+						      stroke="rgba(201,160,48,1)" stroke-width="1.5" fill="none"/>
+						<rect x="15" y="15" width="130" height="130"
+						      transform="rotate(45 80 80)"
+						      stroke="rgba(201,160,48,1)" stroke-width="1.5" fill="none"/>
+						<rect x="42" y="42" width="76" height="76"
+						      stroke="rgba(201,160,48,0.55)" stroke-width="1" fill="none"/>
+						<rect x="42" y="42" width="76" height="76"
+						      transform="rotate(45 80 80)"
+						      stroke="rgba(201,160,48,0.55)" stroke-width="1" fill="none"/>
+						<circle cx="80" cy="80" r="19"
+						        stroke="rgba(201,160,48,0.7)" stroke-width="1.1" fill="none"/>
+						<circle cx="80" cy="80" r="7"
+						        stroke="rgba(201,160,48,0.5)" stroke-width="0.8" fill="none"/>
+						<line x1="80"   y1="15"  x2="80"   y2="145"
+						      stroke="rgba(201,160,48,0.22)" stroke-width="0.7"/>
+						<line x1="15"   y1="80"  x2="145"  y2="80"
+						      stroke="rgba(201,160,48,0.22)" stroke-width="0.7"/>
+						<line x1="30.4" y1="30.4" x2="129.6" y2="129.6"
+						      stroke="rgba(201,160,48,0.15)" stroke-width="0.6"/>
+						<line x1="129.6" y1="30.4" x2="30.4" y2="129.6"
+						      stroke="rgba(201,160,48,0.15)" stroke-width="0.6"/>
+					</svg>
 
-				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="50">
-					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Reflective Reading Sheets</p>
-					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">Guided prompts to help members engage deeply with each book.</p>
-				</div>
+					<span class="ss-step">01</span>
+					<h3 class="ss-title">Book Discussion</h3>
+					<ul class="ss-list">
+						<li>Introduction to the new month's book</li>
+						<li>Discussion of the previous book — reader's reflections, author's intent, personal connections &amp; Islamic themes</li>
+					</ul>
+				</article>
 
-				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="100">
-					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Creative Journaling</p>
-					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">Guided journaling sessions combining writing, calligraphy, and doodles.</p>
-				</div>
+				<!-- ── Card 02 — Creative Journaling & Gameplay ── -->
+				<article class="ss-card ss-card--b" data-aos="fade-up" data-aos-delay="170">
+					<div class="ss-pattern"></div>
+					<!-- Decorative SVG: arabesque flower-of-life rosette.
+					     6 petal circles: centres at (cx + r·sin(n·60°), cy − r·cos(n·60°)) -->
+					<svg class="ss-art" viewBox="0 0 160 160" fill="none" aria-hidden="true">
+						<circle cx="80"    cy="80"    r="65"
+						        stroke="rgba(201,160,48,1)"    stroke-width="1.2" fill="none"/>
+						<circle cx="80"    cy="15"    r="65"
+						        stroke="rgba(201,160,48,0.45)" stroke-width="0.85" fill="none"/>
+						<circle cx="80"    cy="145"   r="65"
+						        stroke="rgba(201,160,48,0.45)" stroke-width="0.85" fill="none"/>
+						<circle cx="136.3" cy="47.5"  r="65"
+						        stroke="rgba(201,160,48,0.45)" stroke-width="0.85" fill="none"/>
+						<circle cx="23.7"  cy="47.5"  r="65"
+						        stroke="rgba(201,160,48,0.45)" stroke-width="0.85" fill="none"/>
+						<circle cx="136.3" cy="112.5" r="65"
+						        stroke="rgba(201,160,48,0.45)" stroke-width="0.85" fill="none"/>
+						<circle cx="23.7"  cy="112.5" r="65"
+						        stroke="rgba(201,160,48,0.45)" stroke-width="0.85" fill="none"/>
+						<circle cx="80"    cy="80"    r="22"
+						        stroke="rgba(201,160,48,0.75)" stroke-width="1"   fill="none"/>
+						<circle cx="80"    cy="80"    r="8"
+						        stroke="rgba(201,160,48,0.55)" stroke-width="0.8" fill="none"/>
+					</svg>
 
-				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="0">
-					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Author Sessions</p>
-					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">Special conversations with authors — virtually or in-person when available.</p>
-				</div>
-
-				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="50">
-					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Cosy Space &amp; Snacks</p>
-					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">A welcoming discussion environment with snacks for offline members.</p>
-				</div>
-
-				<div class="rounded-xl border border-ihsaanah-gold/20 bg-white p-5 shadow-sm"
-				     data-aos="fade-up" data-aos-delay="100">
-					<p class="font-heading text-sm font-semibold text-ihsaanah-black">Strong Sisterhood</p>
-					<p class="mt-1.5 text-xs text-ihsaanah-black/55 leading-relaxed">A community of 15–20 committed offline members, plus unlimited online.</p>
-				</div>
+					<span class="ss-step">02</span>
+					<h3 class="ss-title">Creative Journaling &amp; Gameplay</h3>
+					<ul class="ss-list">
+						<li>
+							<strong>Reading Journal</strong>
+							Personal reflections, quotes, doodles, calligraphy, and decorative elements for each completed book
+						</li>
+						<li>
+							<strong>Gameplay</strong>
+							Informative, intellectual, and bonding games — Code Names, Book Bingo, 5 Pillars of Islam, The Game
+						</li>
+					</ul>
+				</article>
 
 			</div>
 		</div>
@@ -227,189 +1596,227 @@
 
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 6 — SESSION STRUCTURE
-	     Day 1 / Day 2 editorial layout on dark
-	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
-
-			<span class="section-label block mb-3 text-center" data-aos="fade-up">Each Month</span>
-			<h2 class="font-display italic text-3xl text-white mb-12 text-center" data-aos="fade-up" data-aos-delay="40">
-				Session Structure
-			</h2>
-
-			<div class="grid gap-6 sm:grid-cols-2">
-
-				<!-- Day 1 -->
-				<div class="rounded-2xl border border-ihsaanah-gold/20 p-7"
-				     data-aos="fade-up" data-aos-delay="0">
-					<span class="font-display italic text-ihsaanah-gold/40 text-4xl block mb-4 leading-none">01</span>
-					<h3 class="font-heading text-base font-semibold text-white mb-5">Book Discussion</h3>
-					<ul class="space-y-3 text-sm text-white/50">
-						<li class="flex gap-3">
-							<span class="text-ihsaanah-gold/50 shrink-0 mt-0.5">→</span>
-							<span>Introduction to the new book</span>
-						</li>
-						<li class="flex gap-3">
-							<span class="text-ihsaanah-gold/50 shrink-0 mt-0.5">→</span>
-							<span>Discussion of the previous book — reader's reflections, author's intent, personal connections &amp; Islamic themes</span>
-						</li>
-					</ul>
-				</div>
-
-				<!-- Day 2 -->
-				<div class="rounded-2xl border border-ihsaanah-gold/20 p-7"
-				     data-aos="fade-up" data-aos-delay="80">
-					<span class="font-display italic text-ihsaanah-gold/40 text-4xl block mb-4 leading-none">02</span>
-					<h3 class="font-heading text-base font-semibold text-white mb-5">Creative Journaling &amp; Gameplay</h3>
-					<ul class="space-y-4 text-sm text-white/50">
-						<li>
-							<p class="text-white/75 font-medium mb-1">Reading Journal</p>
-							<p>Each member keeps a personal journal — written reflections, quotes, doodles, calligraphy, and decorative elements for each completed book.</p>
-						</li>
-						<li>
-							<p class="text-white/75 font-medium mb-1">Gameplay</p>
-							<p>Informative, intellectual, and bonding games — non-competitive. Think Code Names, Book Bingo, 5 Pillars of Islam, The Game.</p>
-						</li>
-					</ul>
-				</div>
-
-			</div>
-
-			<!-- Author segment note -->
-			<div class="mt-6 rounded-xl border border-ihsaanah-gold/25 bg-ihsaanah-gold/5 px-6 py-5"
-			     data-aos="fade-up" data-aos-delay="120">
-				<p class="text-sm font-semibold text-ihsaanah-gold mb-1">Special Segment — Conversation with the Author</p>
-				<p class="text-sm text-white/45 leading-relaxed">
-					When available, the author joins virtually or in-person to share their story, insights,
-					and intentions — followed by a live Q&amp;A with club members.
-				</p>
-			</div>
-
-		</div>
-	</section>
-
-
-	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 7 — READING LIST
-	     9 books with status dots — the star element
+	     SECTION 7 — BOOKS CAROUSEL  (Phase 8)
+	     Draggable horizontal track of styled CSS book covers.
+	     JS clones items for seamless infinite auto-scroll.
 	     ═══════════════════════════════════════════════════════ -->
 	<section class="bg-ihsaanah-cream py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-3xl px-6">
 
-			<div class="flex items-end justify-between mb-10 gap-4" data-aos="fade-up">
+		<!-- Contained header — title + legend + hint -->
+		<div class="mx-auto px-6 mb-2" style="max-width:900px;">
+			<div class="flex items-end justify-between gap-4 flex-wrap" data-aos="fade-up">
 				<div>
 					<span class="section-label block mb-1">Our Library</span>
 					<h2 class="font-display italic text-3xl text-ihsaanah-black">Books We've Read</h2>
 				</div>
-				<div class="flex flex-col gap-1.5 shrink-0 text-right" data-aos="fade-up" data-aos-delay="60">
-					<span class="flex items-center justify-end gap-1.5 text-xs text-ihsaanah-black/45">
-						<span class="reading-status-dot completed inline-block"></span> Completed
+				<!-- Status legend — larger, bolder -->
+				<div class="flex flex-col gap-2.5 shrink-0 text-right">
+					<span class="flex items-center justify-end gap-2.5 text-sm font-medium text-ihsaanah-black/80">
+						<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:rgba(201,160,48,0.92);flex-shrink:0;"></span>
+						Completed
 					</span>
-					<span class="flex items-center justify-end gap-1.5 text-xs text-ihsaanah-black/45">
-						<span class="reading-status-dot ongoing inline-block"></span> Reading now
+					<span class="flex items-center justify-end gap-2.5 text-sm font-medium text-ihsaanah-black/80">
+						<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:#4ade80;box-shadow:0 0 6px rgba(74,222,128,0.5);flex-shrink:0;"></span>
+						Reading now
 					</span>
-					<span class="flex items-center justify-end gap-1.5 text-xs text-ihsaanah-black/45">
-						<span class="reading-status-dot upcoming inline-block"></span> Coming next
+					<span class="flex items-center justify-end gap-2.5 text-sm font-medium text-ihsaanah-black/80">
+						<span style="display:inline-block;width:11px;height:11px;border-radius:50%;background:rgba(13,13,13,0.18);border:1.5px solid rgba(13,13,13,0.3);flex-shrink:0;"></span>
+						Coming next
 					</span>
 				</div>
 			</div>
-
-			<div class="rounded-2xl border border-ihsaanah-gold/20 bg-white px-6 py-2 shadow-sm"
-			     data-aos="fade-up" data-aos-delay="80">
-
-				<div class="reading-list-item">
-					<div class="reading-status-dot completed"></div>
-					<span class="reading-list-title">Show Up</span>
-					<span class="reading-status-label completed">Completed</span>
-				</div>
-
-				<div class="reading-list-item">
-					<div class="reading-status-dot completed"></div>
-					<span class="reading-list-title">তিনি আমার রব</span>
-					<span class="reading-status-label completed">Completed</span>
-				</div>
-
-				<div class="reading-list-item">
-					<div class="reading-status-dot completed"></div>
-					<span class="reading-list-title">জীবন যেখানে যেমন</span>
-					<span class="reading-status-label completed">Completed</span>
-				</div>
-
-				<div class="reading-list-item">
-					<div class="reading-status-dot completed"></div>
-					<span class="reading-list-title">ফেরা</span>
-					<span class="reading-status-label completed">Completed</span>
-				</div>
-
-				<div class="reading-list-item">
-					<div class="reading-status-dot completed"></div>
-					<span class="reading-list-title">শিকড়ের সন্ধানে</span>
-					<span class="reading-list-author">হামিদা মুবাশ্বেরা</span>
-					<span class="reading-status-label completed">Completed</span>
-				</div>
-
-				<div class="reading-list-item">
-					<div class="reading-status-dot completed"></div>
-					<span class="reading-list-title">ধরণির পথে পথে</span>
-					<span class="reading-list-author">জিয়াউল হক</span>
-					<span class="reading-status-label completed">Completed</span>
-				</div>
-
-				<div class="reading-list-item">
-					<div class="reading-status-dot completed"></div>
-					<span class="reading-list-title">তিনি আমার প্রাণের নবী</span>
-					<span class="reading-list-author">শাইখ আলী জাবির আল-ফাইফী</span>
-					<span class="reading-status-label completed">Completed</span>
-				</div>
-
-				<div class="reading-list-item">
-					<div class="reading-status-dot ongoing"></div>
-					<span class="reading-list-title">গ্রে লেডি অফ বাগরাম <span class="text-ihsaanah-black/40 text-xs">(আফিয়া সিদ্দিকী)</span></span>
-					<span class="reading-list-author">টিম প্রজন্ম</span>
-					<span class="reading-status-label ongoing">Reading now</span>
-				</div>
-
-				<div class="reading-list-item">
-					<div class="reading-status-dot upcoming"></div>
-					<span class="reading-list-title">অনেক আঁধার পেরিয়ে</span>
-					<span class="reading-list-author">মুহাম্মদ জাভেদ কায়সার</span>
-					<span class="reading-status-label upcoming">Coming next</span>
-				</div>
-
-			</div>
-
+			<p class="bc-drag-hint font-body">Drag to explore &nbsp;←→</p>
 		</div>
+
+		<!-- Full-bleed carousel track — no max-width -->
+		<div id="bc-carousel-wrap">
+			<div id="bc-carousel">
+
+				<!-- 1 — Show Up -->
+				<div class="bc-cover bc-cover--completed" style="background:#060d12;">
+					<div class="bc-cv-pat"></div><div class="bc-cv-frame"></div>
+					<div class="bc-cv-status"></div>
+					<div class="bc-cv-content">
+						<div class="bc-cv-orn">✦ ✦ ✦</div>
+						<p class="bc-cv-title">Show Up</p>
+						<div class="bc-cv-rule"></div>
+					</div>
+				</div>
+
+				<!-- 2 — তিনি আমার রব -->
+				<div class="bc-cover bc-cover--completed" style="background:#04100a;">
+					<div class="bc-cv-pat"></div><div class="bc-cv-frame"></div>
+					<div class="bc-cv-status"></div>
+					<div class="bc-cv-content">
+						<div class="bc-cv-orn">✦ ✦ ✦</div>
+						<p class="bc-cv-title">তিনি আমার রব</p>
+						<div class="bc-cv-rule"></div>
+					</div>
+				</div>
+
+				<!-- 3 — জীবন যেখানে যেমন -->
+				<div class="bc-cover bc-cover--completed" style="background:#100406;">
+					<div class="bc-cv-pat"></div><div class="bc-cv-frame"></div>
+					<div class="bc-cv-status"></div>
+					<div class="bc-cv-content">
+						<div class="bc-cv-orn">✦ ✦ ✦</div>
+						<p class="bc-cv-title">জীবন যেখানে যেমন</p>
+						<div class="bc-cv-rule"></div>
+					</div>
+				</div>
+
+				<!-- 4 — ফেরা -->
+				<div class="bc-cover bc-cover--completed" style="background:#040c10;">
+					<div class="bc-cv-pat"></div><div class="bc-cv-frame"></div>
+					<div class="bc-cv-status"></div>
+					<div class="bc-cv-content">
+						<div class="bc-cv-orn">✦ ✦ ✦</div>
+						<p class="bc-cv-title">ফেরা</p>
+						<div class="bc-cv-rule"></div>
+					</div>
+				</div>
+
+				<!-- 5 — শিকড়ের সন্ধানে -->
+				<div class="bc-cover bc-cover--completed" style="background:#0a0516;">
+					<div class="bc-cv-pat"></div><div class="bc-cv-frame"></div>
+					<div class="bc-cv-status"></div>
+					<div class="bc-cv-content">
+						<div class="bc-cv-orn">✦ ✦ ✦</div>
+						<p class="bc-cv-title">শিকড়ের সন্ধানে</p>
+						<div class="bc-cv-rule"></div>
+						<p class="bc-cv-author">হামিদা মুবাশ্বেরা</p>
+					</div>
+				</div>
+
+				<!-- 6 — ধরণির পথে পথে -->
+				<div class="bc-cover bc-cover--completed" style="background:#090e04;">
+					<div class="bc-cv-pat"></div><div class="bc-cv-frame"></div>
+					<div class="bc-cv-status"></div>
+					<div class="bc-cv-content">
+						<div class="bc-cv-orn">✦ ✦ ✦</div>
+						<p class="bc-cv-title">ধরণির পথে পথে</p>
+						<div class="bc-cv-rule"></div>
+						<p class="bc-cv-author">জিয়াউল হক</p>
+					</div>
+				</div>
+
+				<!-- 7 — তিনি আমার প্রাণের নবী -->
+				<div class="bc-cover bc-cover--completed" style="background:#0e0408;">
+					<div class="bc-cv-pat"></div><div class="bc-cv-frame"></div>
+					<div class="bc-cv-status"></div>
+					<div class="bc-cv-content">
+						<div class="bc-cv-orn">✦ ✦ ✦</div>
+						<p class="bc-cv-title">তিনি আমার প্রাণের নবী</p>
+						<div class="bc-cv-rule"></div>
+						<p class="bc-cv-author">শাইখ আলী জাবির আল-ফাইফী</p>
+					</div>
+				</div>
+
+				<!-- 8 — গ্রে লেডি অফ বাগরাম  (reading now) -->
+				<div class="bc-cover bc-cover--ongoing" style="background:#06080e;">
+					<div class="bc-cv-pat"></div><div class="bc-cv-frame"></div>
+					<div class="bc-cv-status"></div>
+					<div class="bc-cv-content">
+						<div class="bc-cv-orn">✦ ✦ ✦</div>
+						<p class="bc-cv-title">গ্রে লেডি অফ বাগরাম</p>
+						<div class="bc-cv-rule"></div>
+						<p class="bc-cv-author">টিম প্রজন্ম</p>
+					</div>
+				</div>
+
+				<!-- 9 — অনেক আঁধার পেরিয়ে  (coming next) -->
+				<div class="bc-cover bc-cover--upcoming" style="background:#0c0c0c;">
+					<div class="bc-cv-pat"></div><div class="bc-cv-frame"></div>
+					<div class="bc-cv-status"></div>
+					<div class="bc-cv-content">
+						<div class="bc-cv-orn">✦ ✦ ✦</div>
+						<p class="bc-cv-title">অনেক আঁধার পেরিয়ে</p>
+						<div class="bc-cv-rule"></div>
+						<p class="bc-cv-author">মুহাম্মদ জাভেদ কায়সার</p>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
 	</section>
 
 
 	<!-- ═══════════════════════════════════════════════════════
-	     SECTION 8 — JOIN CTA + LITTLE MUMIN PLACEHOLDER
+	     SECTION 8 — JOIN THE CLUB  (Phase 9)
+	     Text far left, large 3D CSS book right.
+	     Little Mumin panel removed per Phase 9 scope.
 	     ═══════════════════════════════════════════════════════ -->
-	<section class="bg-ihsaanah-black py-20 border-t border-ihsaanah-gold/10">
-		<div class="mx-auto max-w-4xl px-6">
+	<section class="bg-ihsaanah-black border-t border-ihsaanah-gold/10"
+	         style="position:relative; padding:clamp(5rem,10vw,8rem) 0;">
 
-			<!-- Join CTA -->
-			<div class="text-center mb-12" data-aos="fade-up">
-				<span class="section-label block mb-4">Join the Club</span>
-				<h2 class="font-display italic text-3xl text-white mb-4">
-					Ready to read with us?
+		<!-- Faint gold glow behind the book -->
+		<div class="pointer-events-none" aria-hidden="true"
+		     style="position:absolute; inset:0;
+		            background:radial-gradient(ellipse 55% 75% at 88% 50%,
+		              rgba(201,160,48,0.07) 0%, transparent 70%);"></div>
+
+		<div class="mx-auto px-6 join-section-inner" style="max-width:1100px;">
+
+			<!-- ── LEFT: text column ─────────────────────────────── -->
+			<div class="join-text" data-aos="fade-right" data-aos-delay="40">
+
+				<span class="section-label block mb-5">Join the Club</span>
+
+				<h2 class="font-display italic text-white"
+				    style="font-size:clamp(2.8rem,6vw,4.6rem); line-height:0.93; margin-bottom:1.5rem;">
+					Ready to<br>read with us?
 				</h2>
-				<p class="text-white/45 text-sm max-w-sm mx-auto mb-7">
-					Sessions run on Wednesdays. Open to Muslimah youth ages 13–23.
+
+				<p class="text-white/45 leading-relaxed"
+				   style="font-size:clamp(0.88rem,1.4vw,1rem); max-width:340px; margin-bottom:2.25rem;">
+					Sessions run on Wednesdays. Open to Muslimah youth ages&nbsp;13–23.
 					Both offline (Mirpur-2) and online formats available.
 				</p>
+
 				<a href="contact.html"
-				   class="inline-block rounded-md bg-ihsaanah-gold px-7 py-3 text-sm font-semibold text-white hover:opacity-90 transition-opacity">
+				   class="join-btn inline-block text-white font-semibold"
+				   style="padding:0.85rem 2rem; font-size:0.875rem; letter-spacing:0.04em;">
 					Express Your Interest
 				</a>
+
 			</div>
 
-			<!-- Little Mumin Book Club — coming soon -->
-			<div class="coming-soon-panel" data-aos="fade-up" data-aos-delay="80">
-				<span class="panel-eyebrow">Coming Soon</span>
-				<p class="panel-title">Little Mumin Book Club</p>
-				<p class="panel-sub">A reading programme for our youngest learners within the Ihsaanah community — details to be announced.</p>
+			<!-- ── RIGHT: 3D CSS book (links to contact) ─────────── -->
+			<div class="join-book-wrap" data-aos="fade-left" data-aos-delay="120">
+				<a href="contact.html" aria-label="Express your interest in Verses &amp; Vibes">
+					<div class="join-book3d">
+						<div class="jb-spine"></div>
+						<div class="jb-cover">
+							<!-- Texture + frame -->
+							<div class="jb-pat"></div>
+							<div class="jb-frame"></div>
+							<!-- Central typography -->
+							<div class="jb-content">
+								<div class="jb-orn">✦ ✦ ✦</div>
+								<div class="jb-rule"></div>
+								<p class="jb-title-a">Verses</p>
+								<p class="jb-title-b">&amp;&nbsp;Vibes</p>
+								<div class="jb-rule"></div>
+								<!-- Double-square 8-pointed star -->
+								<svg class="jb-star" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+									<rect x="5" y="5" width="34" height="34"
+									      stroke="rgba(201,160,48,0.88)" stroke-width="1.2" fill="none"/>
+									<rect x="5" y="5" width="34" height="34"
+									      transform="rotate(45 22 22)"
+									      stroke="rgba(201,160,48,0.88)" stroke-width="1.2" fill="none"/>
+									<circle cx="22" cy="22" r="8"
+									        stroke="rgba(201,160,48,0.62)" stroke-width="0.9" fill="none"/>
+									<circle cx="22" cy="22" r="3"
+									        stroke="rgba(201,160,48,0.4)" stroke-width="0.7" fill="none"/>
+								</svg>
+							</div>
+							<!-- Bottom label -->
+							<div class="jb-label">Verses &amp; Vibes · Ihsaanah</div>
+						</div>
+						<div class="jb-pages"></div>
+					</div>
+				</a>
 			</div>
 
 		</div>
@@ -419,5 +1826,188 @@
 <div id="site-footer"></div>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   INTRO BOOK ANIMATION — Phase 1
+   ══════════════════════════════════════════════════════════ */
+(function () {
+  var overlay = document.getElementById('book-intro-overlay');
+  var scene   = document.getElementById('intro-book-scene');
+  if (!overlay || !scene) return;
+
+  /* Lock scroll while intro plays */
+  document.body.style.overflow = 'hidden';
+
+  /* Step 1 — small delay then slide book up into view */
+  setTimeout(function () {
+    scene.style.transition = 'transform 1.15s cubic-bezier(0.16,1,0.3,1), opacity 0.8s ease';
+    scene.style.transform  = 'translateY(0)';
+    scene.style.opacity    = '1';
+  }, 180);
+
+  /* Step 2 — after 2 s visible, zoom the book into the screen */
+  setTimeout(function () {
+    scene.style.transition = 'transform 0.95s cubic-bezier(0.55,0,1,0.45)';
+    scene.style.transform  = 'scale(32)';
+
+    /* Step 3 — fade overlay out mid-zoom */
+    setTimeout(function () {
+      overlay.style.transition = 'opacity 0.6s ease';
+      overlay.style.opacity    = '0';
+      overlay.style.pointerEvents = 'none';
+      document.body.style.overflow = '';
+
+      /* Step 4 — remove from DOM after fade */
+      setTimeout(function () {
+        overlay.remove();
+      }, 650);
+    }, 500);
+
+  }, 2400);
+}());
+
+/* ══════════════════════════════════════════════════════════
+   WHAT WE PROVIDE — Phase 6
+   Books slide from screen edges and track hovered row.
+   JS only moves `top` inline; CSS handles the translate.
+   ══════════════════════════════════════════════════════════ */
+(function () {
+  var section = document.querySelector('.wwp-section');
+  var bookL   = document.querySelector('.wwp-book-global--l');
+  var bookR   = document.querySelector('.wwp-book-global--r');
+  var items   = document.querySelectorAll('.wwp-item');
+  if (!section || !bookL || !bookR || !items.length) return;
+
+  items.forEach(function (item) {
+    item.addEventListener('mouseenter', function () {
+      var sRect = section.getBoundingClientRect();
+      var iRect = item.getBoundingClientRect();
+      /* midY = distance from section top to vertical centre of this row */
+      var midY  = (iRect.top - sRect.top) + iRect.height / 2;
+
+      bookL.style.top = midY + 'px';
+      bookR.style.top = midY + 'px';
+      bookL.classList.add('wwp-book-in');
+      bookR.classList.add('wwp-book-in');
+    });
+
+    item.addEventListener('mouseleave', function () {
+      bookL.classList.remove('wwp-book-in');
+      bookR.classList.remove('wwp-book-in');
+    });
+  });
+}());
+
+/* ══════════════════════════════════════════════════════════
+   BOOKS CAROUSEL — Phase 8
+   1. Clones all covers for seamless infinite scroll loop.
+   2. Auto-scrolls at ~44 px/s; pauses on hover/drag.
+   3. Drag: mouse + touch.
+   ══════════════════════════════════════════════════════════ */
+(function () {
+  var wrap     = document.getElementById('bc-carousel-wrap');
+  var carousel = document.getElementById('bc-carousel');
+  if (!wrap || !carousel) return;
+
+  /* ── 1. Clone items for infinite loop ──────────────────── */
+  var originals = Array.from(carousel.children);
+  originals.forEach(function (item) {
+    carousel.appendChild(item.cloneNode(true));
+  });
+
+  /* halfWidth is calculated after layout — use a short delay   *
+   * so the browser has rendered the cloned items.             */
+  var halfWidth = 0;
+  setTimeout(function () {
+    halfWidth = carousel.scrollWidth / 2;
+  }, 120);
+
+  /* ── 2. Auto-scroll ─────────────────────────────────────── */
+  var autoTimer = null;
+  var SPEED     = 0.7;   /* px per 16 ms tick */
+  var INTERVAL  = 16;
+
+  function tick() {
+    if (!halfWidth) return;
+    wrap.scrollLeft += SPEED;
+    /* Seamless reset: when we reach the clone section, jump
+     * back to the equivalent position in the originals.      */
+    if (wrap.scrollLeft >= halfWidth) {
+      wrap.scrollLeft -= halfWidth;
+    }
+  }
+
+  function startAuto() {
+    if (autoTimer) return;
+    autoTimer = setInterval(tick, INTERVAL);
+  }
+
+  function stopAuto() {
+    clearInterval(autoTimer);
+    autoTimer = null;
+  }
+
+  startAuto();
+
+  /* ── 3. Pause on hover ──────────────────────────────────── */
+  wrap.addEventListener('mouseenter', stopAuto);
+  wrap.addEventListener('mouseleave', function () {
+    if (!isDragging) startAuto();
+  });
+
+  /* ── 4. Mouse drag ──────────────────────────────────────── */
+  var isDragging  = false;
+  var dragStartX  = 0;
+  var dragScrollL = 0;
+  var resumeTimer = null;
+
+  wrap.addEventListener('mousedown', function (e) {
+    isDragging = true;
+    dragStartX  = e.pageX;
+    dragScrollL = wrap.scrollLeft;
+    wrap.classList.add('is-dragging');
+    stopAuto();
+    clearTimeout(resumeTimer);
+  });
+
+  document.addEventListener('mousemove', function (e) {
+    if (!isDragging) return;
+    e.preventDefault();
+    var dx = e.pageX - dragStartX;
+    wrap.scrollLeft = dragScrollL - dx;
+  });
+
+  document.addEventListener('mouseup', function () {
+    if (!isDragging) return;
+    isDragging = false;
+    wrap.classList.remove('is-dragging');
+    /* Resume auto-scroll after 1.5 s so it doesn't kick in
+     * immediately after a quick flick.                       */
+    resumeTimer = setTimeout(startAuto, 1500);
+  });
+
+  /* ── 5. Touch drag (mobile) ─────────────────────────────── */
+  var touchStartX  = 0;
+  var touchScrollL = 0;
+
+  wrap.addEventListener('touchstart', function (e) {
+    touchStartX  = e.touches[0].pageX;
+    touchScrollL = wrap.scrollLeft;
+    stopAuto();
+    clearTimeout(resumeTimer);
+  }, { passive: true });
+
+  wrap.addEventListener('touchmove', function (e) {
+    var dx = e.touches[0].pageX - touchStartX;
+    wrap.scrollLeft = touchScrollL - dx;
+  }, { passive: true });
+
+  wrap.addEventListener('touchend', function () {
+    resumeTimer = setTimeout(startAuto, 1500);
+  });
+}());
+
+</script>
 </body>
 </html>
