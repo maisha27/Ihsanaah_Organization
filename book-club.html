@@ -1601,13 +1601,15 @@
 				</h2>
 			</div>
 
-			<div class="vv-video-frame" data-aos="fade-up" data-aos-delay="80">
-				<div class="vv-corner-bl"></div>
-				<div class="vv-corner-br"></div>
-				<video controls autoplay muted playsinline preload="auto" id="vv-video"
-				       style="display:block; width:auto; max-width:100%; max-height:75vh; margin:0 auto; background:#0D0D0D;">
-					<source src="img/verses_vibes_video.mp4" type="video/mp4">
-				</video>
+			<div style="max-width:400px; margin:0 auto;">
+				<div class="vv-video-frame" data-aos="fade-up" data-aos-delay="80">
+					<div class="vv-corner-bl"></div>
+					<div class="vv-corner-br"></div>
+					<video controls autoplay muted playsinline preload="auto" id="vv-video"
+					       style="display:block; width:100%; height:auto; background:#0D0D0D;">
+						<source src="img/verses_vibes_video.mp4" type="video/mp4">
+					</video>
+				</div>
 			</div>
 
 		</div>
@@ -2266,13 +2268,17 @@
   });
 }());
 
-/* ── Video autoplay fallback (for deployed environments) ── */
+/* ── Video autoplay (robust — works on deployed HTTPS) ── */
 (function () {
   var vid = document.getElementById('vv-video');
   if (!vid) return;
-  var tryPlay = function () {
+  vid.muted = true; /* required by Safari — HTML attr alone is not enough */
+  function tryPlay() {
     vid.play().catch(function () {});
-  };
+  }
+  /* Play as soon as the browser has enough data */
+  vid.addEventListener('canplay', tryPlay, { once: true });
+  /* Fallback: also try on page load */
   if (document.readyState === 'complete') {
     tryPlay();
   } else {
