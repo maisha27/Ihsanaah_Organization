@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 400">
+  <defs>
+    <!-- Warm dark background gradient -->
+    <radialGradient id="z-bg" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#1f1608"/>
+      <stop offset="100%" stop-color="#0a0804"/>
+    </radialGradient>
+    <!-- Gold glow behind head -->
+    <radialGradient id="z-glow" cx="50%" cy="38%" r="40%">
+      <stop offset="0%" stop-color="#C9A030" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#C9A030" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Skin tone gradient on face -->
+    <radialGradient id="z-skin" cx="50%" cy="42%" r="55%">
+      <stop offset="0%" stop-color="#d4a96a"/>
+      <stop offset="100%" stop-color="#b8884a"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="300" height="400" fill="url(#z-bg)"/>
+  <rect width="300" height="400" fill="url(#z-glow)"/>
+
+  <!-- Subtle outer frame -->
+  <rect x="8" y="8" width="284" height="384" fill="none"
+        stroke="#C9A030" stroke-width="0.6" stroke-opacity="0.18"/>
+
+  <!-- Body — modest dark abaya, wide at base -->
+  <path d="M0 400 L35 265 Q60 240 150 232 Q240 240 265 265 L300 400 Z"
+        fill="#14100a"/>
+  <!-- Subtle gold trim at neckline -->
+  <path d="M118 238 Q150 250 182 238"
+        stroke="#C9A030" stroke-width="1.2" fill="none" stroke-opacity="0.45"/>
+
+  <!-- Neck — short, skin tone -->
+  <ellipse cx="150" cy="226" rx="22" ry="16" fill="#b8884a" opacity="0.7"/>
+
+  <!-- Hijab — ROUND / close-fitting style, warm cream-gold tone -->
+  <!-- Main hijab shape: dome over head, flowing to shoulders -->
+  <path d="M68 198
+           Q70 145 90 118
+           Q115 82  150 78
+           Q185 82  210 118
+           Q230 145 232 198
+           Q220 228 190 238
+           Q170 245 150 246
+           Q130 245 110 238
+           Q80 228 68 198 Z"
+        fill="#2e2416"/>
+  <!-- Hijab highlight — lighter band along top suggesting fabric fold -->
+  <path d="M88 165 Q120 130 150 126 Q180 130 212 165"
+        stroke="#C9A030" stroke-width="0.7" fill="none" stroke-opacity="0.20"/>
+
+  <!-- Face oval — smooth skin, no features at all -->
+  <ellipse cx="150" cy="162" rx="52" ry="62" fill="url(#z-skin)"/>
+
+  <!-- Hijab cap — top part of hijab sitting snugly on forehead -->
+  <path d="M98 145
+           Q112 88 150 84
+           Q188 88 202 145
+           Q178 132 150 130
+           Q122 132 98 145 Z"
+        fill="#1e1710"/>
+
+  <!-- Small gold hijab pin detail at chin/front -->
+  <circle cx="150" cy="233" r="3.5" fill="#C9A030" opacity="0.7"/>
+  <circle cx="150" cy="233" r="2"   fill="#e8c060"/>
+
+  <!-- Bottom decorative gold rule -->
+  <line x1="90" y1="385" x2="210" y2="385"
+        stroke="#C9A030" stroke-width="0.5" stroke-opacity="0.22"/>
+  <circle cx="150" cy="385" r="2.5" fill="none"
+          stroke="#C9A030" stroke-width="0.5" stroke-opacity="0.22"/>
+</svg>
