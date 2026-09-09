@@ -601,6 +601,43 @@
 	}
 	.enrol-step-desc.shown { opacity: 1; transform: translateY(0); }
 
+	/* ── RESPONSIVE: mobile / tablet overrides ──────────── */
+	@media (max-width: 767px) {
+	  /* Quranic panels: stack vertically so image sits above info.
+	     4rem top padding + 30vh image keeps total below 616px,
+	     fitting comfortably within a 667px (iPhone 6/7/8) viewport. */
+	  .quranic-panel {
+	    flex-direction: column;
+	    padding: 4rem 1.25rem 1.5rem;
+	    gap: 1.25rem;
+	  }
+	  .qpanel-img {
+	    flex: none;
+	    width: 100%;
+	    height: 30vh;
+	  }
+	  .qpanel-info { flex: none; }
+	  .qpanel-fees { gap: 1.5rem; }
+	  /* Bookclub: left text + right CTA stacks */
+	  .bookclub-content {
+	    flex-direction: column;
+	    align-items: flex-start;
+	    gap: 1.25rem;
+	  }
+	  .bc-right { text-align: left; }
+	  /* Enrol steps: 2×2 grid */
+	  .enrol-steps { flex-wrap: wrap; gap: 2.5rem 0; }
+	  .enrol-step  { flex: 0 0 50%; }
+	  .enrol-line  { display: none; }
+	}
+	/* Skills carousel: 1 card on phone, 2 on tablet */
+	@media (max-width: 639px) {
+	  .skills-card { flex: 0 0 calc(85% - 1rem); }
+	}
+	@media (min-width: 640px) and (max-width: 1023px) {
+	  .skills-card { flex: 0 0 calc(50% - 0.75rem); }
+	}
+
 	</style>
 </head>
 <body class="flex min-h-screen flex-col bg-ihsaanah-black text-ihsaanah-black font-body"
@@ -642,14 +679,14 @@
 
 			<div class="w-full mb-9" style="height:1px;background:rgba(255,255,255,0.16);"></div>
 
-			<div class="flex items-end justify-between gap-10">
+			<div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
 				<div class="flex-shrink-0" data-aos="fade-right" data-aos-delay="100">
 					<h1 class="font-display italic text-white leading-[1.15]"
 					    style="font-size:clamp(2.6rem,5.5vw,4.8rem);">
 						Knowledge.<br>Character.<br>Purpose.
 					</h1>
 				</div>
-				<div class="max-w-xs text-right pb-0.5" data-aos="fade-left" data-aos-delay="200">
+				<div class="max-w-xs sm:text-right pb-0.5" data-aos="fade-left" data-aos-delay="200">
 					<p class="text-white/75 leading-relaxed"
 					   style="font-size:clamp(0.82rem,1.3vw,0.95rem);font-weight:400;">
 						Eight pathways designed to develop<br>
@@ -1141,22 +1178,32 @@
   if (skillsTrack) {
     var sCards  = skillsTrack.querySelectorAll('.skills-card');
     var sCount  = sCards.length;
-    var sVisible = 3;
     var sIndex  = 0;
-    var sMax    = Math.max(0, sCount - sVisible);
+    var sVisible, sMax;
+
+    function getSkillsVisible() {
+      var w = window.innerWidth;
+      if (w < 640)  return 1;
+      if (w < 1024) return 2;
+      return 3;
+    }
 
     function updateSkillsPos() {
       if (!sCards[0]) return;
+      sVisible = getSkillsVisible();
+      sMax = Math.max(0, sCount - sVisible);
+      if (sIndex > sMax) sIndex = sMax;
       var w   = sCards[0].offsetWidth;
       var gap = 24;
       skillsTrack.style.transform = 'translateX(-' + (sIndex * (w + gap)) + 'px)';
     }
 
     skillsNext && skillsNext.addEventListener('click', function () {
+      sMax = Math.max(0, sCount - getSkillsVisible());
       if (sIndex < sMax) { sIndex++; updateSkillsPos(); }
     });
     skillsPrev && skillsPrev.addEventListener('click', function () {
-      if (sIndex > 0)    { sIndex--; updateSkillsPos(); }
+      if (sIndex > 0) { sIndex--; updateSkillsPos(); }
     });
     window.addEventListener('resize', updateSkillsPos, { passive: true });
   }

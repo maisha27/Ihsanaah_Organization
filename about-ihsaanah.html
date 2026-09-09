@@ -67,7 +67,10 @@
 	  display: flex;
 	  align-items: center;
 	  justify-content: center;
-	  padding: 5rem 3rem;
+	  padding: 2rem 1.25rem;
+	}
+	@media (min-width: 640px) {
+	  #about-text-layer { padding: 5rem 3rem; }
 	}
 
 	.reveal-text {
@@ -263,14 +266,14 @@
 
 			<div class="w-full mb-9" style="height:1px;background:rgba(255,255,255,0.18);"></div>
 
-			<div class="flex items-end justify-between gap-10">
+			<div class="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between sm:gap-10">
 				<div class="flex-shrink-0" data-aos="fade-right" data-aos-delay="100">
 					<h1 class="font-display italic text-white leading-[1.15]"
 					    style="font-size:clamp(2.6rem,5.5vw,4.8rem);">
 						Nurturing<br>Goodness<br>for the Ummah
 					</h1>
 				</div>
-				<div class="max-w-xs text-right pb-0.5" data-aos="fade-left" data-aos-delay="200">
+				<div class="max-w-xs sm:text-right pb-0.5" data-aos="fade-left" data-aos-delay="200">
 					<p class="text-white/75 leading-relaxed"
 					   style="font-size:clamp(0.82rem,1.3vw,0.95rem);font-weight:400;">
 						An affirmation of faith, purpose,<br>

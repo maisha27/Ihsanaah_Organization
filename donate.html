@@ -264,6 +264,8 @@
 	}
 	@media (max-width: 768px) {
 	  .cause-panel { grid-template-columns: 1fr; min-height: auto; }
+	  .cause-panel-img { min-height: 280px; }
+	  .cause-panel-body { padding: 2rem 1.75rem; }
 	}
 	.cause-panel-img { position: relative; overflow: hidden; }
 	.cause-panel-img img {
@@ -324,6 +326,7 @@
 	}
 	.img-mosaic-item:hover img { transform: scale(1.08); filter: grayscale(10%) brightness(0.78); }
 	.img-mosaic-item--wide { flex: 2; }
+	@media (max-width: 640px) { .img-mosaic { height: 140px; } }
 
 	/* ══════════════════════════════════════════════════════════
 	   CLOSING HADITH
@@ -410,7 +413,7 @@
 			</div>
 
 			<!-- Subtext — GSAP will animate from top-right -->
-			<div id="dn-body" class="max-w-xs text-right pb-1">
+			<div id="dn-body" class="max-w-xs sm:text-right pb-1">
 				<p class="text-white/58 leading-relaxed"
 				   style="font-size: clamp(0.82rem, 1.3vw, 0.96rem);">
 					Your generosity sustains Islamic education,<br>

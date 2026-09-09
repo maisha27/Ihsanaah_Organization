@@ -289,6 +289,12 @@
 	  .event-card-content { padding: 1.25rem 1.5rem; }
 	  .event-card-title   { max-width: 100%; font-size: clamp(1rem, 4.5vw, 1.4rem); }
 	  .event-card-meta    { font-size: 0.72rem; }
+	  /* Hero: stack headline above sub, hide the centre divider */
+	  .blog-hero-row { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+	  #blog-hero-divider { display: none; }
+	  #blog-hero-sub { max-width: 100%; }
+	  /* Events: hide 54px arrows on narrow screens, navigate via dots only */
+	  .event-nav-btn { display: none; }
 	}
 
 	</style>
@@ -341,7 +347,7 @@
 			<div id="blog-hero-rule"
 			     style="width:100%;height:1px;background:rgba(255,255,255,0.16);margin-bottom:3rem;"></div>
 
-			<div style="display:flex;align-items:center;justify-content:space-between;gap:3rem;">
+			<div class="blog-hero-row" style="display:flex;align-items:center;justify-content:space-between;gap:3rem;">
 
 				<!-- LEFT — main headline, slides from left -->
 				<div id="blog-hero-headline" style="flex-shrink:0;">

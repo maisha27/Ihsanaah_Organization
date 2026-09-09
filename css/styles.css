@@ -33,6 +33,10 @@
   --gold-rgb:            201, 160, 48;
 }
 
+/* Global horizontal-scroll prevention — any element that overflows
+   the viewport in x will be clipped rather than creating a scrollbar */
+body { overflow-x: hidden; }
+
 
 /* ── 2. Load & scroll animations ──────────────────────────── */
 @keyframes fadeUp {
@@ -856,6 +860,8 @@ input:focus, textarea:focus {
 /* Nav link underline (works in both states) */
 #site-header-bar .header-link {
   position: relative;
+  /* Vertical padding lifts touch-target to ~40px on tablet touch screens */
+  padding: 0.375rem 0.125rem;
 }
 #site-header-bar .header-link::after {
   content: '';
