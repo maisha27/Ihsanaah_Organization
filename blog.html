@@ -406,7 +406,7 @@
 				<!-- Staircase grid
 				     To add a new post: copy one .blog-card block, paste it here,
 				     update href, img src, category, date, and title. -->
-				<div class="blog-staircase">
+				<div class="blog-staircase" id="blog-cards-grid">
 
 					<!-- Card 1 — odd → left column -->
 					<a href="blog-post-welcome.html" class="blog-card" data-aos="fade-up">
@@ -651,104 +651,231 @@
 <div id="site-footer"></div>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
 
 <script>
 (function () {
   'use strict';
 
+  /* ── Firebase ─────────────────────────────────────────────── */
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+
+  /* ── Clear static placeholders immediately ─────────────────── */
+  var grid = document.getElementById('blog-cards-grid');
+  if (grid) {
+    grid.innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:5rem 0;' +
+      'color:rgba(201,160,48,0.35);font-size:0.72rem;letter-spacing:0.14em;' +
+      'text-transform:uppercase;">Loading…</div>';
+  }
+  var evTrack = document.getElementById('events-track');
+  if (evTrack) evTrack.innerHTML = '';
+
   /* ══════════════════════════════════════════════════════════
-     1. HERO — GSAP entry animations
-     Headline slides from left, sub from right;
-     rule and divider fade in.
+     1. HERO — GSAP entry animations (unchanged)
      ══════════════════════════════════════════════════════════ */
   if (typeof gsap !== 'undefined') {
-
-    gsap.to('#blog-hero-rule', {
-      opacity: 1, duration: 0.7, delay: 0.1, ease: 'power2.out'
-    });
+    gsap.to('#blog-hero-rule',
+      { opacity: 1, duration: 0.7, delay: 0.1, ease: 'power2.out' });
     gsap.fromTo('#blog-hero-headline',
       { opacity: 0, x: -72 },
-      { opacity: 1, x: 0, duration: 1.05, delay: 0.28, ease: 'power3.out' }
-    );
+      { opacity: 1, x: 0, duration: 1.05, delay: 0.28, ease: 'power3.out' });
     gsap.fromTo('#blog-hero-sub',
       { opacity: 0, x: 72 },
-      { opacity: 1, x: 0, duration: 1.05, delay: 0.42, ease: 'power3.out' }
-    );
-    gsap.to('#blog-hero-divider', {
-      opacity: 1, duration: 0.8, delay: 0.58, ease: 'power2.out'
-    });
-
+      { opacity: 1, x: 0, duration: 1.05, delay: 0.42, ease: 'power3.out' });
+    gsap.to('#blog-hero-divider',
+      { opacity: 1, duration: 0.8, delay: 0.58, ease: 'power2.out' });
   }
 
   /* ══════════════════════════════════════════════════════════
-     2. BLOG CARDS — scroll parallax
-     As each card enters the viewport the image shifts
-     object-position from 60% (bottom) → 38% (top),
-     giving the "image moving inside its frame" feeling.
+     2. BLOG POSTS — load from Firestore + render cards
      ══════════════════════════════════════════════════════════ */
-  var blogCards = document.querySelectorAll('.blog-card');
+  var ORNAMENT_SVG =
+    '<svg width="13" height="13" viewBox="0 0 13 13" fill="none">' +
+    '<rect x="1.5" y="1.5" width="10" height="10" stroke="#C9A030"' +
+    ' stroke-width="1.5" transform="rotate(45 6.5 6.5)" fill="none"/></svg>';
 
-  function updateParallax() {
-    var vH = window.innerHeight;
-    blogCards.forEach(function (card) {
-      var rect = card.getBoundingClientRect();
-      /* 0 = card bottom just entering viewport bottom
-         1 = card top just leaving viewport top */
-      var prog = 1 - (rect.top / vH);
-      prog = Math.max(0, Math.min(1, prog));
-      /* map 0→1 to 60%→38% */
-      var pos = 60 - prog * 22;
-      var img = card.querySelector('.blog-card-img');
-      if (img) img.style.objectPosition = '50% ' + pos + '%';
-    });
+  function buildCard(post) {
+    var href = 'blog-post.html?id=' + encodeURIComponent(post.id);
+    var img  = post.imageUrl ||
+      'https://images.pexels.com/photos/3030188/pexels-photo-3030188.jpeg' +
+      '?auto=compress&cs=tinysrgb&w=800';
+    return '<a href="' + href + '" class="blog-card" data-aos="fade-up">' +
+      '<div class="blog-card-img-wrap">' +
+        '<img class="blog-card-img" src="' + escAttr(img) + '"' +
+          ' alt="' + escAttr(post.title || '') + '" loading="lazy">' +
+        '<div class="blog-card-gradient"></div>' +
+        '<span class="blog-card-category">' + esc(post.category || '') + '</span>' +
+        '<div class="blog-card-content">' +
+          '<div>' +
+            '<p style="font-size:0.56rem;font-weight:700;letter-spacing:0.14em;' +
+              'text-transform:uppercase;color:rgba(201,160,48,0.68);margin-bottom:0.45rem;">' +
+              esc(fmtDate(post.date)) +
+            '</p>' +
+            '<h3 class="blog-card-title">' + esc(post.title || '') + '</h3>' +
+          '</div>' +
+          '<div class="blog-card-ornament">' + ORNAMENT_SVG + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</a>';
   }
 
-  if (blogCards.length) {
-    window.addEventListener('scroll', updateParallax, { passive: true });
-    updateParallax();
-  }
+  db.collection('posts').get().then(function (snap) {
+    if (!grid) return;
+    var posts = snap.docs
+      .map(function (d) { return merge({ id: d.id }, d.data()); })
+      .filter(function (p) { return p.published !== false; })
+      .sort(function (a, b) {
+        return String(b.date || '').localeCompare(String(a.date || ''));
+      });
 
-  /* ══════════════════════════════════════════════════════════
-     3. EVENTS CAROUSEL — auto-advance + manual arrows
-     ══════════════════════════════════════════════════════════ */
-  var track   = document.getElementById('events-track');
-  var prevBtn = document.getElementById('events-prev');
-  var nextBtn = document.getElementById('events-next');
-  var dotsEl  = document.getElementById('events-dots');
-  if (!track) return;
+    if (!posts.length) {
+      grid.innerHTML =
+        '<div style="grid-column:1/-1;text-align:center;padding:5rem 0;' +
+        'color:rgba(255,255,255,0.25);font-size:0.85rem;">No posts published yet.</div>';
+      return;
+    }
 
-  var slides = Array.prototype.slice.call(track.querySelectorAll('.event-slide'));
-  var total  = slides.length;
-  var cur    = 0;
-  var timer;
-
-  /* Build dot buttons */
-  var dots = slides.map(function (_, i) {
-    var d = document.createElement('button');
-    d.className = 'event-dot' + (i === 0 ? ' active' : '');
-    d.setAttribute('aria-label', 'Event ' + (i + 1));
-    d.addEventListener('click', function () { goTo(i); resetTimer(); });
-    dotsEl.appendChild(d);
-    return d;
+    grid.innerHTML = posts.map(buildCard).join('');
+    if (typeof AOS !== 'undefined') AOS.refreshHard();
+    initParallax();
+  }).catch(function (err) {
+    if (grid) grid.innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;padding:5rem 0;' +
+      'color:rgba(255,255,255,0.2);font-size:0.8rem;">Could not load posts.</div>';
+    console.error('Posts:', err);
   });
 
-  function goTo(idx) {
-    cur = ((idx % total) + total) % total;
-    track.style.transform = 'translateX(-' + (cur * 100) + '%)';
-    dots.forEach(function (d, i) {
-      d.classList.toggle('active', i === cur);
-    });
+  /* ══════════════════════════════════════════════════════════
+     3. PARALLAX — re-initialised after Firestore cards render
+     ══════════════════════════════════════════════════════════ */
+  function initParallax() {
+    var cards = document.querySelectorAll('.blog-card');
+    if (!cards.length) return;
+
+    function run() {
+      var vH = window.innerHeight;
+      cards.forEach(function (card) {
+        var prog = Math.max(0, Math.min(1, 1 - card.getBoundingClientRect().top / vH));
+        var img  = card.querySelector('.blog-card-img');
+        if (img) img.style.objectPosition = '50% ' + (60 - prog * 22) + '%';
+      });
+    }
+
+    if (window._blogParallax) window.removeEventListener('scroll', window._blogParallax);
+    window._blogParallax = run;
+    window.addEventListener('scroll', run, { passive: true });
+    run();
   }
 
-  function resetTimer() {
-    clearInterval(timer);
-    timer = setInterval(function () { goTo(cur + 1); }, 2500);
+  /* ══════════════════════════════════════════════════════════
+     4. EVENTS — load from Firestore + render carousel
+     ══════════════════════════════════════════════════════════ */
+  function buildSlide(ev) {
+    var img = ev.imageUrl ||
+      'https://images.pexels.com/photos/3030188/pexels-photo-3030188.jpeg' +
+      '?auto=compress&cs=tinysrgb&w=1200';
+    return '<div class="event-slide">' +
+      '<div class="event-card-inner">' +
+        '<img class="event-card-img" src="' + escAttr(img) + '"' +
+          ' alt="' + escAttr(ev.title || '') + '" loading="lazy">' +
+        '<div class="event-card-overlay"></div>' +
+        '<div class="event-card-content">' +
+          '<div>' +
+            '<p style="font-size:0.58rem;font-weight:700;letter-spacing:0.2em;' +
+              'text-transform:uppercase;color:rgba(201,160,48,0.82);margin-bottom:0.65rem;">' +
+              esc(ev.categoryLabel || '') + '</p>' +
+            '<h3 class="event-card-title">' + esc(ev.title || '') + '</h3>' +
+          '</div>' +
+          '<div class="event-card-meta">' +
+            '<p>' + esc(ev.meta || '') + '</p>' +
+            '<p style="color:rgba(201,160,48,0.85);font-weight:600;">Al-Ihsaanah</p>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
   }
 
-  prevBtn && prevBtn.addEventListener('click', function () { goTo(cur - 1); resetTimer(); });
-  nextBtn && nextBtn.addEventListener('click', function () { goTo(cur + 1); resetTimer(); });
+  db.collection('events').get().then(function (snap) {
+    var track  = document.getElementById('events-track');
+    var dotsEl = document.getElementById('events-dots');
+    if (!track) return;
 
-  resetTimer();
+    var events = snap.docs
+      .map(function (d) { return merge({ id: d.id }, d.data()); })
+      .filter(function (e) { return e.active !== false; })
+      .sort(function (a, b) { return (a.order || 0) - (b.order || 0); });
+
+    if (!events.length) return;
+    track.innerHTML = events.map(buildSlide).join('');
+    initCarousel(events.length, track, dotsEl);
+  }).catch(function (err) { console.error('Events:', err); });
+
+  /* ══════════════════════════════════════════════════════════
+     5. CAROUSEL — initialised after events render
+     ══════════════════════════════════════════════════════════ */
+  function initCarousel(total, track, dotsEl) {
+    var prevBtn = document.getElementById('events-prev');
+    var nextBtn = document.getElementById('events-next');
+    if (!track || !total) return;
+
+    var cur = 0, timer;
+    if (dotsEl) dotsEl.innerHTML = '';
+    var dots = [];
+
+    for (var i = 0; i < total; i++) {
+      (function (idx) {
+        var d = document.createElement('button');
+        d.className = 'event-dot' + (idx === 0 ? ' active' : '');
+        d.setAttribute('aria-label', 'Event ' + (idx + 1));
+        d.addEventListener('click', function () { goTo(idx); resetTimer(); });
+        if (dotsEl) dotsEl.appendChild(d);
+        dots.push(d);
+      })(i);
+    }
+
+    function goTo(idx) {
+      cur = ((idx % total) + total) % total;
+      track.style.transform = 'translateX(-' + (cur * 100) + '%)';
+      dots.forEach(function (d, i) { d.classList.toggle('active', i === cur); });
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
+      timer = setInterval(function () { goTo(cur + 1); }, 2500);
+    }
+
+    if (prevBtn) prevBtn.onclick = function () { goTo(cur - 1); resetTimer(); };
+    if (nextBtn) nextBtn.onclick = function () { goTo(cur + 1); resetTimer(); };
+    resetTimer();
+  }
+
+  /* ── Utilities ───────────────────────────────────────────── */
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function escAttr(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+  }
+  function merge(t, s) {
+    for (var k in s) { if (Object.prototype.hasOwnProperty.call(s,k)) t[k]=s[k]; }
+    return t;
+  }
+  function fmtDate(d) {
+    if (!d) return '';
+    var dt;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+      var p = d.split('-');
+      dt = new Date(+p[0], +p[1]-1, +p[2]);
+    } else {
+      dt = new Date(d);
+    }
+    if (isNaN(dt.getTime())) return d;
+    return dt.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  }
 
 }());
 </script>

@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel | Al-Ihsaanah</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Firebase v10 compat SDK (no build step required) -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    body { background: #0D0D0D; color: #fff; font-family: Inter, system-ui, sans-serif; margin: 0; }
+
+    /* ── Inputs & textareas ───────────────── */
+    .f-input {
+      display: block;
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      color: #fff;
+      padding: 0.6rem 0.75rem;
+      font-size: 0.875rem;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .f-input:focus { border-color: rgba(201,160,48,0.65); }
+    .f-input::placeholder { color: rgba(255,255,255,0.25); }
+    input[type="date"].f-input::-webkit-calendar-picker-indicator { filter: invert(0.55); cursor: pointer; }
+    textarea.f-input { resize: vertical; }
+
+    /* ── Labels ───────────────────────────── */
+    .f-label {
+      display: block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color: rgba(255,255,255,0.4);
+      margin-bottom: 0.375rem;
+    }
+
+    /* ── Buttons ──────────────────────────── */
+    .btn-gold {
+      background: #C9A030;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.82rem;
+      padding: 0.55rem 1.25rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: opacity 0.18s;
+      white-space: nowrap;
+    }
+    .btn-gold:hover  { opacity: 0.86; }
+    .btn-gold:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-ghost {
+      background: transparent;
+      color: rgba(255,255,255,0.55);
+      font-size: 0.82rem;
+      padding: 0.55rem 1rem;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.18s;
+      white-space: nowrap;
+    }
+    .btn-ghost:hover { color: #fff; border-color: rgba(255,255,255,0.32); }
+
+    /* ── Tabs ─────────────────────────────── */
+    .tab-btn {
+      padding: 0.9rem 1.25rem;
+      font-size: 0.83rem;
+      font-weight: 500;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: rgba(255,255,255,0.45);
+      cursor: pointer;
+      transition: color 0.18s, border-color 0.18s;
+    }
+    .tab-btn:hover { color: rgba(255,255,255,0.75); }
+    .tab-btn.active { color: #C9A030; border-bottom-color: #C9A030; }
+
+    /* ── Table ────────────────────────────── */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .data-table th {
+      text-align: left;
+      padding: 0 16px 10px 0;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: rgba(255,255,255,0.3);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .data-table td {
+      padding: 11px 16px 11px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      vertical-align: middle;
+      color: rgba(255,255,255,0.85);
+    }
+    .data-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+    /* ── Product cards ────────────────────── */
+    .prod-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 7px;
+      padding: 13px 16px;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    /* ── Modal ────────────────────────────── */
+    .hidden { display: none !important; }
+    #modal-backdrop {
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(0,0,0,0.72);
+      display: flex; align-items: flex-start;
+      justify-content: center;
+      overflow-y: auto;
+      padding: 3rem 1rem 3rem;
+    }
+    #modal-box {
+      background: #1a1a1a;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      width: 100%;
+      max-width: 600px;
+      overflow: hidden;
+    }
+    #modal-body { max-height: 68vh; overflow-y: auto; padding: 1.5rem; }
+
+    /* ── Misc ─────────────────────────────── */
+    .badge-gold  { font-size:0.68rem; padding:2px 8px; background:rgba(201,160,48,0.15); color:#C9A030; border-radius:3px; }
+    .badge-green { font-size:0.75rem; color:#4ade80; }
+    .badge-dim   { font-size:0.75rem; color:rgba(255,255,255,0.25); }
+    .act-edit    { font-size:0.78rem; color:#C9A030; background:none; border:none; cursor:pointer; padding:0; }
+    .act-del     { font-size:0.78rem; color:rgba(248,113,113,0.6); background:none; border:none; cursor:pointer; padding:0; }
+    .act-edit:hover { text-decoration:underline; }
+    .act-del:hover  { color:#f87171; text-decoration:underline; }
+    .empty-msg { font-size:0.85rem; color:rgba(255,255,255,0.22); text-align:center; padding:3rem 1rem; }
+    .section-divider { border-top:1px solid rgba(255,255,255,0.07); padding-top:2rem; margin-top:2rem; }
+    .form-group { margin-bottom:1.1rem; }
+  </style>
+</head>
+
+<body class="min-h-screen">
+
+<!-- ════════════════════════════════════════════════
+     LOGIN SCREEN
+     ════════════════════════════════════════════════ -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center px-4">
+  <div style="width:100%;max-width:400px;">
+
+    <!-- Brand -->
+    <div style="text-align:center;margin-bottom:2rem;">
+      <img src="../img/Ihsaana%20logo.jpeg" alt="Al-Ihsaanah"
+           style="width:60px;height:60px;border-radius:50%;object-fit:cover;margin:0 auto 0.875rem;
+                  display:block;box-shadow:0 0 0 2px rgba(201,160,48,0.45);">
+      <h1 style="font-size:1.15rem;font-weight:700;color:#fff;">Al-Ihsaanah</h1>
+      <p style="font-size:0.76rem;color:rgba(255,255,255,0.35);margin-top:0.2rem;">Admin Panel</p>
+    </div>
+
+    <!-- Card -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:10px;padding:2rem;">
+      <form id="login-form">
+        <div class="form-group">
+          <label class="f-label" for="login-email">Email</label>
+          <input class="f-input" type="email" id="login-email" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+        <div class="form-group" style="margin-bottom:1.5rem;">
+          <label class="f-label" for="login-password">Password</label>
+          <input class="f-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password" required>
+        </div>
+        <p id="login-error" style="font-size:0.8rem;color:#f87171;margin-bottom:1rem;display:none;"></p>
+        <button type="submit" id="login-btn" class="btn-gold" style="width:100%;">Sign In</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     DASHBOARD  (hidden until auth)
+     ════════════════════════════════════════════════ -->
+<div id="dashboard" class="hidden" style="min-height:100vh;display:flex;flex-direction:column;">
+
+  <!-- Top bar -->
+  <div style="background:#111;border-bottom:1px solid rgba(255,255,255,0.07);
+              height:56px;padding:0 1.5rem;
+              display:flex;align-items:center;justify-content:space-between;
+              position:sticky;top:0;z-index:30;">
+    <div style="display:flex;align-items:center;gap:0.625rem;">
+      <img src="../img/Ihsaana%20logo.jpeg" alt=""
+           style="width:30px;height:30px;border-radius:50%;object-fit:cover;
+                  box-shadow:0 0 0 1.5px rgba(201,160,48,0.45);">
+      <span style="font-weight:700;font-size:0.88rem;color:#fff;">Ihsaanah Admin</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:0.875rem;">
+      <span id="user-email" style="font-size:0.75rem;color:rgba(255,255,255,0.35);"></span>
+      <button id="logout-btn" class="btn-ghost" style="padding:0.35rem 0.8rem;font-size:0.75rem;">Logout</button>
+    </div>
+  </div>
+
+  <!-- Tab nav -->
+  <div style="background:#111;border-bottom:1px solid rgba(255,255,255,0.07);
+              padding:0 1.5rem;display:flex;position:sticky;top:56px;z-index:29;">
+    <button class="tab-btn active" data-tab="posts">Blog Posts</button>
+    <button class="tab-btn"        data-tab="events">Events</button>
+    <button class="tab-btn"        data-tab="products">Products</button>
+  </div>
+
+  <!-- Tab content wrapper -->
+  <div style="flex:1;padding:2rem 1.5rem;max-width:1080px;width:100%;margin:0 auto;">
+
+    <!-- ── Blog Posts Tab ───────────────────────── -->
+    <div id="tab-posts" class="tab-content">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <div>
+          <h2 style="font-size:1.05rem;font-weight:700;margin:0 0 0.2rem 0;">Blog Posts</h2>
+          <p style="font-size:0.76rem;color:rgba(255,255,255,0.35);margin:0;">Shown on the Blog & Events page</p>
+        </div>
+        <button class="btn-gold" onclick="openForm('post',null)">+ New Post</button>
+      </div>
+      <div id="posts-list"><p class="empty-msg">Loading…</p></div>
+    </div>
+
+    <!-- ── Events Tab ────────────────────────────── -->
+    <div id="tab-events" class="tab-content hidden">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <div>
+          <h2 style="font-size:1.05rem;font-weight:700;margin:0 0 0.2rem 0;">Events</h2>
+          <p style="font-size:0.76rem;color:rgba(255,255,255,0.35);margin:0;">Shown in the carousel on the Blog & Events page</p>
+        </div>
+        <button class="btn-gold" onclick="openForm('event',null)">+ New Event</button>
+      </div>
+      <div id="events-list"><p class="empty-msg">Loading…</p></div>
+    </div>
+
+    <!-- ── Products Tab ──────────────────────────── -->
+    <div id="tab-products" class="tab-content hidden">
+
+      <!-- Quranic Sciences -->
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
+          <div>
+            <h2 style="font-size:1.05rem;font-weight:700;margin:0 0 0.2rem 0;">Quranic Sciences</h2>
+            <p style="font-size:0.76rem;color:rgba(255,255,255,0.35);margin:0;">Scroll-through panels on the Products page</p>
+          </div>
+          <button class="btn-gold" onclick="openNewProductForm('quranic')">+ Add Course</button>
+        </div>
+        <div id="quranic-list"><p class="empty-msg">Loading…</p></div>
+      </div>
+
+      <!-- Skills & Enrichment -->
+      <div class="section-divider">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
+          <div>
+            <h2 style="font-size:1.05rem;font-weight:700;margin:0 0 0.2rem 0;">Skills &amp; Enrichment</h2>
+            <p style="font-size:0.76rem;color:rgba(255,255,255,0.35);margin:0;">Hover-reveal cards on the Products page</p>
+          </div>
+          <button class="btn-gold" onclick="openNewProductForm('skills')">+ Add Course</button>
+        </div>
+        <div id="skills-list"><p class="empty-msg">Loading…</p></div>
+      </div>
+
+      <!-- Book Club -->
+      <div class="section-divider">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;">
+          <div>
+            <h2 style="font-size:1.05rem;font-weight:700;margin:0 0 0.2rem 0;">Book Club</h2>
+            <p style="font-size:0.76rem;color:rgba(255,255,255,0.35);margin:0;">The Verses &amp; Vibes section on the Products page</p>
+          </div>
+          <button class="btn-gold" onclick="openNewProductForm('bookclub')">+ Add Entry</button>
+        </div>
+        <div id="bookclub-list"><p class="empty-msg">Loading…</p></div>
+      </div>
+
+    </div><!-- /tab-products -->
+
+  </div><!-- /content wrapper -->
+</div><!-- /dashboard -->
+
+
+<!-- ════════════════════════════════════════════════
+     MODAL
+     ════════════════════════════════════════════════ -->
+<div id="modal-backdrop" class="hidden" onclick="handleBackdropClick(event)">
+  <div id="modal-box">
+
+    <!-- Header -->
+    <div style="padding:1.1rem 1.4rem;border-bottom:1px solid rgba(255,255,255,0.08);
+                display:flex;align-items:center;justify-content:space-between;">
+      <h3 id="modal-title" style="font-size:0.95rem;font-weight:700;margin:0;"></h3>
+      <button onclick="closeModal()"
+              style="background:none;border:none;color:rgba(255,255,255,0.4);
+                     cursor:pointer;font-size:1.25rem;line-height:1;padding:0.2rem 0.4rem;">
+        &times;
+      </button>
+    </div>
+
+    <!-- Body (scrolls if tall) -->
+    <div id="modal-body"></div>
+
+    <!-- Footer -->
+    <div style="padding:1rem 1.4rem;border-top:1px solid rgba(255,255,255,0.08);
+                display:flex;justify-content:flex-end;gap:0.625rem;">
+      <button class="btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn-gold"  id="modal-save-btn" onclick="saveForm()">Save</button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════
+     SCRIPTS
+     ════════════════════════════════════════════════ -->
+<script src="../firebase-config.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  // ── Firebase init ──────────────────────────────────────────
+  firebase.initializeApp(firebaseConfig);
+  var auth = firebase.auth();
+  var db   = firebase.firestore();
+
+  // ── State ──────────────────────────────────────────────────
+  var postsData    = [];
+  var eventsData   = [];
+  var productsData = { quranic: [], skills: [], bookclub: [] };
+
+  var currentEditId          = null;
+  var currentEditType        = null;   // 'post' | 'event' | 'product'
+  var currentProductSection  = null;   // 'quranic' | 'skills' | 'bookclub'
+
+  var unsubPosts    = null;
+  var unsubEvents   = null;
+  var unsubProducts = null;
+
+  // ── Auth state ─────────────────────────────────────────────
+  auth.onAuthStateChanged(function (user) {
+    if (user) {
+      document.getElementById('login-screen').classList.add('hidden');
+      document.getElementById('dashboard').classList.remove('hidden');
+      document.getElementById('user-email').textContent = user.email;
+      startListeners();
+    } else {
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('dashboard').classList.add('hidden');
+      stopListeners();
+    }
+  });
+
+  // ── Login ──────────────────────────────────────────────────
+  document.getElementById('login-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var email = document.getElementById('login-email').value.trim();
+    var pass  = document.getElementById('login-password').value;
+    var errEl = document.getElementById('login-error');
+    var btn   = document.getElementById('login-btn');
+
+    errEl.style.display = 'none';
+    btn.textContent = 'Signing in…';
+    btn.disabled = true;
+
+    auth.signInWithEmailAndPassword(email, pass).catch(function () {
+      errEl.textContent = 'Invalid email or password. Please try again.';
+      errEl.style.display = 'block';
+      btn.textContent = 'Sign In';
+      btn.disabled = false;
+    });
+  });
+
+  // ── Logout ─────────────────────────────────────────────────
+  document.getElementById('logout-btn').addEventListener('click', function () {
+    auth.signOut();
+  });
+
+  // ── Tab switching ──────────────────────────────────────────
+  document.querySelectorAll('.tab-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      document.querySelectorAll('.tab-btn').forEach(function (b) {
+        b.classList.remove('active');
+      });
+      this.classList.add('active');
+
+      document.querySelectorAll('.tab-content').forEach(function (c) {
+        c.classList.add('hidden');
+      });
+      document.getElementById('tab-' + this.dataset.tab).classList.remove('hidden');
+    });
+  });
+
+  // ── Firestore listeners ────────────────────────────────────
+  function startListeners() {
+    // Posts — ordered newest first by date (ISO string sorts correctly)
+    unsubPosts = db.collection('posts').orderBy('date', 'desc')
+      .onSnapshot(function (snap) {
+        postsData = snap.docs.map(function (d) { return assign({ id: d.id }, d.data()); });
+        renderPosts();
+      }, function () {
+        // Fallback if index not built yet
+        unsubPosts = db.collection('posts').onSnapshot(function (snap) {
+          postsData = snap.docs.map(function (d) { return assign({ id: d.id }, d.data()); });
+          renderPosts();
+        });
+      });
+
+    // Events — ordered by display order
+    unsubEvents = db.collection('events').orderBy('order')
+      .onSnapshot(function (snap) {
+        eventsData = snap.docs.map(function (d) { return assign({ id: d.id }, d.data()); });
+        renderEvents();
+      }, function () {
+        unsubEvents = db.collection('events').onSnapshot(function (snap) {
+          eventsData = snap.docs.map(function (d) { return assign({ id: d.id }, d.data()); });
+          renderEvents();
+        });
+      });
+
+    // Products — ordered by display order
+    unsubProducts = db.collection('products').orderBy('order')
+      .onSnapshot(function (snap) {
+        var all = snap.docs.map(function (d) { return assign({ id: d.id }, d.data()); });
+        productsData.quranic  = all.filter(function (p) { return p.section === 'quranic'; });
+        productsData.skills   = all.filter(function (p) { return p.section === 'skills'; });
+        productsData.bookclub = all.filter(function (p) { return p.section === 'bookclub'; });
+        renderProducts();
+      }, function () {
+        unsubProducts = db.collection('products').onSnapshot(function (snap) {
+          var all = snap.docs.map(function (d) { return assign({ id: d.id }, d.data()); });
+          productsData.quranic  = all.filter(function (p) { return p.section === 'quranic'; });
+          productsData.skills   = all.filter(function (p) { return p.section === 'skills'; });
+          productsData.bookclub = all.filter(function (p) { return p.section === 'bookclub'; });
+          renderProducts();
+        });
+      });
+  }
+
+  function stopListeners() {
+    if (unsubPosts)    { unsubPosts();    unsubPosts    = null; }
+    if (unsubEvents)   { unsubEvents();   unsubEvents   = null; }
+    if (unsubProducts) { unsubProducts(); unsubProducts = null; }
+    postsData    = [];
+    eventsData   = [];
+    productsData = { quranic: [], skills: [], bookclub: [] };
+  }
+
+  // ══════════════════════════════════════════════════════════
+  //  RENDER: POSTS
+  // ══════════════════════════════════════════════════════════
+  function renderPosts() {
+    var el = document.getElementById('posts-list');
+    if (!el) return;
+
+    if (!postsData.length) {
+      el.innerHTML = '<p class="empty-msg">No blog posts yet. Click "+ New Post" to create the first one.</p>';
+      return;
+    }
+
+    var rows = postsData.map(function (p) {
+      return '<tr>' +
+        '<td style="font-weight:500;">' + esc(p.title || '—') + '</td>' +
+        '<td style="color:rgba(255,255,255,0.5);font-size:0.8rem;">' + esc(fmtDate(p.date)) + '</td>' +
+        '<td><span class="badge-gold">' + esc(p.category || '') + '</span></td>' +
+        '<td><span class="' + (p.published ? 'badge-green' : 'badge-dim') + '">' +
+          (p.published ? 'Published' : 'Draft') + '</span></td>' +
+        '<td style="white-space:nowrap;">' +
+          '<button class="act-edit" onclick="openForm(\'post\',\'' + p.id + '\')">Edit</button>' +
+          '&nbsp;&nbsp;' +
+          '<button class="act-del" onclick="deleteItem(\'posts\',\'' + p.id + '\')">Delete</button>' +
+        '</td>' +
+      '</tr>';
+    }).join('');
+
+    el.innerHTML =
+      '<div style="overflow-x:auto;">' +
+      '<table class="data-table">' +
+        '<thead><tr>' +
+          '<th>Title</th><th>Date</th><th>Category</th><th>Status</th><th>Actions</th>' +
+        '</tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table></div>';
+  }
+
+  // ══════════════════════════════════════════════════════════
+  //  RENDER: EVENTS
+  // ══════════════════════════════════════════════════════════
+  function renderEvents() {
+    var el = document.getElementById('events-list');
+    if (!el) return;
+
+    if (!eventsData.length) {
+      el.innerHTML = '<p class="empty-msg">No events yet. Click "+ New Event" to add one.</p>';
+      return;
+    }
+
+    var rows = eventsData.map(function (ev) {
+      var img = ev.imageUrl
+        ? '<img src="' + escAttr(ev.imageUrl) + '" style="width:52px;height:38px;object-fit:cover;border-radius:4px;" loading="lazy">'
+        : '<div style="width:52px;height:38px;background:rgba(255,255,255,0.07);border-radius:4px;"></div>';
+
+      return '<tr>' +
+        '<td style="padding-right:8px;">' + img + '</td>' +
+        '<td style="font-weight:500;">' + esc(ev.title || '—') + '</td>' +
+        '<td style="color:rgba(255,255,255,0.45);font-size:0.78rem;">' + esc(ev.categoryLabel || '') + '</td>' +
+        '<td style="color:rgba(255,255,255,0.45);">' + (ev.order || 0) + '</td>' +
+        '<td><span class="' + (ev.active !== false ? 'badge-green' : 'badge-dim') + '">' +
+          (ev.active !== false ? 'Active' : 'Hidden') + '</span></td>' +
+        '<td style="white-space:nowrap;">' +
+          '<button class="act-edit" onclick="openForm(\'event\',\'' + ev.id + '\')">Edit</button>' +
+          '&nbsp;&nbsp;' +
+          '<button class="act-del" onclick="deleteItem(\'events\',\'' + ev.id + '\')">Delete</button>' +
+        '</td>' +
+      '</tr>';
+    }).join('');
+
+    el.innerHTML =
+      '<div style="overflow-x:auto;">' +
+      '<table class="data-table">' +
+        '<thead><tr>' +
+          '<th style="width:64px;">Img</th>' +
+          '<th>Title</th><th>Category Label</th><th>Order</th><th>Status</th><th>Actions</th>' +
+        '</tr></thead>' +
+        '<tbody>' + rows + '</tbody>' +
+      '</table></div>';
+  }
+
+  // ══════════════════════════════════════════════════════════
+  //  RENDER: PRODUCTS
+  // ══════════════════════════════════════════════════════════
+  function renderProdSection(items) {
+    if (!items.length) {
+      return '<p class="empty-msg" style="padding:1.25rem 0;">None added yet.</p>';
+    }
+    return items.map(function (p) {
+      var sub = p.admissionFee
+        ? 'Admission: ' + esc(p.admissionFee) + ' &nbsp;·&nbsp; Monthly: ' + esc(p.monthlyFee || '')
+        : (p.description ? esc(p.description.substring(0, 72)) + (p.description.length > 72 ? '…' : '') : '');
+      return '<div class="prod-row">' +
+        '<div style="min-width:0;">' +
+          '<p style="font-size:0.9rem;font-weight:600;color:#fff;margin:0 0 3px 0;">' + esc(p.title || '—') + '</p>' +
+          '<p style="font-size:0.74rem;color:rgba(255,255,255,0.35);margin:0;">' + sub + '</p>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:10px;flex-shrink:0;">' +
+          '<span class="' + (p.active !== false ? 'badge-green' : 'badge-dim') + '">' +
+            (p.active !== false ? 'Active' : 'Hidden') + '</span>' +
+          '<button class="act-edit" onclick="openForm(\'product\',\'' + p.id + '\')">Edit</button>' +
+          '<button class="act-del"  onclick="deleteItem(\'products\',\'' + p.id + '\')">Delete</button>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderProducts() {
+    var q = document.getElementById('quranic-list');
+    var s = document.getElementById('skills-list');
+    var b = document.getElementById('bookclub-list');
+    if (q) q.innerHTML = renderProdSection(productsData.quranic);
+    if (s) s.innerHTML = renderProdSection(productsData.skills);
+    if (b) b.innerHTML = renderProdSection(productsData.bookclub);
+  }
+
+  // ══════════════════════════════════════════════════════════
+  //  MODAL — open
+  // ══════════════════════════════════════════════════════════
+  window.openForm = function (type, id) {
+    currentEditId   = id || null;
+    currentEditType = type;
+
+    var data = {};
+    if (id) {
+      if (type === 'post')    data = postsData.find(function (p) { return p.id === id; }) || {};
+      if (type === 'event')   data = eventsData.find(function (e) { return e.id === id; }) || {};
+      if (type === 'product') {
+        var all = productsData.quranic.concat(productsData.skills, productsData.bookclub);
+        data = all.find(function (p) { return p.id === id; }) || {};
+      }
+    }
+    currentProductSection = data.section || null;
+
+    document.getElementById('modal-title').textContent = (id ? 'Edit ' : 'New ') + cap(type);
+    document.getElementById('modal-body').innerHTML    = buildForm(type, data);
+    document.getElementById('modal-backdrop').classList.remove('hidden');
+    document.getElementById('modal-save-btn').textContent = 'Save';
+    document.getElementById('modal-save-btn').disabled    = false;
+  };
+
+  window.openNewProductForm = function (section) {
+    currentEditId = null;
+    currentEditType = 'product';
+    currentProductSection = section;
+    var labels = { quranic: 'Quranic Sciences', skills: 'Skills & Enrichment', bookclub: 'Book Club' };
+    document.getElementById('modal-title').textContent = 'New Product — ' + (labels[section] || section);
+    document.getElementById('modal-body').innerHTML    = buildForm('product', { section: section });
+    document.getElementById('modal-backdrop').classList.remove('hidden');
+    document.getElementById('modal-save-btn').textContent = 'Save';
+    document.getElementById('modal-save-btn').disabled    = false;
+  };
+
+  // ── Form builder ───────────────────────────────────────────
+  function buildForm(type, data) {
+    var h = '';
+
+    if (type === 'post') {
+      h += fi('Title *', 'title', 'text', data.title || '');
+      h += fi('Date', 'date', 'date', toDateInput(data.date || ''));
+      h += fi('Category (e.g. Community, Education)', 'category', 'text', data.category || '');
+      h += fi('Image URL (paste from Cloudinary, Imgur, etc.)', 'imageUrl', 'url', data.imageUrl || '');
+      h += fta('Body Content (HTML allowed — use &lt;p&gt;, &lt;strong&gt;, &lt;a&gt; etc.)', 'content', data.content || '', 10);
+      h += fcb('Published — tick to make visible on the website', 'published', !!data.published);
+    }
+
+    if (type === 'event') {
+      h += fi('Title *', 'title', 'text', data.title || '');
+      h += fi('Category Label (small text shown above title, e.g. Story-Based Learning)', 'categoryLabel', 'text', data.categoryLabel || '');
+      h += fi('Meta Text (bottom-right of card, e.g. Multi-session event)', 'meta', 'text', data.meta || '');
+      h += fi('Image URL', 'imageUrl', 'url', data.imageUrl || '');
+      h += fi('Order in carousel (1 = shown first)', 'order', 'number', String(data.order !== undefined ? data.order : 1));
+      h += fcb('Active — tick to show in the events carousel', 'active', data.active !== false);
+    }
+
+    if (type === 'product') {
+      var sec = data.section || currentProductSection || 'quranic';
+      h += '<input type="hidden" id="f-section" value="' + escAttr(sec) + '">';
+      h += fi('Title *', 'title', 'text', data.title || '');
+
+      if (sec === 'quranic' || sec === 'skills') {
+        h += fi('Eyebrow label (e.g. 01 / Quranic Sciences)', 'eyebrow', 'text', data.eyebrow || '');
+        h += fta('Schedule lines (one per line, e.g.\nFri & Sat — 3:30–4:30 pm · 6–8 months)', 'scheduleLines',
+          Array.isArray(data.scheduleLines) ? data.scheduleLines.join('\n') : (data.scheduleLines || ''), 3);
+        h += fi('Admission Fee (e.g. 2,500 BDT)', 'admissionFee', 'text', data.admissionFee || '');
+        h += fi('Monthly Fee (e.g. 1,500 BDT)', 'monthlyFee', 'text', data.monthlyFee || '');
+        h += fi('Duration (e.g. 6–8 months)', 'duration', 'text', data.duration || '');
+        h += fi('Image URL', 'imageUrl', 'url', data.imageUrl || '');
+        if (sec === 'skills') {
+          h += fi('Hover Image URL (swaps in on mouse-over)', 'imageHoverUrl', 'url', data.imageHoverUrl || '');
+        }
+      }
+
+      if (sec === 'bookclub') {
+        h += fta('Description', 'description', data.description || '', 4);
+        h += fi('Schedule (e.g. Wed 3:00–5:00 pm Offline, Wed 3:00–4:00 pm Online)', 'schedule', 'text', data.schedule || '');
+        h += fi('Age Range (e.g. Ages 13–23)', 'ageRange', 'text', data.ageRange || '');
+        h += fi('Image URL', 'imageUrl', 'url', data.imageUrl || '');
+      }
+
+      h += fi('Display order (lower number = shown first)', 'order', 'number', String(data.order !== undefined ? data.order : 1));
+      h += fcb('Active — tick to show on the website', 'active', data.active !== false);
+    }
+
+    return h;
+  }
+
+  // ── Form field helpers ─────────────────────────────────────
+  function fi(label, id, type, value) {
+    return '<div class="form-group">' +
+      '<label class="f-label" for="f-' + id + '">' + label + '</label>' +
+      '<input class="f-input" type="' + type + '" id="f-' + id + '" value="' + escAttr(value) + '">' +
+      '</div>';
+  }
+
+  function fta(label, id, value, rows) {
+    return '<div class="form-group">' +
+      '<label class="f-label" for="f-' + id + '">' + label + '</label>' +
+      '<textarea class="f-input" id="f-' + id + '" rows="' + rows + '">' + esc(value) + '</textarea>' +
+      '</div>';
+  }
+
+  function fcb(label, id, checked) {
+    return '<div class="form-group" style="display:flex;align-items:center;gap:9px;">' +
+      '<input type="checkbox" id="f-' + id + '"' + (checked ? ' checked' : '') +
+        ' style="width:16px;height:16px;accent-color:#C9A030;flex-shrink:0;cursor:pointer;">' +
+      '<label for="f-' + id + '" style="font-size:0.83rem;color:rgba(255,255,255,0.7);' +
+        'margin:0;cursor:pointer;text-transform:none;letter-spacing:0;">' + label + '</label>' +
+      '</div>';
+  }
+
+  // Reads a form field value by its short id (strips the 'f-' prefix)
+  function val(id) {
+    var el = document.getElementById('f-' + id);
+    if (!el) return undefined;
+    if (el.type === 'checkbox') return el.checked;
+    if (el.type === 'number')   return Number(el.value) || 0;
+    return el.value.trim();
+  }
+
+  // ══════════════════════════════════════════════════════════
+  //  SAVE
+  // ══════════════════════════════════════════════════════════
+  window.saveForm = function () {
+    var btn  = document.getElementById('modal-save-btn');
+    btn.textContent = 'Saving…';
+    btn.disabled    = true;
+
+    var docData = {};
+
+    if (currentEditType === 'post') {
+      docData = {
+        title:     val('title'),
+        date:      val('date'),       // YYYY-MM-DD from date input
+        category:  val('category'),
+        imageUrl:  val('imageUrl'),
+        content:   val('content'),
+        published: val('published'),
+        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      };
+      if (!currentEditId) {
+        docData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      }
+    }
+
+    if (currentEditType === 'event') {
+      docData = {
+        title:         val('title'),
+        categoryLabel: val('categoryLabel'),
+        meta:          val('meta'),
+        imageUrl:      val('imageUrl'),
+        order:         val('order'),
+        active:        val('active'),
+      };
+    }
+
+    if (currentEditType === 'product') {
+      var sec = val('section');
+      docData = { section: sec, title: val('title'), order: val('order'), active: val('active') };
+
+      if (sec === 'quranic' || sec === 'skills') {
+        var rawSched = val('scheduleLines') || '';
+        docData.eyebrow       = val('eyebrow');
+        docData.scheduleLines = rawSched.split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+        docData.admissionFee  = val('admissionFee');
+        docData.monthlyFee    = val('monthlyFee');
+        docData.duration      = val('duration');
+        docData.imageUrl      = val('imageUrl');
+        if (sec === 'skills') docData.imageHoverUrl = val('imageHoverUrl');
+      }
+
+      if (sec === 'bookclub') {
+        docData.description = val('description');
+        docData.schedule    = val('schedule');
+        docData.ageRange    = val('ageRange');
+        docData.imageUrl    = val('imageUrl');
+      }
+    }
+
+    var coll = currentEditType === 'post' ? 'posts'
+             : currentEditType === 'event' ? 'events'
+             : 'products';
+
+    var op = currentEditId
+      ? db.collection(coll).doc(currentEditId).update(docData)
+      : db.collection(coll).add(docData);
+
+    op.then(function () {
+      closeModal();
+    }).catch(function (err) {
+      alert('Save failed: ' + err.message);
+      btn.textContent = 'Save';
+      btn.disabled = false;
+    });
+  };
+
+  // ══════════════════════════════════════════════════════════
+  //  DELETE
+  // ══════════════════════════════════════════════════════════
+  window.deleteItem = function (coll, id) {
+    if (!confirm('Permanently delete this item? This cannot be undone.')) return;
+    db.collection(coll).doc(id).delete().catch(function (err) {
+      alert('Delete failed: ' + err.message);
+    });
+  };
+
+  // ══════════════════════════════════════════════════════════
+  //  CLOSE MODAL
+  // ══════════════════════════════════════════════════════════
+  window.closeModal = function () {
+    document.getElementById('modal-backdrop').classList.add('hidden');
+    document.getElementById('modal-body').innerHTML = '';
+    currentEditId = null;
+    currentEditType = null;
+    currentProductSection = null;
+  };
+
+  window.handleBackdropClick = function (e) {
+    if (e.target === document.getElementById('modal-backdrop')) closeModal();
+  };
+
+  // Close on Escape
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeModal();
+  });
+
+  // ══════════════════════════════════════════════════════════
+  //  UTILITIES
+  // ══════════════════════════════════════════════════════════
+
+  // HTML-escape for text content & textarea values
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  // Escape for HTML attribute values (e.g. value="...")
+  function escAttr(s) {
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  // Capitalise first letter
+  function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  // Pad single digit to two digits
+  function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+  // Convert any date string to YYYY-MM-DD for <input type="date">
+  function toDateInput(dateStr) {
+    if (!dateStr) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return dateStr;
+    var d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+
+  // Format a date string (YYYY-MM-DD or text) for display in the table
+  function fmtDate(dateStr) {
+    if (!dateStr) return '';
+    var d;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      var p = dateStr.split('-');
+      d = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    } else {
+      d = new Date(dateStr);
+    }
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  // Shallow object assign (no Object.assign for older engines)
+  function assign(target, src) {
+    for (var k in src) { if (Object.prototype.hasOwnProperty.call(src, k)) target[k] = src[k]; }
+    return target;
+  }
+
+}());
+</script>
+
+</body>
+</html>

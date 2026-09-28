@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="description" content="Blog post | Al-Ihsaanah" />
+	<title>Loading… | Al-Ihsaanah</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<script>
+	  tailwind.config = {
+	    theme: {
+	      extend: {
+	        colors: {
+	          'ihsaanah-gold':       '#C9A030',
+	          'ihsaanah-gold-light': '#f5ede0',
+	          'ihsaanah-black':      '#0D0D0D',
+	          'ihsaanah-cream':      '#faf7f2',
+	        },
+	        fontFamily: {
+	          heading: ['Poppins', 'Segoe UI', 'sans-serif'],
+	          body:    ['Inter', 'Segoe UI', 'sans-serif'],
+	        },
+	      },
+	    },
+	  };
+	</script>
+	<link rel="stylesheet" href="css/styles.css" />
+
+	<style>
+	  .prose-content p          { margin: 0 0 1.25em; line-height: 1.75; }
+	  .prose-content h2         { font-family: Poppins,sans-serif; font-weight: 700; font-size: 1.35rem; margin: 2em 0 0.6em; color: #0D0D0D; }
+	  .prose-content h3         { font-family: Poppins,sans-serif; font-weight: 600; font-size: 1.1rem; margin: 1.75em 0 0.5em; color: #0D0D0D; }
+	  .prose-content a          { color: #C9A030; text-decoration: underline; }
+	  .prose-content a:hover    { opacity: 0.8; }
+	  .prose-content strong     { font-weight: 600; }
+	  .prose-content blockquote { border-left: 3px solid #C9A030; padding-left: 1.25rem; margin: 1.5em 0; color: rgba(13,13,13,0.65); font-style: italic; }
+	  .prose-content ul, .prose-content ol { padding-left: 1.5rem; margin-bottom: 1.25em; }
+	  .prose-content li         { margin-bottom: 0.4em; line-height: 1.65; }
+	  .prose-content img        { max-width: 100%; border-radius: 4px; margin: 1.5em 0; }
+	</style>
+</head>
+<body class="flex min-h-screen flex-col bg-ihsaanah-cream text-ihsaanah-black font-body"
+      data-active-nav="blog.html">
+<div id="site-header"></div>
+<main class="flex-1">
+
+	<!-- ── Hero (populated by JS) ──────────────────────────── -->
+	<section id="post-hero" class="relative overflow-hidden bg-ihsaanah-black py-20 text-white">
+		<div class="ihsaanah-pattern-gold pointer-events-none absolute inset-0 opacity-[0.12]"></div>
+		<div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60"></div>
+		<div class="relative mx-auto max-w-4xl px-4 text-center">
+			<div class="mb-5 flex items-center justify-center gap-4">
+				<div class="h-px w-14 bg-gradient-to-r from-transparent to-ihsaanah-gold/60"></div>
+				<div class="h-2 w-2 rotate-45 bg-ihsaanah-gold opacity-80"></div>
+				<div class="h-px w-14 bg-gradient-to-l from-transparent to-ihsaanah-gold/60"></div>
+			</div>
+			<h1 id="post-title" class="font-heading text-3xl font-bold text-white sm:text-4xl">
+				<!-- filled by JS -->
+			</h1>
+			<p id="post-meta" class="mt-3 text-white/70 text-sm">
+				<!-- filled by JS -->
+			</p>
+		</div>
+	</section>
+
+	<!-- ── Back link ───────────────────────────────────────── -->
+	<div class="mx-auto max-w-3xl px-4 pt-10">
+		<a href="blog.html"
+		   class="inline-flex items-center gap-1 text-sm font-medium text-ihsaanah-gold hover:underline">
+			&larr; Back to Blog
+		</a>
+	</div>
+
+	<!-- ── Post body (populated by JS) ────────────────────── -->
+	<article id="post-body"
+	         class="prose-content mx-auto max-w-3xl px-4 py-10 text-sm leading-relaxed text-ihsaanah-black/80">
+		<!-- Loading state -->
+		<p id="post-loading" style="text-align:center;color:rgba(13,13,13,0.3);padding:3rem 0;
+		   font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;">
+			Loading post…
+		</p>
+	</article>
+
+</main>
+<div id="site-footer"></div>
+
+<script src="js/main.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ── Firebase ───────────────────────────────────────────── */
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+
+  /* ── Read post ID from URL (?id=DOCID) ──────────────────── */
+  var params  = new URLSearchParams(window.location.search);
+  var postId  = params.get('id');
+
+  var titleEl   = document.getElementById('post-title');
+  var metaEl    = document.getElementById('post-meta');
+  var bodyEl    = document.getElementById('post-body');
+  var loadingEl = document.getElementById('post-loading');
+
+  if (!postId) {
+    showError('No post ID provided.');
+    return;
+  }
+
+  db.collection('posts').doc(postId).get().then(function (doc) {
+    if (!doc.exists) {
+      showError('Post not found.');
+      return;
+    }
+
+    var post = doc.data();
+
+    /* ── Update page title + meta tags ──────────────────── */
+    document.title = (post.title || 'Post') + ' | Al-Ihsaanah';
+    var metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc && post.title) metaDesc.setAttribute('content', post.title);
+
+    /* ── Hero ────────────────────────────────────────────── */
+    if (titleEl) titleEl.textContent = post.title || '';
+    if (metaEl) {
+      var metaParts = [];
+      if (post.date) metaParts.push(fmtDate(post.date));
+      if (post.category) metaParts.push(post.category);
+      metaEl.textContent = metaParts.join(' · ');
+    }
+
+    /* ── Hero image background (optional) ───────────────── */
+    if (post.imageUrl) {
+      var hero = document.getElementById('post-hero');
+      if (hero) {
+        var imgEl = document.createElement('img');
+        imgEl.src = post.imageUrl;
+        imgEl.alt = '';
+        imgEl.style.cssText =
+          'position:absolute;inset:0;width:100%;height:100%;' +
+          'object-fit:cover;opacity:0.18;pointer-events:none;';
+        hero.insertBefore(imgEl, hero.firstChild);
+      }
+    }
+
+    /* ── Body content ────────────────────────────────────── */
+    if (bodyEl) {
+      var content = post.content || '';
+      // If plain text (no HTML tags), wrap paragraphs automatically
+      if (!/<[a-z][\s\S]*>/i.test(content)) {
+        content = content
+          .split(/\n\n+/)
+          .map(function (p) { return '<p>' + esc(p.trim()) + '</p>'; })
+          .join('');
+      }
+      bodyEl.innerHTML = content;
+    }
+
+  }).catch(function (err) {
+    showError('Could not load this post. Please try again.');
+    console.error('blog-post.html:', err);
+  });
+
+  function showError(msg) {
+    if (titleEl) titleEl.textContent = 'Post Not Found';
+    if (metaEl)  metaEl.textContent  = '';
+    if (bodyEl)  bodyEl.innerHTML    =
+      '<p style="text-align:center;color:rgba(13,13,13,0.4);padding:3rem 0;">' +
+      esc(msg) + ' <a href="blog.html" style="color:#C9A030;">Return to Blog →</a></p>';
+  }
+
+  /* ── Utilities ──────────────────────────────────────────── */
+  function esc(s) {
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function fmtDate(d) {
+    if (!d) return '';
+    var dt;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(d)) {
+      var p = d.split('-');
+      dt = new Date(+p[0], +p[1]-1, +p[2]);
+    } else {
+      dt = new Date(d);
+    }
+    if (isNaN(dt.getTime())) return d;
+    return dt.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+}());
+</script>
+
+</body>
+</html>
