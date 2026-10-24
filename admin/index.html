@@ -10,10 +10,16 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <!-- Image uploads go to Cloudinary (free tier) — no Firebase Storage needed -->
 
   <style>
     *, *::before, *::after { box-sizing: border-box; }
     body { background: #0D0D0D; color: #fff; font-family: Inter, system-ui, sans-serif; margin: 0; }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
 
     /* ── Inputs & textareas ───────────────── */
     .f-input {
@@ -336,8 +342,12 @@
 
   // ── Firebase init ──────────────────────────────────────────
   firebase.initializeApp(firebaseConfig);
-  var auth = firebase.auth();
-  var db   = firebase.firestore();
+  var auth    = firebase.auth();
+  var db      = firebase.firestore();
+
+  // Cloudinary config
+  var CLOUDINARY_CLOUD  = 'vzj7vwvs';
+  var CLOUDINARY_PRESET = 'Ihsaanah_Folder';
 
   // ── State ──────────────────────────────────────────────────
   var postsData    = [];
@@ -621,7 +631,7 @@
       h += fi('Title *', 'title', 'text', data.title || '');
       h += fi('Date', 'date', 'date', toDateInput(data.date || ''));
       h += fi('Category (e.g. Community, Education)', 'category', 'text', data.category || '');
-      h += fi('Image URL (paste from Cloudinary, Imgur, etc.)', 'imageUrl', 'url', data.imageUrl || '');
+      h += fiImage('Image', 'imageUrl', data.imageUrl || '');
       h += fta('Body Content (HTML allowed — use &lt;p&gt;, &lt;strong&gt;, &lt;a&gt; etc.)', 'content', data.content || '', 10);
       h += fcb('Published — tick to make visible on the website', 'published', !!data.published);
     }
@@ -630,7 +640,7 @@
       h += fi('Title *', 'title', 'text', data.title || '');
       h += fi('Category Label (small text shown above title, e.g. Story-Based Learning)', 'categoryLabel', 'text', data.categoryLabel || '');
       h += fi('Meta Text (bottom-right of card, e.g. Multi-session event)', 'meta', 'text', data.meta || '');
-      h += fi('Image URL', 'imageUrl', 'url', data.imageUrl || '');
+      h += fiImage('Image', 'imageUrl', data.imageUrl || '');
       h += fi('Order in carousel (1 = shown first)', 'order', 'number', String(data.order !== undefined ? data.order : 1));
       h += fcb('Active — tick to show in the events carousel', 'active', data.active !== false);
     }
@@ -647,9 +657,9 @@
         h += fi('Admission Fee (e.g. 2,500 BDT)', 'admissionFee', 'text', data.admissionFee || '');
         h += fi('Monthly Fee (e.g. 1,500 BDT)', 'monthlyFee', 'text', data.monthlyFee || '');
         h += fi('Duration (e.g. 6–8 months)', 'duration', 'text', data.duration || '');
-        h += fi('Image URL', 'imageUrl', 'url', data.imageUrl || '');
+        h += fiImage('Image', 'imageUrl', data.imageUrl || '');
         if (sec === 'skills') {
-          h += fi('Hover Image URL (swaps in on mouse-over)', 'imageHoverUrl', 'url', data.imageHoverUrl || '');
+          h += fiImage('Hover Image (swaps in on mouse-over)', 'imageHoverUrl', data.imageHoverUrl || '');
         }
       }
 
@@ -657,7 +667,7 @@
         h += fta('Description', 'description', data.description || '', 4);
         h += fi('Schedule (e.g. Wed 3:00–5:00 pm Offline, Wed 3:00–4:00 pm Online)', 'schedule', 'text', data.schedule || '');
         h += fi('Age Range (e.g. Ages 13–23)', 'ageRange', 'text', data.ageRange || '');
-        h += fi('Image URL', 'imageUrl', 'url', data.imageUrl || '');
+        h += fiImage('Image', 'imageUrl', data.imageUrl || '');
       }
 
       h += fi('Display order (lower number = shown first)', 'order', 'number', String(data.order !== undefined ? data.order : 1));
@@ -691,6 +701,63 @@
       '</div>';
   }
 
+  function fiImage(label, id, value) {
+    var uid     = 'f-'    + id;
+    var fileUid = 'file-' + id;
+    var prevUid = 'prev-' + id;
+    var statUid = 'stat-' + id;
+    var barUid  = 'bar-'  + id;
+    var wrapUid = 'wrap-' + id;
+
+    var previewHtml = value
+      ? '<img id="' + prevUid + '" src="' + escAttr(value) + '" loading="lazy" ' +
+            'style="margin-top:7px;width:100%;max-height:110px;object-fit:cover;' +
+            'border-radius:4px;border:1px solid rgba(255,255,255,0.08);" ' +
+            'onerror="this.style.display=\'none\'">'
+      : '<img id="' + prevUid + '" src="" ' +
+            'style="display:none;margin-top:7px;width:100%;max-height:110px;object-fit:cover;' +
+            'border-radius:4px;border:1px solid rgba(255,255,255,0.08);">';
+
+    return '<div class="form-group">' +
+      '<label class="f-label" for="' + uid + '">' + label + '</label>' +
+      '<input class="f-input" type="url" id="' + uid + '" ' +
+          'value="' + escAttr(value) + '" placeholder="Upload below, or paste a URL" ' +
+          'data-prev="' + prevUid + '" oninput="adminImgPreview(this)">' +
+      '<div style="display:flex;align-items:center;gap:8px;margin-top:6px;">' +
+        '<label for="' + fileUid + '" ' +
+            'style="display:inline-flex;align-items:center;gap:5px;cursor:pointer;' +
+            'color:rgba(255,255,255,0.55);font-size:0.78rem;padding:0.38rem 0.85rem;' +
+            'border:1px solid rgba(255,255,255,0.14);border-radius:5px;' +
+            'transition:all 0.18s;white-space:nowrap;user-select:none;">' +
+          '<svg width="12" height="12" viewBox="0 0 12 12" fill="none">' +
+            '<path d="M6 1v6M3 4l3-3 3 3" stroke="currentColor" stroke-width="1.4" ' +
+                  'stroke-linecap="round" stroke-linejoin="round"/>' +
+            '<path d="M1 9.5v1a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-1" ' +
+                  'stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>' +
+          '</svg>' +
+          'Upload image' +
+        '</label>' +
+        '<input type="file" id="' + fileUid + '" ' +
+            'accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;" ' +
+            'onchange="adminImgUpload(this,' +
+              '\'' + uid     + '\',' +
+              '\'' + statUid + '\',' +
+              '\'' + prevUid + '\',' +
+              '\'' + barUid  + '\',' +
+              '\'' + wrapUid + '\')">' +
+        '<span id="' + statUid + '" style="font-size:0.74rem;"></span>' +
+      '</div>' +
+      '<div id="' + wrapUid + '" ' +
+          'style="display:none;margin-top:5px;height:2px;' +
+          'background:rgba(255,255,255,0.08);border-radius:2px;">' +
+        '<div id="' + barUid + '" ' +
+            'style="height:100%;background:#C9A030;border-radius:2px;' +
+            'width:0%;transition:width 0.25s ease;"></div>' +
+      '</div>' +
+      previewHtml +
+    '</div>';
+  }
+
   // Reads a form field value by its short id (strips the 'f-' prefix)
   function val(id) {
     var el = document.getElementById('f-' + id);
@@ -704,6 +771,25 @@
   //  SAVE
   // ══════════════════════════════════════════════════════════
   window.saveForm = function () {
+    // ── Validation ──────────────────────────────────────────
+    var existingErr = document.getElementById('modal-val-error');
+    if (existingErr) existingErr.remove();
+
+    var titleEl = document.getElementById('f-title');
+    if (titleEl && !titleEl.value.trim()) {
+      var errDiv = document.createElement('div');
+      errDiv.id = 'modal-val-error';
+      errDiv.style.cssText =
+        'font-size:0.78rem;color:#f87171;background:rgba(248,113,113,0.08);' +
+        'border:1px solid rgba(248,113,113,0.18);border-radius:5px;' +
+        'padding:0.5rem 0.75rem;margin-bottom:0.75rem;';
+      errDiv.textContent = 'Title is required.';
+      var body = document.getElementById('modal-body');
+      if (body) body.insertBefore(errDiv, body.firstChild);
+      titleEl.focus();
+      return;
+    }
+
     var btn  = document.getElementById('modal-save-btn');
     btn.textContent = 'Saving…';
     btn.disabled    = true;
@@ -767,10 +853,12 @@
       ? db.collection(coll).doc(currentEditId).update(docData)
       : db.collection(coll).add(docData);
 
+    var wasEdit = !!currentEditId;
     op.then(function () {
       closeModal();
+      showToast(wasEdit ? 'Updated successfully' : 'Created successfully');
     }).catch(function (err) {
-      alert('Save failed: ' + err.message);
+      showToast('Save failed — ' + err.message, true);
       btn.textContent = 'Save';
       btn.disabled = false;
     });
@@ -861,6 +949,116 @@
     for (var k in src) { if (Object.prototype.hasOwnProperty.call(src, k)) target[k] = src[k]; }
     return target;
   }
+
+  function showToast(msg, isError) {
+    var t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText =
+      'position:fixed;bottom:1.5rem;right:1.5rem;z-index:9999;' +
+      'background:' + (isError ? '#7f1d1d' : '#C9A030') + ';' +
+      'color:#fff;font-size:0.8rem;font-weight:600;' +
+      'padding:0.6rem 1.1rem;border-radius:5px;' +
+      'box-shadow:0 4px 16px rgba(0,0,0,0.45);' +
+      'animation:toastIn 0.22s ease;pointer-events:none;';
+    document.body.appendChild(t);
+    setTimeout(function () {
+      t.style.opacity = '0';
+      t.style.transition = 'opacity 0.28s ease';
+      setTimeout(function () { if (t.parentNode) t.remove(); }, 280);
+    }, 2200);
+  }
+
+  // ══════════════════════════════════════════════════════════
+  //  IMAGE UPLOAD HELPERS
+  //  Global so the inline onchange / oninput attributes can reach them.
+  // ══════════════════════════════════════════════════════════
+
+  /* Live preview when a URL is typed / pasted into the URL input */
+  window.adminImgPreview = function (input) {
+    var prevEl = document.getElementById(input.dataset.prev || '');
+    if (!prevEl) return;
+    var url = input.value.trim();
+    if (url) {
+      prevEl.src = url;
+      prevEl.style.display = 'block';
+    } else {
+      prevEl.style.display = 'none';
+      prevEl.src = '';
+    }
+  };
+
+  /* Upload a local file to Cloudinary and fill the URL input */
+  window.adminImgUpload = function (fileInput, urlId, statId, prevId, barId, wrapId) {
+    var file = fileInput.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select an image file (JPEG, PNG, WebP, or GIF).');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Image is too large. Maximum allowed size is 5 MB.');
+      return;
+    }
+
+    var urlEl   = document.getElementById(urlId);
+    var statEl  = document.getElementById(statId);
+    var prevEl  = document.getElementById(prevId);
+    var barEl   = document.getElementById(barId);
+    var wrapEl  = document.getElementById(wrapId);
+    var saveBtn = document.getElementById('modal-save-btn');
+
+    /* Lock UI while uploading */
+    if (urlEl)   { urlEl.value = ''; urlEl.disabled = true; }
+    if (wrapEl)  wrapEl.style.display = 'block';
+    if (barEl)   barEl.style.width    = '0%';
+    if (statEl)  { statEl.textContent = 'Uploading…'; statEl.style.color = 'rgba(201,160,48,0.8)'; }
+    if (saveBtn) saveBtn.disabled = true;
+
+    var fd = new FormData();
+    fd.append('file', file);
+    fd.append('upload_preset', CLOUDINARY_PRESET);
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'https://api.cloudinary.com/v1_1/' + CLOUDINARY_CLOUD + '/image/upload', true);
+
+    xhr.upload.onprogress = function (e) {
+      if (e.lengthComputable && barEl) {
+        barEl.style.width = Math.round((e.loaded / e.total) * 100) + '%';
+      }
+    };
+
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        var res = JSON.parse(xhr.responseText);
+        var url = res.secure_url;
+        if (urlEl)   { urlEl.value = url; urlEl.disabled = false; }
+        if (statEl)  { statEl.textContent = 'Uploaded ✓'; statEl.style.color = '#4ade80'; }
+        if (wrapEl)  wrapEl.style.display = 'none';
+        if (prevEl)  { prevEl.src = url; prevEl.style.display = 'block'; }
+        if (saveBtn) saveBtn.disabled = false;
+        fileInput.value = '';
+      } else {
+        var errMsg = '';
+        try { errMsg = JSON.parse(xhr.responseText).error.message; } catch (e) {}
+        if (statEl)  { statEl.textContent = 'Upload failed — ' + (errMsg || 'server error'); statEl.style.color = '#f87171'; }
+        if (wrapEl)  wrapEl.style.display = 'none';
+        if (urlEl)   urlEl.disabled = false;
+        if (saveBtn) saveBtn.disabled = false;
+        fileInput.value = '';
+      }
+    };
+
+    xhr.onerror = function () {
+      if (statEl)  { statEl.textContent = 'Upload failed — network error'; statEl.style.color = '#f87171'; }
+      if (wrapEl)  wrapEl.style.display = 'none';
+      if (urlEl)   urlEl.disabled = false;
+      if (saveBtn) saveBtn.disabled = false;
+      fileInput.value = '';
+    };
+
+    xhr.send(fd);
+  };
 
 }());
 </script>

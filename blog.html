@@ -845,7 +845,7 @@
 
     function resetTimer() {
       clearInterval(timer);
-      timer = setInterval(function () { goTo(cur + 1); }, 2500);
+      timer = setInterval(function () { goTo(cur + 1); }, 5000);
     }
 
     if (prevBtn) prevBtn.onclick = function () { goTo(cur - 1); resetTimer(); };
