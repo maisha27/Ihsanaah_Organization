@@ -91,6 +91,8 @@
       color: rgba(255,255,255,0.45);
       cursor: pointer;
       transition: color 0.18s, border-color 0.18s;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
     .tab-btn:hover { color: rgba(255,255,255,0.75); }
     .tab-btn.active { color: #C9A030; border-bottom-color: #C9A030; }
@@ -146,7 +148,7 @@
       max-width: 600px;
       overflow: hidden;
     }
-    #modal-body { max-height: 68vh; overflow-y: auto; padding: 1.5rem; }
+    #modal-body { max-height: calc(100vh - 220px); overflow-y: auto; padding: 1.5rem; }
 
     /* ── Misc ─────────────────────────────── */
     .badge-gold  { font-size:0.68rem; padding:2px 8px; background:rgba(201,160,48,0.15); color:#C9A030; border-radius:3px; }
@@ -159,6 +161,16 @@
     .empty-msg { font-size:0.85rem; color:rgba(255,255,255,0.22); text-align:center; padding:3rem 1rem; }
     .section-divider { border-top:1px solid rgba(255,255,255,0.07); padding-top:2rem; margin-top:2rem; }
     .form-group { margin-bottom:1.1rem; }
+
+    /* ── Tab nav scroll (hides scrollbar visually) ── */
+    #tab-nav { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    #tab-nav::-webkit-scrollbar { display: none; }
+    #tab-nav { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* ── Mobile responsive ──────────────────────── */
+    @media (max-width: 480px) {
+      #user-email { display: none; }
+    }
   </style>
 </head>
 
@@ -222,7 +234,7 @@
   </div>
 
   <!-- Tab nav -->
-  <div style="background:#111;border-bottom:1px solid rgba(255,255,255,0.07);
+  <div id="tab-nav" style="background:#111;border-bottom:1px solid rgba(255,255,255,0.07);
               padding:0 1.5rem;display:flex;position:sticky;top:56px;z-index:29;">
     <button class="tab-btn active" data-tab="posts">Blog Posts</button>
     <button class="tab-btn"        data-tab="events">Events</button>
@@ -230,7 +242,7 @@
   </div>
 
   <!-- Tab content wrapper -->
-  <div style="flex:1;padding:2rem 1.5rem;max-width:1080px;width:100%;margin:0 auto;">
+  <div style="flex:1;padding:2rem 1.5rem;max-width:1080px;width:100%;margin:0 auto;overflow-x:hidden;">
 
     <!-- ── Blog Posts Tab ───────────────────────── -->
     <div id="tab-posts" class="tab-content">
