@@ -175,7 +175,7 @@
 						<!-- Web3Forms — replace key before going live -->
 						<form action="https://api.web3forms.com/submit" method="POST" class="space-y-5"
 						      id="contact-form">
-							<input type="hidden" name="access_key" value="7c140a5c-c45c-4b7f-b707-ad5cd3cab9ba" />
+							<input type="hidden" name="access_key" value="5114b08c-bad3-4e6a-92ba-955cc74aa7f8" />
 							<input type="hidden" name="subject" value="New message from Al-Ihsaanah website" />
 							<input type="hidden" name="from_name" value="Al-Ihsaanah Website" />
 
@@ -260,5 +260,63 @@
 <div id="site-footer"></div>
 <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
 <script src="js/main.js"></script>
+
+<script>
+(function () {
+  var form = document.getElementById('contact-form');
+  if (!form) return;
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    var btn = document.getElementById('submit-btn');
+    btn.textContent = 'Sending…';
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+    btn.style.cursor = 'not-allowed';
+
+    fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      body: new FormData(form)
+    })
+    .then(function (res) { return res.json(); })
+    .then(function (json) {
+      if (json.success) {
+        var card = form.closest('.rounded-2xl');
+        card.innerHTML =
+          '<div style="text-align:center;padding:2.5rem 1rem;">' +
+            '<div style="width:56px;height:56px;border-radius:50%;' +
+                 'background:rgba(201,160,48,0.10);border:1px solid rgba(201,160,48,0.30);' +
+                 'display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">' +
+              '<svg width="22" height="22" viewBox="0 0 22 22" fill="none">' +
+                '<path d="M4.5 11.5l4.5 4.5 9-9" stroke="#C9A030" stroke-width="1.8"' +
+                      ' stroke-linecap="round" stroke-linejoin="round"/>' +
+              '</svg>' +
+            '</div>' +
+            '<h3 style="font-family:\'DM Serif Display\',Georgia,serif;font-style:italic;' +
+                 'font-size:1.5rem;color:#0D0D0D;margin-bottom:0.5rem;">Message sent!</h3>' +
+            '<p style="font-size:0.875rem;color:rgba(13,13,13,0.55);line-height:1.6;' +
+                'max-width:300px;margin:0 auto;">' +
+              'Thank you for reaching out. We\'ll get back to you soon, inshaa Allah.' +
+            '</p>' +
+          '</div>';
+      } else {
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+        btn.style.opacity = '';
+        btn.style.cursor = '';
+        alert('Something went wrong. Please try again or email us directly.');
+      }
+    })
+    .catch(function () {
+      btn.textContent = 'Send Message';
+      btn.disabled = false;
+      btn.style.opacity = '';
+      btn.style.cursor = '';
+      alert('Could not send message. Please check your connection and try again.');
+    });
+  });
+}());
+</script>
 </body>
 </html>
